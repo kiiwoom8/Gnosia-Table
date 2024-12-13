@@ -25,7 +25,7 @@ def get_user_choice(characters):
             else:
                 print(f"Please enter a number between 1 and {len(characters)}.")
         except ValueError:
-            print("Invalid input. Please enter a number or 'z' to go back.")
+            print("\033[31mInvalid input. Please enter a number or 'z' to go back.\033[0m")
 
 
 def record_action(matrix, characters):
@@ -71,7 +71,7 @@ def delete_recent_action(matrix, characters):
 
 
 def select_action():
-    print("\nAssign or Remove Roles:")
+    print("\nSelect the action performed:")
     print("1. \033[91mVote\033[0m")
     print("2. \033[91mDoubt\033[0m")
     print("3. \033[91mAgree\033[0m")
@@ -89,7 +89,7 @@ def select_action():
         action_choice = int(action_choice)
         return action_choice
     except ValueError:
-        print("Invalid input. Try again.")
+        print("\033[31mInvalid input. Try again.\033[0m")
         return None
 
 
@@ -124,7 +124,7 @@ def assign_roles(characters):
                 print("Invalid role choice. Try again.")
                 continue
         except ValueError:
-            print("Invalid input. Try again.")
+            print("\033[31mInvalid input. Try again.\033[0m")
             continue
 
         char_index = select_character("assign/remove") - 1
@@ -198,6 +198,30 @@ def apply_color(row_line):
 
     return color_words(row_line, words_to_color)
 
+def show_stats():
+    print("\n1. \033[32mIntuition\033[0m\n")
+    print("2. \033[35mPerformance\033[0m\n")
+    # print("3. Logic")
+    option = input("Enter your choice: ").strip()
+    print()
+    if option == '1':
+        print("\n\033[32mIntuition\033[0m\n")
+        print ("\033[31mStrongest\033[0m:")
+        print ("Min: \033[33mComet (25.5)\033[0m, \033[97mRemnan (21)\033[0m, \033[90mYuriko (20.5)\033[0m, \033[92mChipie (17)\033[0m, \033[95mOtome (16.5)\033[0m, \033[31mKukurushka (16)\033[0m")
+        print ("Max: \033[33mComet (49.5)\033[0m, \033[94mGina (45.5)\033[0m, \033[90mYuriko (42)\033[0m, \033[97mRemnan (41)\033[0m, \033[92mChipie (39)\033[0m, \033[31mKukurushka (35.5)\033[0m, \033[95mOtome (32)\033[0m, Setsu (28.5)\n")
+        print ("\033[34mWeakest\033[0m:")
+        print ("Min: \033[96mRaqio (0.5)\033[0m, Shigemichi (3.5), \033[94mGina\033[0m (4), \033[32mStella (5)\033[0m, \033[35mSha-Ming (5.5)\033[0m, Setsu (8), Jonas (9.5), SQ (11)")
+        print ("Max: \033[96mRaqio (0.5)\033[0m, \033[35mSha-Ming (6.5)\033[0m, Shigemichi (14.5), \033[32mStella (18)\033[0m")
+    elif option == '2':
+        print("\n\033[35mPerformance\033[0m\n")
+        print ("\033[31mStrongest\033[0m:")
+        print ("Min: \033[90mYuriko (25)\033[0m, \033[35mSha-Ming (20.5)\033[0m, \033[31mKukurushka (20.5)\033[0m, \033[36mJonas (19.5)\033[0m, \033[91mSQ (14.5)\033[0m")
+        print ("Max: \033[90mYuriko (49.5)\033[0m, \033[91mSQ (47.5)\033[0m, \033[31mKukurushka (45)\033[0m, \033[36mJonas (43.5)\033[0m, \033[35mSha-Ming (40.5)\033[0m\n")
+        print ("\033[34mWeakest\033[0m:")
+        print ("Min: Shigemichi (0.5), \033[94mGina (2)\033[0m, \033[33mComet (4.5)\033[0m, \033[32mStella (5)\033[0m")
+        print ("Max: Shigemichi (6), \033[94mGina (13)\033[0m, \033[33mComet (16.5)\033[0m, \033[95mOtome (23)\033[0m, \033[92mChipie (26.5)\033[0m")
+    else:
+        print("\033[31mInvalid choice. Return to menu.\033[0m")
 
 def main():
     characters = display_character_names()
@@ -209,6 +233,7 @@ def main():
         print("1. Record an action\n")
         print("2. Delete the most recent action\n")
         print("3. Assign/Remove roles\n")
+        print("4. Show character stats\n")
         print("9. Initialize\n")
         print("0. Exit\n")
         option = input("Enter your choice: ").strip()
@@ -219,6 +244,8 @@ def main():
             delete_recent_action(matrix, characters)
         elif option == '3':
             assign_roles(characters)
+        elif option == '4':
+            show_stats()
         elif option =='9':
             characters = display_character_names()
             matrix = [[[] for _ in characters] for _ in characters]
@@ -226,7 +253,7 @@ def main():
             print("Exiting...")
             break
         else:
-            print("Invalid choice. Please select 1, 2, 3, or 9.")
+            print("\033[31mInvalid choice. Please select 1, 2, 3, or 9.\033[0m")
 
 
 if __name__ == "__main__":
