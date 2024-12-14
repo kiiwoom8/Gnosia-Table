@@ -1,6 +1,5 @@
 import re
 
-
 def display_character_names():
     return [
         "Me", "Setsu", "Gina", "SQ", "Raqio", "Shigemichi", "Stella", "Comet", "Chipie", "Jonas",
