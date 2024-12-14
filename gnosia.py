@@ -3,9 +3,8 @@ import re
 def display_character_names():
     return [
         "Me", "Setsu", "Gina", "SQ", "Raqio", "Shigemichi", "Stella", "Chipie", "Comet", "Jonas",
-        "Kukrushka", "Otome", "Sha-Ming", "Remnan", "Yuriko"
+        "Kukurushka", "Otome", "Sha-Ming", "Remnan", "Yuriko"
     ]
-
 
 def get_user_choice(characters):
     while True:
@@ -26,15 +25,16 @@ def get_user_choice(characters):
         except ValueError:
             print("\033[31mInvalid input. Please enter a number or 'z' to go back.\033[0m")
 
-
 def record_action(matrix, characters):
-    action_names = {1: "Vote", 2: "Doubt", 3: "Agree", 4: "Cover", 5: "Defend", 6: "Collab", 7: "ExAgree", 8: "ExDefend"}
-    action_choice = select_action()
+    action_names = {1: "Vote", 2: "Doubt", 3: "Agree", 4: "Cover", 5: "Defend", 
+                    6: "Collaborate", 7: "Exaggerate Agree", 8: "Exaggerate Defend"}
+    action_names_abbr = {1: "Vo", 2: "Dou", 3: "Ag", 4: "Cov", 5: "Def", 6: "Col", 7: "ExA", 8: "ExD"}
+    action_choice = select_action(action_names)
 
     if action_choice not in action_names:
         return
 
-    action = action_names[action_choice]
+    action = action_names_abbr[action_choice]
     actor = select_character("acting")
     if actor is None:
         return
@@ -49,7 +49,6 @@ def record_action(matrix, characters):
 
     matrix[actor - 1][target - 1].append(action)
     print(f"Recorded: {actor_name} {action} {target_name}")
-
 
 def delete_recent_action(matrix, characters):
     print("\nDelete the most recent action from a character pair:")
@@ -70,17 +69,14 @@ def delete_recent_action(matrix, characters):
     else:
         print(f"No actions recorded between {actor_name} and {target_name}.")
 
-
-def select_action():
+def select_action(action_names):
     print("\nSelect the action performed:")
-    print("1. \033[91mVote\033[0m")
-    print("2. \033[91mDoubt\033[0m")
-    print("3. \033[91mAgree\033[0m")
-    print("4. \033[94mCover\033[0m")
-    print("5. \033[94mDefend\033[0m")
-    print("6. \033[94mCollab\033[0m")
-    print("7. \033[91mExAgree\033[0m")
-    print("8. \033[94mExDefend\033[0m")
+    for number, action_name in action_names.items():
+        if action_name in ["Vote", "Doubt", "Agree", "Exaggerate Agree"]:
+            action_name = "\033[91m" + action_name + "\033[0m"
+        else:
+            action_name = "\033[94m" + action_name + "\033[0m"
+        print(f"{number}. {action_name}")
     print("z. Go back")
 
     action_choice = input("Select a role by number: ").strip()
@@ -95,11 +91,9 @@ def select_action():
         print("\033[31mInvalid input. Try again.\033[0m")
         return None
 
-
 def select_character(role_type):
     print(f"Select the {role_type} character:")
     return get_user_choice(display_character_names())
-
 
 def assign_roles(characters):
     role_symbols = {1: "🅰️", 2: "🕷️", 3: "🛠️", 4: "✙", 5: "☠️", 6: "🕊️", 7: "✳️"}
@@ -107,13 +101,8 @@ def assign_roles(characters):
 
     while True:
         print("\nAssign or Remove Roles:")
-        print("1. Gnosia (🅰️)")
-        print("2. AC Follower (🕷️)")
-        print("3. Engineer (🛠️)")
-        print("4. Doctor (✙)")
-        print("5. Bug (☠️)")
-        print("6. Guardian Angel (🕊️)")
-        print("7. Crew (✳️)")
+        for key in role_names:
+            print(f"{key}. {role_names[key]} ({role_symbols[key]})")
         print("z. Go back")
 
         role_choice = input("Select a role by number: ").strip()
@@ -138,7 +127,6 @@ def assign_roles(characters):
         symbol = role_symbols[role_choice]
         toggle_role(characters, char_index, symbol, role_names[role_choice])
 
-
 def toggle_role(characters, char_index, symbol, role_name):
     if symbol in characters[char_index]:
         characters[char_index] = characters[char_index].replace(symbol, "")
@@ -146,7 +134,6 @@ def toggle_role(characters, char_index, symbol, role_name):
     else:
         characters[char_index] += symbol
         print(f"Assigned {role_name} ({symbol}) to {characters[char_index]}.")
-
 
 def display_matrix(matrix, characters):
     col_widths = calculate_column_widths(matrix, characters)
@@ -160,12 +147,10 @@ def display_matrix(matrix, characters):
         colored_text = apply_color(row_line)
         print(f"{colored_text}\n")
 
-
 def calculate_column_widths(matrix, characters):
     col_widths = [max(len(characters[i]), max((len(";".join(actions)) for actions in column), default=0)) + 2
                   for i, column in enumerate(zip(*matrix))]
     return col_widths
-
 
 def build_header(characters, col_widths):
     header_width = max(len(name) for name in characters) + 2
@@ -174,7 +159,6 @@ def build_header(characters, col_widths):
     )
     return header
 
-
 def format_row(characters, i, row_data, col_widths):
     header_width = max(len(name) for name in characters) + 2
     row_line = characters[i].ljust(header_width) + "".join(
@@ -182,17 +166,11 @@ def format_row(characters, i, row_data, col_widths):
     )
     return row_line
 
-
 def apply_color(row_line):
     words_to_color = {
-        "Vote": "\033[31m",
-        "Doubt": "\033[31m",
-        "Agree": "\033[31m",
-        "Cover": "\033[34m",
-        "Defend": "\033[34m",
-        "Collab": "\033[34m",
-        "ExAgree": "\033[31m",
-        "ExDefend": "\033[34m"
+        "Vo": "\033[31m", "Dou": "\033[31m", "Ag": "\033[91m",
+        "Cov": "\033[34m", "Def": "\033[94m", "Col": "\033[34m",
+        "ExA": "\033[31m", "ExD": "\033[34m"
     }
     reset_color = "\033[0m"
 
@@ -204,7 +182,7 @@ def apply_color(row_line):
     return color_words(row_line, words_to_color)
 
 def show_stats():
-    print("\n1. \033[32mIntuition\033[0m")
+    print("1. \033[32mIntuition\033[0m")
     print("2. \033[35mPerformance\033[0m")
     # print("3. Logic")
     option = input("Enter your choice: ").strip()
@@ -228,10 +206,13 @@ def show_stats():
     else:
         print("\033[31mInvalid choice. Return to menu.\033[0m")
 
-def main():
+def initialize_table():
     characters = display_character_names()
     matrix = [[[] for _ in characters] for _ in characters]
+    return characters, matrix
 
+def main():
+    characters, matrix = initialize_table()
     while True:
         display_matrix(matrix, characters)
         print("Choose an option:")
@@ -252,14 +233,12 @@ def main():
         elif option == '4':
             show_stats()
         elif option =='9':
-            characters = display_character_names()
-            matrix = [[[] for _ in characters] for _ in characters]
+            characters, matrix = initialize_table()
         elif option == '0':
             print("Exiting...")
             break
         else:
-            print("\033[31mInvalid choice. Please select 1, 2, 3, or 9.\033[0m")
-
+            print("\033[31mInvalid choice. Please select 1, 2, 3, 9, or 0.\033[0m")
 
 if __name__ == "__main__":
     main()
