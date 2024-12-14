@@ -4,7 +4,7 @@ import re
 def display_character_names():
     return [
         "Me", "Setsu", "Gina", "SQ", "Raqio", "Shigemichi", "Stella", "Comet", "Chipie", "Jonas",
-        "Kukrushka", "Otome", "Remnan", "Sha-Ming", "Yuriko"
+        "Kukrushka", "Otome", "Sha-Ming", "Remnan", "Yuriko"
     ]
 
 
@@ -29,7 +29,7 @@ def get_user_choice(characters):
 
 
 def record_action(matrix, characters):
-    action_names = {1: "Vote", 2: "Doubt", 3: "Agree", 4: "Cover", 5: "Defend", 6: "Collab"}
+    action_names = {1: "Vote", 2: "Doubt", 3: "Agree", 4: "Cover", 5: "Defend", 6: "Collab", 7: "ExAgree", 8: "ExDefend"}
     action_choice = select_action()
 
     if action_choice not in action_names:
@@ -46,7 +46,7 @@ def record_action(matrix, characters):
     actor_name = characters[actor - 1]
     target_name = characters[target - 1]
 
-    matrix[actor - 1][target - 1].append(action.capitalize())
+    matrix[actor - 1][target - 1].append(action)
     print(f"Recorded: {actor_name} {action} {target_name}")
 
 
@@ -78,6 +78,8 @@ def select_action():
     print("4. \033[94mCover\033[0m")
     print("5. \033[94mDefend\033[0m")
     print("6. \033[94mCollab\033[0m")
+    print("7. \033[91mExAgree\033[0m")
+    print("8. \033[94mExDefend\033[0m")
     print("z. Go back")
 
     action_choice = input("Select a role by number: ").strip()
@@ -127,9 +129,10 @@ def assign_roles(characters):
             print("\033[31mInvalid input. Try again.\033[0m")
             continue
 
-        char_index = select_character("assign/remove") - 1
+        char_index = select_character("assign/remove")
         if char_index is None:
-            continue
+            continue  
+        char_index -= 1
 
         symbol = role_symbols[role_choice]
         toggle_role(characters, char_index, symbol, role_names[role_choice])
@@ -188,6 +191,8 @@ def apply_color(row_line):
         "Cover": "\033[34m",
         "Defend": "\033[34m",
         "Collab": "\033[34m",
+        "ExAgree": "\033[31m",
+        "ExDefend": "\033[34m"
     }
     reset_color = "\033[0m"
 
