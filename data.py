@@ -5,23 +5,31 @@ def get_character_list():
     ]
     return character_list
 
+def get_options():
+    options = {1: "Record an action", 2: "Delete the most recent action", 3: "Assign/Remove roles", 4: "Show character stats",
+               9: "Initialize table", 0: "Exit"}
+    return options
+
+
 def get_action_list():
     action_names = {1: "\033[91mVote\033[0m", 2: "\033[91mDoubt\033[0m", 3: "\033[91mAgree\033[0m", 4: "\033[94mCover\033[0m", 5: "\033[94mDefend\033[0m", 
-                    6: "\033[94mCollaborate\033[0m", 7: "\033[91mExaggerate Agree\033[0m", 8: "\033[94mExaggerate Defend\033[0m"}
-    action_names_abbr = {1: "Vo", 2: "Dou", 3: "Ag", 4: "Cov", 5: "Def", 6: "Col", 7: "ExA", 8: "ExD"}
+                    6: "\033[91mExaggerate Agree\033[0m", 7: "\033[94mExaggerate Defend\033[0m", 8: "\033[91mArgue\033[0m", 
+                    9: "\033[91mSeek Agreement\033[0m", 0: "\033[94mSeek Agreement\033[0m"}
+    action_names_abbr = {1: "Vo", 2: "Dou", 3: "Ag", 4: "Cov", 5: "Def", 6: "ExA", 7: "ExD", 8: "Arg", 9: "SeA", 0: "SeD"}
     return action_names, action_names_abbr
 
 def get_words_to_color():
     words_to_color = {
         "Vo": "\033[31m", "Dou": "\033[31m", "Ag": "\033[91m",
-        "Cov": "\033[34m", "Def": "\033[94m", "Col": "\033[34m",
-        "ExA": "\033[31m", "ExD": "\033[34m"
+        "Cov": "\033[34m", "Def": "\033[94m", "ExA": "\033[31m", 
+        "ExD": "\033[34m", "Arg": "\033[31m", "SeA": "\033[31m", 
+        "SeD": "\033[34m"
     }
     return words_to_color
 
 def get_roles_list():
-    role_symbols = {1: "🅰️", 2: "🕷️", 3: "🛠️", 4: "✙", 5: "☠️", 6: "🕊️", 7: "✳️"}
-    role_names = {1: "Gnosia", 2: "AC Follower", 3: "Engineer", 4: "Doctor", 5: "Bug", 6: "Guardian Angel", 7: "Crew"}
+    role_symbols = {1: "🅰️", 2: "🕷️", 3: "🛠️", 4: "⚕️", 5: "☠️", 6: "🕊️", 7: "✳️", 8: "⚠️", 9: "🔪", 10: "🧊"}
+    role_names = {1: "Gnosia", 2: "AC Follower", 3: "Engineer", 4: "Doctor", 5: "Bug", 6: "Guardian Angel", 7: "Crew", 8: "Enemy", 9: "Kiiled", 10: "Cold Sleep"}
     return role_symbols, role_names
 
 
