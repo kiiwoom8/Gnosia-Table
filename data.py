@@ -1,8 +1,9 @@
 def get_character_list():
-    return [
+    character_list = [
         "Me", "Setsu", "Gina", "SQ", "Raqio", "Shigemichi", "Stella", "Chipie", "Comet", "Jonas",
         "Kukurushka", "Otome", "Sha-Ming", "Remnan", "Yuriko"
     ]
+    return character_list
 
 def get_action_list():
     action_names = {1: "\033[91mVote\033[0m", 2: "\033[91mDoubt\033[0m", 3: "\033[91mAgree\033[0m", 4: "\033[94mCover\033[0m", 5: "\033[94mDefend\033[0m", 

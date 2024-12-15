@@ -85,7 +85,7 @@ def select_character(role_type):
     return get_user_choice(data.get_character_list())
 
 def assign_roles(characters):
-    role_symbols, role_names = data.get_get_roles_list()
+    role_symbols, role_names = data.get_roles_list()
 
     while True:
         print("\nAssign or Remove Roles:")
