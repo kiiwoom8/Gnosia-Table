@@ -116,7 +116,7 @@ class Main:
             char_index -= 1
 
             if role_choice in [9, 10]:
-                character = self.characters[char_index]
+                character = self.characters_original[char_index]
                 if character in self.words_to_color:
                     self.words_to_color.pop(character)
                 else:
@@ -185,6 +185,7 @@ class Main:
 
     def initialize_table(self):
         self.characters = data.get_character_list()
+        self.characters_original = data.get_character_list()
         self.matrix = [[[] for _ in self.characters] for _ in self.characters]
         self.words_to_color = data.get_words_to_color()
 
