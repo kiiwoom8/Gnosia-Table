@@ -2,10 +2,14 @@ import data
 
 def take_note(notes):
     while True:
+        if notes:
+            print("\n\033[32mYour Notes:\033[0m")
+            for idx, content in enumerate(notes, start=1):
+                print(f"{idx}. {content}")
+
         print("\nNotepad:")
         print("1. Take a note")
         print("2. Delete a note")
-        print("3. Read notes")
         print("z. Go back")
 
         option = input("Enter your choice: ").strip().lower()
@@ -17,7 +21,7 @@ def take_note(notes):
                 print("\033[31mNote content cannot be empty.\033[0m")
                 continue
             notes.append(content)
-            print("\033[32mNote added successfully.\033[0m")
+            print("Note added successfully.")
 
         elif option == '2':
             # Delete an existing note by number
@@ -39,22 +43,13 @@ def take_note(notes):
             except ValueError:
                 print("\033[31mInvalid input. Please enter a number.\033[0m")
 
-        elif option == '3':
-            # Read all notes with numbering
-            if not notes:
-                print("\033[31mNo notes available.\033[0m")
-            else:
-                print("\nYour Notes:")
-                for idx, content in enumerate(notes, start=1):
-                    print(f"{idx}. {content}")
-
         elif option == 'z':
             print("Returning to main menu...")
-            break
+            return notes
 
         else:
             print("\033[31mInvalid choice. Please select 1, 2, 3, or 'z'.\033[0m")
-
+        
 def show_stats():
     print("1. \033[32mIntuition\033[0m")
     print("2. \033[35mPerformance\033[0m")
