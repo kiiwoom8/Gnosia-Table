@@ -6,7 +6,7 @@ def get_character_list():
     return character_list
 
 def get_options():
-    options = {1: "Record an action", 2: "Delete the most recent action", 3: "Assign/Remove roles", 4: "Show character stats",
+    options = {1: "Record an action", 2: "Delete the most recent action", 3: "Assign/Remove roles", 5: "Show character stats",
                9: "Initialize table", 0: "Exit"}
     return options
 
