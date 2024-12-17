@@ -10,6 +10,7 @@ class Main:
 
     def initialize_all(self):
         self.characters = data.get_character_list()
+        self.original_characters_list = data.get_character_list()
         self.matrix = [[[] for _ in self.characters] for _ in self.characters]
         self.words_to_color = data.get_words_to_color()
         self.notes = []
@@ -24,6 +25,7 @@ def main():
         print ("3. Assign/Remove roles")
         print ("4. Notepad")
         print ("5. Show character stats")
+        print ("8. Remove character from the list")
         print ("9. Initialize table")
         print ("0. Exit")
         option = input("Enter your choice: ").strip()
@@ -33,11 +35,13 @@ def main():
         elif option == '2':
             m.matrix = actions.delete_recent_action(m.characters, m.matrix)
         elif option == '3':
-            m.characters, m.words_to_color = actions.assign_roles(m.characters, m.words_to_color)
+            m.characters, m.original_characters_list, m.words_to_color = actions.assign_roles(m.characters, m.original_characters_list, m.words_to_color)
         elif option == '4':
             m.notes = af.take_note(m.notes)
         elif option == '5':
             af.show_stats()
+        elif option == '8':
+            m.characters, m.original_characters_list, m.words_to_color = actions.remove_character_from_list(m.characters, m.original_characters_list, m.words_to_color)
         elif option =='9':
             m.initialize_all()
         elif option == '0':

@@ -2,13 +2,18 @@ import data
 
 def take_note(notes):
     while True:
+        draw_note_line()
+
         if notes:
             print("\n\033[32mYour Notes:\033[0m")
             for idx, content in enumerate(notes, start=1):
-                print(f"{idx}. {content}")
+                print(f"({idx}) {content}")
+        else:
+            print("\n\033[91m(No note)\033[0m")
 
-        print("\nNotepad:")
-        print("1. Take a note")
+        draw_note_line()
+
+        print("\n1. Take a note")
         print("2. Delete a note")
         print("z. Go back")
 
@@ -29,7 +34,7 @@ def take_note(notes):
                 print("\033[31mNo notes to delete.\033[0m")
                 continue
 
-            print("\nYour Notes:")
+            print("\nWhich record do you want to delete:")
             for idx, content in enumerate(notes, start=1):
                 print(f"{idx}. {content}")
 
@@ -37,7 +42,7 @@ def take_note(notes):
                 note_number = int(input("\nEnter the number of the note to delete: ").strip())
                 if 1 <= note_number <= len(notes):
                     deleted_note = notes.pop(note_number - 1)
-                    print(f"\033[32mNote '{deleted_note}' deleted successfully.\033[0m")
+                    print(f"Note '{deleted_note}' deleted successfully.")
                 else:
                     print("\033[31mInvalid number. Please try again.\033[0m")
             except ValueError:
@@ -50,10 +55,19 @@ def take_note(notes):
         else:
             print("\033[31mInvalid choice. Please select 1, 2, 3, or 'z'.\033[0m")
         
+def draw_note_line():
+    for _ in range(100):
+            print("\033[33m-\033[0m", end='')
+
 def show_stats():
-    print("1. \033[32mIntuition\033[0m")
-    print("2. \033[35mPerformance\033[0m")
-    # print("3. Logic")
-    option = input("Enter your choice: ").strip()
-    print()
-    data.print_stats(option)
+    while True:
+        print("\n1. \033[32mIntuition\033[0m")
+        print("2. \033[35mPerformance\033[0m")
+        print("z. Go back")
+        # print("3. Logic")
+        option = input("Enter your choice: ").strip()
+
+        if option.lower() == 'z':
+            return
+        
+        data.print_stats(option)

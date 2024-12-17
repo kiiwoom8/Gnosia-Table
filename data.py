@@ -1,8 +1,8 @@
 def get_character_list():
-    character_list = [
-        "Me", "Setsu", "Gina", "SQ", "Raqio", "Shigemichi", "Stella", "Chipie", "Comet", "Jonas",
-        "Kukurushka", "Otome", "Sha-Ming", "Remnan", "Yuriko"
-    ]
+    character_list = {
+        1: "Me", 2: "Setsu", 3: "Gina", 4: "SQ", 5: "Raqio", 6: "Shigemichi", 7: "Stella", 8: "Chipie", 9: "Comet", 10: "Jonas",
+        11: "Kukurushka", 12: "Otome", 13: "Sha-Ming", 14: "Remnan", 15: "Yuriko"
+    }
     return character_list
 
 def get_options():
@@ -23,7 +23,7 @@ def get_words_to_color():
         "Vo": "\033[31m", "Dou": "\033[31m", "Ag": "\033[91m",
         "Cov": "\033[34m", "Def": "\033[94m", "ExA": "\033[31m", 
         "ExD": "\033[34m", "Arg": "\033[31m", "SeA": "\033[31m", 
-        "SeD": "\033[34m"
+        "SeD": "\033[34m",
     }
     return words_to_color
 
@@ -34,6 +34,7 @@ def get_roles_list():
 
 
 def print_stats(option):
+    print()
     if option == '1':
         print("\033[32mIntuition\033[0m")
         print ("\033[31mStrongest\033[0m:")
