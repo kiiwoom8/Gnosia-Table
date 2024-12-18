@@ -1,6 +1,6 @@
-import re
 import data
-import actions
+import actions as a
+import handle_text
 import table_rendering as tr
 import additional_functions as af
 
@@ -17,31 +17,32 @@ class Main:
 
 def main():
     m = Main()
+    t = handle_text.HandleText()
     while True:
         tr.display_matrix(m.characters, m.matrix, m.words_to_color)
-        print("Choose an option:")
-        print ("1. Record an action")
-        print ("2. Delete the most recent action")
-        print ("3. Assign/Remove roles")
-        print ("4. Notepad")
-        print ("5. Show character stats")
-        print ("8. Remove character from the list")
-        print ("9. Initialize table")
-        print ("0. Exit")
-        option = input("Enter your choice: ").strip()
+        t.print("Choose an option:")
+        t.print ("1. Record an action")
+        t.print ("2. Delete the most recent action")
+        t.print ("3. Assign/Remove roles")
+        t.print ("4. Notepad")
+        t.print ("5. Show character stats")
+        t.print ("8. Remove character from the list")
+        t.print ("9. Initialize table")
+        t.print ("0. Exit")
+        option = t.input("Enter your choice: ").strip()
 
         if option == '1':
-            m.matrix = actions.record_action(m.characters, m.matrix)
+            m.matrix = a.record_action(m.characters, m.matrix)
         elif option == '2':
-            m.matrix = actions.delete_recent_action(m.characters, m.matrix)
+            m.matrix = a.delete_recent_action(m.characters, m.matrix)
         elif option == '3':
-            m.characters, m.original_characters_list, m.words_to_color = actions.assign_roles(m.characters, m.original_characters_list, m.words_to_color)
+            m.characters, m.original_characters_list, m.words_to_color = a.assign_roles(m.characters, m.original_characters_list, m.words_to_color)
         elif option == '4':
             m.notes = af.take_note(m.notes)
         elif option == '5':
             af.show_stats()
         elif option == '8':
-            m.characters, m.original_characters_list, m.words_to_color = actions.remove_character_from_list(m.characters, m.original_characters_list, m.words_to_color)
+            m.characters, m.original_characters_list, m.words_to_color = a.remove_character_from_list(m.characters, m.original_characters_list, m.words_to_color)
         elif option =='9':
             m.initialize_all()
         elif option == '0':
