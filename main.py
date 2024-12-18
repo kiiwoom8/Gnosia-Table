@@ -1,3 +1,4 @@
+import os
 import data
 import actions as a
 import handle_text
@@ -9,6 +10,7 @@ class Main:
         self.initialize_all()
 
     def initialize_all(self):
+        os.system("cls")
         self.characters = data.get_character_list()
         self.original_characters_list = data.get_character_list()
         self.matrix = [[[] for _ in self.characters] for _ in self.characters]
