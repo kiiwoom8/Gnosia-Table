@@ -19,10 +19,11 @@ def display_characters(characters):
 def validate_choice(user_input, characters):
     try:
         choice = int(user_input)
-        if choice in characters and " " not in characters[choice]:
-            return choice
-        elif " " in characters[choice]:
-            print("\033[31mRemoved character cannot be selected.\033[0m")
+        if choice in characters.keys():
+            if " " not in characters[choice]:
+                return choice
+            elif " " in characters[choice]:
+                print("\033[31mRemoved character cannot be selected.\033[0m")
         else:
             print(f"\033[31mPlease enter a number between 1 and {max(characters.keys())}.\033[0m")
     except ValueError:
