@@ -1,6 +1,6 @@
 def get_character_list():
     character_list = {
-        1: "Me", 2: "Setsu", 3: "Gina", 4: "SQ", 5: "Raqio", 6: "Shigemichi", 7: "Stella", 8: "Chipie", 9: "Comet", 10: "Jonas",
+        1: "Me", 2: "Setsu", 3: "Gina", 4: "SQ", 5: "Raqio", 6: "Stella", 7: "Shigemichi", 8: "Chipie", 9: "Comet", 10: "Jonas",
         11: "Kukurushka", 12: "Otome", 13: "Sha-Ming", 14: "Remnan", 15: "Yuriko"
     }
     return character_list
