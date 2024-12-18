@@ -42,7 +42,8 @@ def record_action(characters, matrix):
             continue
 
         action = action_names_abbr[action_choice]
-        actor = select_character(characters, "acting")
+        option = action_names[action_choice]
+        actor = select_character(characters, "acting", option)
         if actor is None:
             action_choice = -1
             continue
@@ -59,11 +60,11 @@ def record_action(characters, matrix):
         actor_name = characters[actor]
         target_name = characters[target]
         matrix[actor - 1][target - 1].append(action)
-        print(f"Recorded: {actor_name} {action} {target_name}")
+        print(f"Recorded: {actor_name} {option} {target_name}")
 
 def delete_recent_action(characters, matrix):
-    print("\nDelete the most recent action from a character pair:")
-    actor = select_character(characters, "actor")
+    option = "\033[91mDelete the most recent action from a character pair\033[0m"
+    actor = select_character(characters, "actor", option)
     if actor is None:
         return matrix
 
@@ -99,14 +100,19 @@ def select_action(action_names):
         print("\033[31mInvalid input. Try again.\033[0m")
         return None
 
-def select_character(characters, role_type):
+def select_character(characters, role_type, option = None):
+    if option:
+        print(f"\n{option}")
+    else:
+        print()
+        
     print(f"Select the {role_type} character:")
     return get_user_choice(characters)
 
 def assign_roles(characters, original_characters_list, words_to_color):
     role_symbols, role_names = data.get_roles_list()
     while True:
-        print("\nAssign or Remove Roles:")
+        print("\n\033[92mAssign or Remove Roles:\033[0m")
         display_roles(role_names, role_symbols)
         role_choice = input("Select a role by number: ").strip()
 
@@ -117,7 +123,7 @@ def assign_roles(characters, original_characters_list, words_to_color):
         role_choice = validate_role_choice(role_choice, role_symbols)
         if role_choice is None:
             continue
-
+        
         char_index = select_character(characters, "assign/remove")
         if char_index is None:
             continue  
@@ -152,22 +158,23 @@ def handle_role_assignment(characters, original_characters_list, words_to_color,
             words_to_color[character] = color_code
     else:
         symbol = role_symbols[role_choice]
-        characters = toggle_role(characters, char_index, symbol, role_names[role_choice])
+        characters = toggle_role(characters, original_characters_list, char_index, symbol, role_names[role_choice])
     
     return characters, words_to_color
 
-def toggle_role(characters, char_index, symbol, role_name):
+def toggle_role(characters, original_characters_list, char_index, symbol, role_name):
     if symbol in characters[char_index]:
         characters[char_index] = characters[char_index].replace(symbol, "")
         print(f"Removed {role_name} ({symbol}) from {characters[char_index]}.")
     else:
         characters[char_index] += symbol
-        print(f"Assigned {role_name} ({symbol}) to {characters[char_index]}.")
+        print(f"Assigned {role_name} ({symbol}) to {original_characters_list[char_index]}.")
     return characters
 
 def remove_character_from_list(characters, original_characters_list, words_to_color):
     while True:
-        choice = get_user_choice(characters)
+        option = "\033[31mRemove character\033[0m"
+        choice = select_character(characters, "target", option)
         if choice == None:
             return characters, original_characters_list, words_to_color
         else:

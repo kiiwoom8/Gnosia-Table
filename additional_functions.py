@@ -2,6 +2,7 @@ import data
 
 def take_note(notes):
     while True:
+        print()
         draw_note_line()
 
         if notes:
