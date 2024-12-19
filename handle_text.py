@@ -1,3 +1,6 @@
+import data
+import table_rendering
+
 class HandleText:
     def __init__(self):
         self.text_lines = 0
@@ -8,8 +11,8 @@ class HandleText:
         self.text_lines += 1
 
     def printr(self, text = ""):
-        print(text)
-        self.text_liner += 1
+        data.stored_texts += f"{text}\n"
+        table_rendering.print_table()
         
     def input(self, text):
         result = input(text)
@@ -21,12 +24,3 @@ class HandleText:
         for _ in range(self.text_lines):
             print("\033[F\033[K", end= "")
         self.text_lines = 0
-
-    def delete_textr(self):
-        for _ in range(self.text_liner):
-            print("\033[F\033[K", end= "")
-        self.text_liner = 0
-
-    def delete_all(self):
-        self.delete_text()
-        self.delete_textr()

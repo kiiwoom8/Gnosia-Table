@@ -1,8 +1,8 @@
 import os
 import data
-import actions as a
+import actions
 import handle_text
-import table_rendering as tr
+import table_rendering
 import additional_functions as af
 
 class Main:
@@ -10,28 +10,24 @@ class Main:
         self.initialize_all()
 
     def initialize_all(self):
-        self.characters = data.get_character_list()
-        self.original_characters_list = data.get_character_list()
-        self.removed_characters = {}
-        self.matrix = [[[] for _ in self.characters] for _ in self.characters]
-        self.words_to_color = data.get_words_to_color()
-        self.notes = []
-
-    def clear(self):
-        os.system("cls")
+        data.characters = data.get_character_list()
+        data.removed_characters = {}
+        data.matrix = [[[] for _ in data.characters] for _ in data.characters]
+        data.words_to_color = data.get_words_to_color()
+        data.notes = []
+        data.stored_texts = ""
 
 def main():
     m = Main()
     t = handle_text.HandleText()
     while True:
-        tr.display_matrix(m.characters, m.matrix, m.words_to_color)
+        table_rendering.print_table()
         t.print ("Choose an option:")
         t.print ("1. Record an action")
         t.print ("2. Delete the most recent action")
         t.print ("3. Assign/Remove roles")
         t.print ("4. Notepad")
-        t.print ("5. Clear screen")
-        t.print ("6. Show character stats")
+        t.print ("5. Show character stats")
         t.print ("7. Remove character from the list")
         t.print ("8. Restore removed characters")
         t.print ("9. Initialize table")
@@ -39,23 +35,20 @@ def main():
         option = t.input("Enter your choice: ").strip()
 
         if option == '1':
-            a.record_action(m.characters, m.matrix)
+            actions.record_action()
         elif option == '2':
-            a.delete_recent_action(m.characters, m.matrix)
+            actions.delete_recent_action()
         elif option == '3':
-            a.assign_roles(m.characters, m.original_characters_list, m.words_to_color)
+            actions.assign_roles()
         elif option == '4':
-            af.take_note(m.notes)
+            af.take_note()
         elif option == '5':
-            m.clear()
-        elif option == '6':
             af.show_stats()
         elif option == '7':
-            a.remove_character_from_list(m.characters, m.original_characters_list, m.removed_characters, m.words_to_color)
+            actions.remove_character_from_list()
         elif option == '8':
-            a.restore_removed_characters(m.characters, m.removed_characters)
+            actions.restore_removed_characters()
         elif option =='9':
-            m.clear()
             m.initialize_all()
         elif option == '0':
             print("Exiting...")

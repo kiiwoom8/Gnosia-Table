@@ -2,18 +2,23 @@ import data
 import handle_text
 
 t = handle_text.HandleText()
+tt = handle_text.HandleText()
 
-def take_note(notes):
+def delete_all():
+    t.delete_text()
+    tt.delete_text()
+
+def take_note():
     while True:
-        t.delete_all()
+        delete_all()
         draw_note_line()
 
-        if notes:
-            t.printr("\033[32mYour Notes:\033[0m")
-            for idx, content in enumerate(notes, start=1):
-                t.printr(f"({idx}) {content}")
+        if data.notes:
+            tt.print("\033[32mYour Notes:\033[0m")
+            for idx, content in enumerate(data.notes, start=1):
+                tt.print(f"({idx}) {content}")
         else:
-            t.printr("\033[91m(No note)\033[0m")
+            tt.print("\033[91m(No note)\033[0m")
 
         draw_note_line()
 
@@ -29,23 +34,23 @@ def take_note(notes):
             if not content:
                 t.print("\033[31mNote content cannot be empty.\033[0m")
                 continue
-            notes.append(content)
+            data.notes.append(content)
             t.print("Note added successfully.")
 
         elif option == '2':
             # Delete an existing note by number
-            if not notes:
+            if not data.notes:
                 t.print("\033[31mNo notes to delete.\033[0m")
                 continue
 
             t.print("Which record do you want to delete:")
-            for idx, content in enumerate(notes, start=1):
+            for idx, content in enumerate(data.notes, start=1):
                 t.print(f"{idx}. {content}")
 
             try:
                 note_number = int(t.input("Enter the number of the note to delete: ").strip())
-                if 1 <= note_number <= len(notes):
-                    deleted_note = notes.pop(note_number - 1)
+                if 1 <= note_number <= len(data.notes):
+                    deleted_note = data.notes.pop(note_number - 1)
                     t.print(f"Note '{deleted_note}' deleted successfully.")
                 else:
                     t.print("\033[31mInvalid number. Please try again.\033[0m")
@@ -53,7 +58,7 @@ def take_note(notes):
                 t.print("\033[31mInvalid input. Please enter a number.\033[0m")
 
         elif option == 'z':
-            t.delete_all()
+            delete_all()
             return
 
         else:
@@ -62,7 +67,7 @@ def take_note(notes):
 def draw_note_line():
     for _ in range(100):
         print("\033[33m-\033[0m", end='')
-    t.printr()
+    tt.print()
 
 def show_stats():
     while True:
@@ -75,4 +80,4 @@ def show_stats():
         if option.lower() == 'z':
             return
         
-        data.print_stats(option)
+        data.print_stats(option, t)
