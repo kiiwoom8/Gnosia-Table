@@ -1,3 +1,6 @@
+import actions
+import additional_functions
+
 characters = {}
 removed_characters = {}
 matrix = []
@@ -5,6 +8,15 @@ table = ""
 words_to_color = []
 notes = []
 stored_texts = ""
+
+def reset():
+    global characters, removed_characters, matrix, words_to_color, notes, stored_texts
+    characters = get_character_list()
+    removed_characters = {}
+    matrix = [[[] for _ in characters] for _ in characters]
+    words_to_color = get_words_to_color()
+    notes = []
+    stored_texts = ""
 
 def get_character_list():
     character_list = {
@@ -58,5 +70,29 @@ def print_stats(option, t):
         t.print ("Weakest:")
         t.print ("Min: Shigemichi (0.5), \033[94mGina (2)\033[0m, \033[33mComet (4.5)\033[0m, \033[32mStella (5)\033[0m")
         t.print ("Max: Shigemichi (6), \033[94mGina (13)\033[0m, \033[33mComet (16.5)\033[0m, \033[95mOtome (23)\033[0m, \033[92mChipie (26.5)\033[0m")
-    
+    else:
+        t.print("\033[91mInvalid input\033[0m")   
+
     t.print()
+
+def get_selections():
+    return {
+    1: {"title": "Record an action", 
+        "function": lambda: actions.record_action()}, 
+    2: {"title": "Delete the most recent action", 
+        "function": lambda: actions.delete_recent_action()}, 
+    3: {"title": "Assign/Remove roles", 
+        "function": lambda: actions.assign_roles()},
+    4: {"title": "Notepad", 
+        "function": lambda: additional_functions.take_note()}, 
+    6: {"title": "Show character stats", 
+        "function": lambda: additional_functions.show_stats()}, 
+    7: {"title": "Remove character from the list", 
+        "function": lambda: actions.remove_character_from_list()}, 
+    8: {"title": "Restore removed characters", 
+        "function": lambda: actions.restore_removed_characters()}, 
+    9: {"title": "Initialize table", 
+        "function": lambda: reset()}, 
+    0: {"title": "Exit", 
+        "function": lambda: actions.exit_program()}
+    }

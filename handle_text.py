@@ -4,7 +4,6 @@ import table_rendering
 class HandleText:
     def __init__(self):
         self.text_lines = 0
-        self.text_liner = 0
 
     def print(self, text = ""):
         print(text)

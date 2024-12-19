@@ -4,35 +4,6 @@ import handle_text
 
 t = handle_text.HandleText()
 
-def get_user_choice():
-    while True:
-        display_characters()
-        user_input = t.input("Enter the number for your choice (or 'z' to go back): ")
-        if user_input.lower() == 'z':
-            return None
-        choice = validate_choice(user_input)
-        if choice is not None:
-            return choice
-
-def display_characters():
-    for number, character in data.characters.items():
-        if character != " ":
-            t.print(f"{number}. {character}")
-
-def validate_choice(user_input):
-    try:
-        choice = int(user_input)
-        if choice in data.characters.keys():
-            if " " not in data.characters[choice]:
-                return choice
-            elif " " in data.characters[choice]:
-                t.print("\033[31mRemoved character cannot be selected.\033[0m")
-        else:
-            t.print(f"\033[31mPlease enter a number between 1 and {max(data.characters.keys())}: \033[0m ")
-    except ValueError:
-        t.print("\033[31mInvalid input. Please enter a number or 'z' to go back.\033[0m")
-    return None
-
 def record_action():
     action_names, action_names_abbr = data.get_action_list()
     action_choice = -1
@@ -69,6 +40,35 @@ def record_action():
         target_name = data.characters[target]
         data.matrix[actor - 1][target - 1].append(action)
         t.printr(f"\033[92mRecorded:\033[0m {actor_name} {option} {target_name}")
+
+def get_user_choice():
+    while True:
+        display_characters()
+        user_input = t.input("Enter the number for your choice (or 'z' to go back): ")
+        if user_input.lower() == 'z':
+            return None
+        choice = validate_choice(user_input)
+        if choice is not None:
+            return choice
+
+def display_characters():
+    for number, character in data.characters.items():
+        if character != " ":
+            t.print(f"{number}. {character}")
+
+def validate_choice(user_input):
+    try:
+        choice = int(user_input)
+        if choice in data.characters.keys():
+            if " " not in data.characters[choice]:
+                return choice
+            elif " " in data.characters[choice]:
+                t.print("\033[31mRemoved character cannot be selected.\033[0m")
+        else:
+            t.print(f"\033[31mPlease enter a number between 1 and {max(data.characters.keys())}: \033[0m ")
+    except ValueError:
+        t.print("\033[31mInvalid input. Please enter a number or 'z' to go back.\033[0m")
+    return None
 
 def delete_recent_action():
     while True:
@@ -200,3 +200,7 @@ def restore_removed_characters():
     for number, character in data.removed_characters.items():
                 data.characters[number] = character
     data.removed_characters = {}
+
+def exit_program():
+    print("Exiting...")
+    exit(0)

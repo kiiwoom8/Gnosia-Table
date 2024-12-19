@@ -36,7 +36,6 @@ def take_note():
                 continue
             data.notes.append(content)
             t.print("Note added successfully.")
-
         elif option == '2':
             # Delete an existing note by number
             if not data.notes:
@@ -56,11 +55,9 @@ def take_note():
                     t.print("\033[31mInvalid number. Please try again.\033[0m")
             except ValueError:
                 t.print("\033[31mInvalid input. Please enter a number.\033[0m")
-
         elif option == 'z':
             delete_all()
             return
-
         else:
             t.print("\033[31mInvalid choice. Please select 1, 2, 3, or 'z'.\033[0m")
         
