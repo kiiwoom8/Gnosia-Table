@@ -79,8 +79,8 @@ def delete_recent_action(characters, matrix):
         if target is None:
             return
 
-        actor_name = characters[actor - 1]
-        target_name = characters[target - 1]
+        actor_name = characters[actor]
+        target_name = characters[target]
         actions = matrix[actor - 1][target - 1]
         action_names, action_names_abbr = data.get_action_list()
         if actions:
