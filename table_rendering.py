@@ -1,11 +1,11 @@
 import re
 
-def display_matrix(characters, matrix, words_to_color, handle_text):
+def display_matrix(characters, matrix, words_to_color):
     col_widths = calculate_column_widths(characters, matrix)
     header = build_header(characters, col_widths, words_to_color)
-    handle_text.print()
-    handle_text.print(header)
-    handle_text.print("-" * len(header))
+    print()
+    print(header)
+    print("-" * len(header))
 
     rc_index = [i for i, name in enumerate(characters.values()) if name == " "]
 
@@ -26,8 +26,8 @@ def display_matrix(characters, matrix, words_to_color, handle_text):
                 char_names[j] = " "
 
         row_line = format_row(characters, i, row_data, col_widths)
-        handle_text.print(apply_color(words_to_color, row_line))
-        handle_text.print()
+        print(apply_color(words_to_color, row_line))
+        print()
 
 def calculate_column_widths(characters, matrix):
     char_names = [characters[key] for key in sorted(characters)]

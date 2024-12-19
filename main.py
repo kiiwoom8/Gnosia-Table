@@ -17,20 +17,20 @@ class Main:
         self.words_to_color = data.get_words_to_color()
         self.notes = []
 
-    def refresh(self):
+    def clear(self):
         os.system("cls")
 
 def main():
     m = Main()
     t = handle_text.HandleText()
     while True:
-        tr.display_matrix(m.characters, m.matrix, m.words_to_color, t)
+        tr.display_matrix(m.characters, m.matrix, m.words_to_color)
         t.print ("Choose an option:")
         t.print ("1. Record an action")
         t.print ("2. Delete the most recent action")
         t.print ("3. Assign/Remove roles")
         t.print ("4. Notepad")
-        t.print ("5. Refresh")
+        t.print ("5. Clear screen")
         t.print ("6. Show character stats")
         t.print ("7. Remove character from the list")
         t.print ("8. Restore removed characters")
@@ -47,7 +47,7 @@ def main():
         elif option == '4':
             af.take_note(m.notes)
         elif option == '5':
-            m.refresh()
+            m.clear()
         elif option == '6':
             af.show_stats()
         elif option == '7':
@@ -55,7 +55,7 @@ def main():
         elif option == '8':
             a.restore_removed_characters(m.characters, m.removed_characters)
         elif option =='9':
-            m.refresh()
+            m.clear()
             m.initialize_all()
         elif option == '0':
             print("Exiting...")
