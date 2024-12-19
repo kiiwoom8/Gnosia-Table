@@ -70,25 +70,27 @@ def record_action(characters, matrix):
         print(f"Recorded: {actor_name} {option} {target_name}")
 
 def delete_recent_action(characters, matrix):
-    actor = select_character(characters, "actor")
-    if actor is None:
-        return matrix
+    while True:
+        actor = select_character(characters, "actor")
+        if actor is None:
+            return matrix
 
-    target = select_character(characters, "target")
-    if target is None:
-        return matrix
+        target = select_character(characters, "target")
+        if target is None:
+            return matrix
 
-    actor_name = characters[actor - 1]
-    target_name = characters[target - 1]
-    actions = matrix[actor - 1][target - 1]
-
-    if actions:
-        removed_action = actions.pop()
-        t.print(f"Deleted: {actor_name} {removed_action} {target_name}")
-    else:
-        t.print(f"No actions recorded between {actor_name} and {target_name}.")
-    
-    return matrix
+        actor_name = characters[actor - 1]
+        target_name = characters[target - 1]
+        actions = matrix[actor - 1][target - 1]
+        action_names, action_names_abbr = data.get_action_list()
+        if actions:
+            removed_action = actions.pop()
+            key = next((k for k, v in action_names_abbr.items() if v == removed_action), None)
+            if key:
+                removed_action = action_names.get(key)
+            print(f"Deleted: {actor_name} {removed_action} {target_name}")
+        else:
+            t.print(f"No actions recorded between {actor_name} and {target_name}.")
 
 def select_action(action_names):
     while True:

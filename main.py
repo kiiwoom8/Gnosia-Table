@@ -10,24 +10,27 @@ class Main:
         self.initialize_all()
 
     def initialize_all(self):
-        os.system("cls")
         self.characters = data.get_character_list()
         self.original_characters_list = data.get_character_list()
         self.matrix = [[[] for _ in self.characters] for _ in self.characters]
         self.words_to_color = data.get_words_to_color()
         self.notes = []
 
+    def refresh(self):
+        os.system("cls")
+
 def main():
     m = Main()
     t = handle_text.HandleText()
     while True:
-        tr.display_matrix(m.characters, m.matrix, m.words_to_color)
-        t.print("Choose an option:")
+        tr.display_matrix(m.characters, m.matrix, m.words_to_color, t)
+        t.print ("Choose an option:")
         t.print ("1. Record an action")
         t.print ("2. Delete the most recent action")
         t.print ("3. Assign/Remove roles")
         t.print ("4. Notepad")
-        t.print ("5. Show character stats")
+        t.print ("5. Refresh")
+        t.print ("6. Show character stats")
         t.print ("8. Remove character from the list")
         t.print ("9. Initialize table")
         t.print ("0. Exit")
@@ -42,10 +45,13 @@ def main():
         elif option == '4':
             m.notes = af.take_note(m.notes)
         elif option == '5':
+            m.refresh()
+        elif option == '6':
             af.show_stats()
         elif option == '8':
             m.characters, m.original_characters_list, m.words_to_color = a.remove_character_from_list(m.characters, m.original_characters_list, m.words_to_color)
         elif option =='9':
+            m.refresh()
             m.initialize_all()
         elif option == '0':
             print("Exiting...")

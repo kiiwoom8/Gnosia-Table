@@ -53,6 +53,7 @@ def take_note(notes):
                 t.print("\033[31mInvalid input. Please enter a number.\033[0m")
 
         elif option == 'z':
+            t.delete_all()
             return notes
 
         else:
