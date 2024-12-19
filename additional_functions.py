@@ -54,7 +54,7 @@ def take_note(notes):
 
         elif option == 'z':
             t.delete_all()
-            return notes
+            return
 
         else:
             t.print("\033[31mInvalid choice. Please select 1, 2, 3, or 'z'.\033[0m")

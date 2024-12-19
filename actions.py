@@ -40,7 +40,7 @@ def record_action(characters, matrix):
             action_choice = select_action(action_names)
         
         if action_choice == -1:
-            return matrix
+            return
         elif action_choice not in action_names:
             continue
 
@@ -73,11 +73,11 @@ def delete_recent_action(characters, matrix):
     while True:
         actor = select_character(characters, "actor")
         if actor is None:
-            return matrix
+            return
 
         target = select_character(characters, "target")
         if target is None:
-            return matrix
+            return
 
         actor_name = characters[actor - 1]
         target_name = characters[target - 1]
@@ -122,7 +122,7 @@ def assign_roles(characters, original_characters_list, words_to_color):
         role_choice = t.input("Select a role by number: ").strip()
 
         if role_choice.lower() == 'z':
-            return characters, original_characters_list, words_to_color
+            return
 
         role_choice = validate_role_choice(role_choice, role_symbols)
         if role_choice is None:
@@ -154,12 +154,7 @@ def validate_role_choice(role_choice, role_symbols):
 
 def handle_role_assignment(characters, original_characters_list, words_to_color, role_choice, char_index, role_symbols, role_names):
     if role_choice in [9, 10]:
-        character = original_characters_list[char_index]
-        if character in words_to_color:
-            words_to_color.pop(character)
-        else:
-            color_code = "\033[31m" if role_choice == 9 else "\033[34m"
-            words_to_color[character] = color_code
+        toggle_color(original_characters_list, char_index, words_to_color, role_choice)
     else:
         symbol = role_symbols[role_choice]
         characters = toggle_role(characters, original_characters_list, char_index, symbol, role_names[role_choice])
@@ -175,11 +170,34 @@ def toggle_role(characters, original_characters_list, char_index, symbol, role_n
         print(f"Assigned {role_name} ({symbol}) to {original_characters_list[char_index]}.")
     return characters
 
-def remove_character_from_list(characters, original_characters_list, words_to_color):
+def toggle_color(original_characters_list, char_index, words_to_color, role_choice):
+    character = original_characters_list[char_index]
+    if character in words_to_color:
+        words_to_color.pop(character)
+        print(f"{character} is released from the state of being excepted.")
+    else:
+        if role_choice == 9:
+            color_code = "\033[31m"
+            state = "\033[31mkilled\033[0m"
+        else:
+            color_code = "\033[34m"
+            state = "\033[34mcold sleeped\033[0m"
+            
+        words_to_color[character] = color_code
+        print(f"{character} is {state}.")
+    return words_to_color
+
+def remove_character_from_list(characters, original_characters_list, removed_characters, words_to_color):
     while True:
         option = "\033[31mRemove character\033[0m"
         choice = select_character(characters, "target", option)
         if choice == None:
-            return characters, original_characters_list, words_to_color
+            return
         else:
+            removed_characters[choice] = characters[choice]
             characters[choice] = " "
+
+def restore_removed_characters(characters, removed_characters):
+    for number, character in removed_characters.items():
+                characters[number] = character
+    removed_characters = {}
