@@ -80,5 +80,8 @@ def show_stats():
         data.print_stats(option, t)
 
 def see_hostory():
-    print(data.history)
+    text = data.history
+    if not text:
+        text = "\033[91m(There's no history recoreded.)\033[0m\n"
+    print(text)
     input("Enter any key for exit: ").strip().lower()
