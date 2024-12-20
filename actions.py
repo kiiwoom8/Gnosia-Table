@@ -177,19 +177,22 @@ def toggle_role(char_index, symbol, role_name):
 
 def toggle_color(char_index, role_choice):
     character = data.get_character_list()[char_index]
-    if character in data.words_to_color:
-        data.words_to_color.pop(character)
-        t.printr(f"{character} is released from the state of being excepted.")
+
+    if role_choice == 9:
+        color_code = "\033[31m"
+        state = "\033[31mkilled\033[0m"
     else:
-        if role_choice == 9:
-            color_code = "\033[31m"
-            state = "\033[31mkilled\033[0m"
-        else:
-            color_code = "\033[34m"
-            state = "\033[34mcold sleeped\033[0m"
-            
-        data.words_to_color[character] = color_code
-        t.printr(f"{character} is {state}.")
+        color_code = "\033[34m"
+        state = "\033[34mcold sleeped\033[0m"
+
+    if character in data.words_to_color:
+        removed_color = data.words_to_color.pop(character)
+        if color_code == removed_color:
+            t.printr(f"{character} is released from the state of being excepted.")
+            return
+
+    data.words_to_color[character] = color_code
+    t.printr(f"{character} is {state}.")
 
 def remove_character_from_list():
     while True:
