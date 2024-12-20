@@ -6,37 +6,34 @@ t = handle_text.HandleText()
 
 def record_action():
     action_names, action_names_abbr = data.get_action_list()
-    action_choice = -1
+    action_choice = data.DEFAULT
     first = True
     while True:
-        if action_choice != 1:
-            action_choice = select_action(action_names)
-        else: # vote
+        if action_choice == data.VOTE:
             first = False
-        
-        if action_choice == -1: # z
-            return
-        elif action_choice not in action_names:
-            continue
+        else:
+            action_choice = select_action(action_names)
+            if action_choice == data.Z:
+                return
+            elif action_choice not in action_names:
+                continue
 
         action = action_names_abbr[action_choice]
         option = action_names[action_choice]
         actor = select_character("acting", option)
 
-        if actor is None:
+        if actor is data.Z:
             if not first:
                 return
             else:
-                action_choice = -1
+                action_choice = data.DEFAULT
                 continue
         
         actor_name = data.characters[actor]
-        if not actor_name:
-            actor_name = "\033[91mNone\033[0m"
-
         target = select_character("target", f"Acting character: {actor_name}")
-        if target is None:
-            action_choice = -1
+
+        if target is data.Z:
+            action_choice = data.DEFAULT
             continue
 
         if actor == target:
@@ -52,9 +49,9 @@ def get_user_choice():
         display_characters()
         user_input = t.input("Enter the number for your choice (or 'z' to go back): ")
         if user_input.lower() == 'z':
-            return None
+            return data.Z
         choice = validate_choice(user_input)
-        if choice is not None:
+        if choice is not data.INVALID:
             return choice
 
 def display_characters():
@@ -74,18 +71,18 @@ def validate_choice(user_input):
             t.print(f"\033[31mPlease enter a number between 1 and {max(data.characters.keys())}: \033[0m ")
     except ValueError:
         t.print("\033[31mInvalid input. Please enter a number or 'z' to go back.\033[0m")
-    return None
+    return data.INVALID
 
 def delete_recent_action():
     while True:
         table_rendering.print_table()
         actor = select_character("actor")
         actor_name = data.characters[actor]
-        if actor is None:
+        if actor is data.Z:
             return
 
         target = select_character("target", f"Acting character: {actor_name}")
-        if target is None:
+        if target is data.Z:
             return
 
         target_name = data.characters[target]
@@ -111,7 +108,7 @@ def select_action(action_names):
         action_choice = t.input("Select an action by number: ").strip()
 
         if action_choice.lower() == 'z':
-            return -1
+            return data.Z
         try:
             return int(action_choice)
         except ValueError:
@@ -134,11 +131,11 @@ def assign_roles():
             return
 
         role_choice = validate_role_choice(role_choice, role_symbols)
-        if role_choice is None:
+        if role_choice is data.INVALID:
             continue
         
         char_index = select_character("assign/remove", "\033[92mAssign/remove a role: \033[0m")
-        if char_index is None:
+        if char_index is data.Z:
             continue  
 
         handle_role_assignment(

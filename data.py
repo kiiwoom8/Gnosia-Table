@@ -1,14 +1,10 @@
 import actions
 import additional_functions
 
-characters = {}
-removed_characters = {}
-matrix = []
-table = ""
-words_to_color = []
-notes = []
-stored_texts = ""
-history = ""
+characters, removed_characters = {}, {}
+matrix, words_to_color, notes = [], [], []
+table, stored_texts, history = "", "", ""
+DEFAULT, Z, INVALID, VOTE =-1, -1, -1, 1
 
 def reset():
     global characters, removed_characters, matrix, words_to_color, notes, stored_texts, history
@@ -31,7 +27,6 @@ def get_options():
     options = {1: "Record an action", 2: "Delete the most recent action", 3: "Assign/Remove roles", 4: "Notepad", 5: "Show character stats",
                8: "Remove character from the list", 9: "Initialize table", 0: "Exit"}
     return options
-
 
 def get_action_list():
     action_names = {1: "\033[91mVote\033[0m", 2: "\033[91mDoubt\033[0m", 3: "\033[91mAgree\033[0m", 4: "\033[94mCover\033[0m", 5: "\033[94mDefend\033[0m", 
