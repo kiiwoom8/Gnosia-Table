@@ -8,15 +8,17 @@ table = ""
 words_to_color = []
 notes = []
 stored_texts = ""
+history = ""
 
 def reset():
-    global characters, removed_characters, matrix, words_to_color, notes, stored_texts
+    global characters, removed_characters, matrix, words_to_color, notes, stored_texts, history
     characters = get_character_list()
     removed_characters = {}
     matrix = [[[] for _ in characters] for _ in characters]
     words_to_color = get_words_to_color()
     notes = []
     stored_texts = ""
+    history = ""
 
 def get_character_list():
     character_list = {
@@ -85,8 +87,10 @@ def get_selections():
         "function": lambda: actions.assign_roles()},
     4: {"title": "Notepad", 
         "function": lambda: additional_functions.take_note()}, 
-    6: {"title": "Show character stats", 
+    5: {"title": "Show character stats", 
         "function": lambda: additional_functions.show_stats()}, 
+    6: {"title": "See the full history", 
+        "function": lambda: additional_functions.see_hostory()}, 
     7: {"title": "Remove character from the list", 
         "function": lambda: actions.remove_character_from_list()}, 
     8: {"title": "Restore removed characters", 

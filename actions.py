@@ -7,27 +7,33 @@ t = handle_text.HandleText()
 def record_action():
     action_names, action_names_abbr = data.get_action_list()
     action_choice = -1
+    first = True
     while True:
         if action_choice != 1:
             action_choice = select_action(action_names)
+        else: # vote
+            first = False
         
-        if action_choice == -1:
+        if action_choice == -1: # z
             return
         elif action_choice not in action_names:
             continue
 
         action = action_names_abbr[action_choice]
         option = action_names[action_choice]
-
         actor = select_character("acting", option)
 
         if actor is None:
-            action_choice = -1
-            continue
+            if not first:
+                return
+            else:
+                action_choice = -1
+                continue
         
         actor_name = data.characters[actor]
         if not actor_name:
             actor_name = "\033[91mNone\033[0m"
+
         target = select_character("target", f"Acting character: {actor_name}")
         if target is None:
             action_choice = -1

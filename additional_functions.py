@@ -78,3 +78,7 @@ def show_stats():
             return
         
         data.print_stats(option, t)
+
+def see_hostory():
+    print(data.history)
+    input("Enter any key for exit: ").strip().lower()

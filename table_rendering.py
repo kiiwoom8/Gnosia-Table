@@ -2,12 +2,9 @@ import re
 import os
 import data
 
-def clear():
-    os.system("cls")
-    
 def print_table():
     clear()
-    print(data.stored_texts)
+    print_history()
 
     col_widths = calculate_column_widths()
     header = build_header(col_widths)
@@ -19,7 +16,18 @@ def print_table():
     generate_characters(col_widths)
     print(data.table, end="")
 
+def delete_old_history():
+    lines = data.stored_texts.count("\n")
+    if lines > 5:
+        data.stored_texts = data.stored_texts.split("\n", 1)[1]
 
+def print_history():
+    delete_old_history()
+    print(data.stored_texts)
+
+def clear():
+    os.system("cls")
+    
 def generate_characters(col_widths):
     rc_index = [i for i, name in enumerate(data.characters.values()) if name == " "]
 
