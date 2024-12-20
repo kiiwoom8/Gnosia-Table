@@ -80,17 +80,18 @@ def delete_recent_action():
     while True:
         table_rendering.print_table()
         actor = select_character("actor")
+        actor_name = data.characters[actor]
         if actor is None:
             return
 
-        target = select_character("target")
+        target = select_character("target", f"Acting character: {actor_name}")
         if target is None:
             return
 
-        actor_name = data.characters[actor]
         target_name = data.characters[target]
         actions = data.matrix[actor - 1][target - 1]
         action_names, action_names_abbr = data.get_action_list()
+
         if actions:
             removed_action = actions.pop()
             key = next((k for k, v in action_names_abbr.items() if v == removed_action), None)
