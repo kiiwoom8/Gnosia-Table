@@ -13,8 +13,7 @@ def reset():
     matrix = [[[] for _ in characters] for _ in characters]
     words_to_color = get_words_to_color()
     notes = []
-    stored_texts = ""
-    history = ""
+    stored_texts, history = "", ""
 
 def get_character_list():
     character_list = {
