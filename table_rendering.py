@@ -62,8 +62,8 @@ def build_header(col_widths):
     data.table += f"{apply_color(header)}\n"
 def build_row_line(col_widths):
     for width in col_widths:
-        data.table += f"{"-" * width}"
-    data.table += f"{"-" * 12}\n"
+        data.table += f"{"─" * width}"
+    data.table += f"{"─" * 12}\n"
 
 def format_row(i, row_data, col_widths):
     char_names = [data.characters[key] for key in sorted(data.characters)]
