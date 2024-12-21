@@ -152,11 +152,11 @@ def validate_role_choice(role_choice, role_symbols):
         role_choice = int(role_choice)
         if role_choice not in role_symbols:
             t.print("Invalid role choice. Try again.")
-            return None
+            return data.INVALID
         return role_choice
     except ValueError:
         t.print("\033[31mInvalid input. Try again.\033[0m")
-        return None
+        return data.INVALID
 
 def handle_role_assignment(role_choice, char_index, role_symbols, role_names):
     if role_choice in [9, 10]:
