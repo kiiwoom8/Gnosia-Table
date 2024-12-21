@@ -151,7 +151,7 @@ def validate_role_choice(role_choice, role_symbols):
     try:
         role_choice = int(role_choice)
         if role_choice not in role_symbols:
-            t.print("Invalid role choice. Try again.")
+            t.print("\033[31mInvalid role choice. Try again.\033[0m")
             return data.INVALID
         return role_choice
     except ValueError:
