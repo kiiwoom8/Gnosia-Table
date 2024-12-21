@@ -39,8 +39,8 @@ def record_action():
             t.print("\033[31mCannot act on self. Please try again.\033[0m")
             continue
 
-        data.matrix[actor - 1][target - 1].append(action)
         action = action_names_abbr[action_choice]
+        data.matrix[actor - 1][target - 1].append(action)
         target_name = data.characters[target]
         t.printr(f"\033[92mRecorded:\033[0m {actor_name} {option} {target_name}")
 
