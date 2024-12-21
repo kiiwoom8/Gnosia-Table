@@ -197,7 +197,7 @@ def remove_character_from_list():
         table_rendering.print_table()
         option = "\033[31mRemove character\033[0m"
         choice = select_character("target", option)
-        if choice == None:
+        if choice == data.Z:
             return
         else:
             data.removed_characters[choice] = data.characters[choice]
