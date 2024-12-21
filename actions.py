@@ -202,10 +202,12 @@ def remove_character_from_list():
         else:
             data.removed_characters[choice] = data.characters[choice]
             data.characters[choice] = " "
+            t.printr(f"\033[31mRemoved\033[0m {data.removed_characters[choice]} from the list.")
 
 def restore_removed_characters():
     for number, character in data.removed_characters.items():
-                data.characters[number] = character
+        data.characters[number] = character
+        t.printr(f"\033[94mRestored\033[0m {character} to the list.")
     data.removed_characters = {}
 
 def exit_program():
