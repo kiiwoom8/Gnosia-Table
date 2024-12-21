@@ -77,10 +77,10 @@ def delete_recent_action():
     while True:
         table_rendering.print_table()
         actor = select_character("actor")
-        actor_name = data.characters[actor]
         if actor is data.Z:
             return
 
+        actor_name = data.characters[actor]
         target = select_character("target", f"Acting character: {actor_name}")
         if target is data.Z:
             return
