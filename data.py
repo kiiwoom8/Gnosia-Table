@@ -1,31 +1,28 @@
 import actions
 import additional_functions
 
-characters, removed_characters = {}, {}
-matrix, words_to_color, notes = [], [], []
-table, stored_texts, history = "", "", ""
 DEFAULT, Z, INVALID, VOTE =-1, -1, -1, 1
 
+characters, removed_characters, action_names, action_names_abbr, role_symbols, role_names = {}, {}, {}, {}, {}, {}
+matrix, words_to_color, notes, history = [], [], [], []
+table = ""
+
 def reset():
-    global characters, removed_characters, matrix, words_to_color, notes, stored_texts, history
+    global characters, removed_characters, matrix, action_names, action_names_abbr, role_symbols, role_names, words_to_color, notes, history
     characters = get_character_list()
-    removed_characters = {}
-    matrix = [[[] for _ in characters] for _ in characters]
     words_to_color = get_words_to_color()
-    notes = []
-    stored_texts, history = "", ""
+    matrix = [[[] for _ in characters] for _ in characters]
+    notes, history = [], []
+    removed_characters = {}
+    if not role_names or not role_symbols or not action_names or not action_names_abbr:
+        role_symbols, role_names = get_roles_list()
+        action_names, action_names_abbr = get_action_list()
 
 def get_character_list():
-    character_list = {
+    return {
         1: "Me", 2: "Setsu", 3: "Gina", 4: "SQ", 5: "Raqio", 6: "Stella", 7: "Shigemichi", 8: "Chipie", 9: "Comet", 10: "Jonas",
         11: "Kukurushka", 12: "Otome", 13: "Sha-Ming", 14: "Remnan", 15: "Yuriko"
     }
-    return character_list
-
-def get_options():
-    options = {1: "Record an action", 2: "Delete the most recent action", 3: "Assign/Remove roles", 4: "Notepad", 5: "Show character stats",
-               8: "Remove character from the list", 9: "Initialize table", 0: "Exit"}
-    return options
 
 def get_action_list():
     action_names = {1: "\033[91mVote\033[0m", 2: "\033[91mDoubt\033[0m", 3: "\033[91mAgree\033[0m", 4: "\033[94mCover\033[0m", 5: "\033[94mDefend\033[0m", 
@@ -34,20 +31,18 @@ def get_action_list():
     action_names_abbr = {1: "Vo", 2: "Dou", 3: "Ag", 4: "Cov", 5: "Def", 6: "ExA", 7: "ExD", 8: "Arg", 9: "SeA", 0: "SeD"}
     return action_names, action_names_abbr
 
-def get_words_to_color():
-    words_to_color = {
-        "Vo": "\033[31m", "Dou": "\033[31m", "Ag": "\033[91m",
-        "Cov": "\033[34m", "Def": "\033[94m", "ExA": "\033[31m", 
-        "ExD": "\033[34m", "Arg": "\033[31m", "SeA": "\033[31m", 
-        "SeD": "\033[34m",
-    }
-    return words_to_color
-
 def get_roles_list():
     role_symbols = {1: "🅰️", 2: "🕷️", 3: "🛠️", 4: "⚕️", 5: "☠️", 6: "🕊️", 7: "✳️", 8: "⚠️", 9: "🔪", 10: "🧊", 11: "👁️"}
     role_names = {1: "Gnosia", 2: "AC Follower", 3: "Engineer", 4: "Doctor", 5: "Bug", 6: "Guardian Angel", 7: "Crew", 8: "Enemy", 9: "Kiiled", 10: "Cold Sleep", 11: "Suspicous"}
     return role_symbols, role_names
 
+def get_words_to_color():
+    return {
+        "Vo": "\033[31m", "Dou": "\033[31m", "Ag": "\033[91m",
+        "Cov": "\033[34m", "Def": "\033[94m", "ExA": "\033[31m", 
+        "ExD": "\033[34m", "Arg": "\033[31m", "SeA": "\033[31m", 
+        "SeD": "\033[34m",
+    }
 
 def print_stats(option, t):
     if option == '1':
@@ -84,7 +79,7 @@ def get_selections():
     5: {"title": "Show character stats", 
         "function": lambda: additional_functions.show_stats()}, 
     6: {"title": "See the full history", 
-        "function": lambda: additional_functions.see_hostory()}, 
+        "function": lambda: additional_functions.see_full_hostory()}, 
     7: {"title": "Remove character from the list", 
         "function": lambda: actions.remove_character_from_list()}, 
     8: {"title": "Restore removed characters", 

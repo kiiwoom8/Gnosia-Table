@@ -4,26 +4,32 @@ import data
 
 def print_table():
     clear()
-    print_history()
-
+    print_recent_history()
     col_widths = calculate_column_widths()
     build_header(col_widths)
     build_row_line(col_widths)
     generate_characters(col_widths)
     print(data.table, end="")
 
-def delete_old_history():
-    lines = data.stored_texts.count("\n")
-    if lines > 5:
-        data.stored_texts = data.stored_texts.split("\n", 1)[1]
-
-def print_history():
-    delete_old_history()
-    print(data.stored_texts)
-
 def clear():
     os.system("cls")
+
+def print_recent_history():
+    if len(data.history) > 5:
+        history = data.history[-5:]
+    else:
+        history = data.history
+    for line in history:
+        print(line)
+    print()
     
+def calculate_column_widths():
+    char_names = [data.characters[key] for key in sorted(data.characters)]
+    return [
+        max(len(char_names[i]), max((len(";".join(actions)) for actions in column), default=0)) + 2
+        for i, column in enumerate(zip(*data.matrix))
+    ]
+
 def generate_characters(col_widths):
     rc_index = [i for i, name in enumerate(data.characters.values()) if name == " "]
 
@@ -46,13 +52,6 @@ def generate_characters(col_widths):
         row_line = format_row(i, row_data, col_widths)
         data.table += f"{apply_color(row_line)}\n\n"
 
-def calculate_column_widths():
-    char_names = [data.characters[key] for key in sorted(data.characters)]
-    return [
-        max(len(char_names[i]), max((len(";".join(actions)) for actions in column), default=0)) + 2
-        for i, column in enumerate(zip(*data.matrix))
-    ]
-
 def build_header(col_widths):
     header_width = max(len(name) for name in data.characters.values()) + 2
     header = "".ljust(header_width) + "".join(
@@ -60,6 +59,7 @@ def build_header(col_widths):
     )
     data.table = ""
     data.table += f"{apply_color(header)}\n"
+
 def build_row_line(col_widths):
     for width in col_widths:
         data.table += f"{"─" * width}"

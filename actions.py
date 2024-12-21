@@ -5,20 +5,19 @@ import handle_text
 t = handle_text.HandleText()
 
 def record_action():
-    action_names, action_names_abbr = data.get_action_list()
     action_choice = data.DEFAULT
     first = True
     while True:
         if action_choice == data.VOTE:
             first = False
         else:
-            action_choice = select_action(action_names)
+            action_choice = select_action()
             if action_choice == data.Z:
                 return
-            elif action_choice not in action_names:
+            elif action_choice not in data.action_names:
                 continue
 
-        option = action_names[action_choice]
+        option = data.action_names[action_choice]
         actor = select_character("acting", option)
 
         if actor is data.Z:
@@ -39,7 +38,7 @@ def record_action():
             t.print("\033[31mCannot act on self. Please try again.\033[0m")
             continue
 
-        action = action_names_abbr[action_choice]
+        action = data.action_names_abbr[action_choice]
         data.matrix[actor - 1][target - 1].append(action)
         target_name = data.characters[target]
         t.printr(f"\033[92mRecorded:\033[0m {actor_name} {option} {target_name}")
@@ -87,21 +86,20 @@ def delete_recent_action():
 
         target_name = data.characters[target]
         actions = data.matrix[actor - 1][target - 1]
-        action_names, action_names_abbr = data.get_action_list()
 
         if actions:
             removed_action = actions.pop()
-            key = next((k for k, v in action_names_abbr.items() if v == removed_action), None)
+            key = next((k for k, v in data.action_names_abbr.items() if v == removed_action), None)
             if key:
-                removed_action = action_names.get(key)
+                removed_action = data.action_names.get(key)
             t.printr(f"\033[91mDeleted:\033[0m {actor_name} {removed_action} {target_name}")
         else:
             t.print(f"No actions recorded between {actor_name} and {target_name}.")
 
-def select_action(action_names):
+def select_action():
     while True:
         t.print("Select the action performed:")
-        for number, action_name in action_names.items():
+        for number, action_name in data.action_names.items():
             t.print(f"{number}. {action_name}")
         t.print("z. Go back")
 
@@ -121,16 +119,15 @@ def select_character(role_type, option = None):
     return get_user_choice()
 
 def assign_roles():
-    role_symbols, role_names = data.get_roles_list()
     while True:
         t.print("\033[92mAssign or Remove Roles:\033[0m")
-        display_roles(role_names, role_symbols)
+        display_roles()
         role_choice = t.input("Select a role by number: ").strip()
 
         if role_choice.lower() == 'z':
             return
 
-        role_choice = validate_role_choice(role_choice, role_symbols)
+        role_choice = validate_role_choice(role_choice)
         if role_choice is data.INVALID:
             continue
         
@@ -138,19 +135,17 @@ def assign_roles():
         if char_index is data.Z:
             continue  
 
-        handle_role_assignment(
-            role_choice, char_index, role_symbols, role_names
-        )
+        handle_role_assignment(role_choice, char_index)
 
-def display_roles(role_names, role_symbols):
-    for key in role_names:
-        t.print(f"{key}. {role_names[key]} ({role_symbols[key]})")
+def display_roles():
+    for key in data.role_names:
+        t.print(f"{key}. {data.role_names[key]} ({data.role_symbols[key]})")
     t.print("z. Go back")
 
-def validate_role_choice(role_choice, role_symbols):
+def validate_role_choice(role_choice):
     try:
         role_choice = int(role_choice)
-        if role_choice not in role_symbols:
+        if role_choice not in data.role_symbols:
             t.print("\033[31mInvalid role choice. Try again.\033[0m")
             return data.INVALID
         return role_choice
@@ -158,12 +153,12 @@ def validate_role_choice(role_choice, role_symbols):
         t.print("\033[31mInvalid input. Try again.\033[0m")
         return data.INVALID
 
-def handle_role_assignment(role_choice, char_index, role_symbols, role_names):
+def handle_role_assignment(role_choice, char_index):
     if role_choice in [9, 10]:
         toggle_color(char_index, role_choice)
     else:
-        symbol = role_symbols[role_choice]
-        toggle_role(char_index, symbol, role_names[role_choice])
+        symbol = data.role_symbols[role_choice]
+        toggle_role(char_index, symbol, data.role_names[role_choice])
 
 def toggle_role(char_index, symbol, role_name):
     if symbol in data.characters[char_index]:

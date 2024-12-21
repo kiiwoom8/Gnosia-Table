@@ -10,9 +10,7 @@ class HandleText:
         self.text_lines += 1
 
     def printr(self, text = ""):
-        new_record = f"{text}\n"
-        data.stored_texts += new_record
-        data.history += new_record
+        data.history.append(text)
         table_rendering.print_table()
         
     def input(self, text):

@@ -12,22 +12,18 @@ def take_note():
     while True:
         delete_all()
         draw_note_line()
-
         if data.notes:
             tt.print("\033[32mYour Notes:\033[0m")
             for idx, content in enumerate(data.notes, start=1):
                 tt.print(f"({idx}) {content}")
         else:
             tt.print("\033[91m(No note)\033[0m")
-
         draw_note_line()
-
         t.print("1. Take a note")
         t.print("2. Delete a note")
         t.print("z. Go back")
 
         option = t.input("Enter your choice: ").strip().lower()
-
         if option == '1':
             # Add a new note
             content = t.input("Enter the note content: ").strip()
@@ -79,9 +75,13 @@ def show_stats():
         
         data.print_stats(option, t)
 
-def see_hostory():
-    text = data.history
-    if not text:
+def see_full_hostory():
+    text = ""
+    history = data.history
+    if history:
+        for line in history:
+            text += f"{line}\n"
+    else:
         text = "\033[91m(There's no history recoreded.)\033[0m\n"
     print(text)
     input("Enter any key for exit: ").strip().lower()
