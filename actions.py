@@ -32,7 +32,7 @@ def vote(option):
     vote_choice = t.input("Select an action by number: ").strip()
     if vote_choice == '1':
         for num, char in data.characters.items():
-            if char not in [" ", "Me"]:
+            if char != " " and char[:2] != "Me":
                 target, record, action_choice = get_target(num, action_choice)
                 if action_choice == data.Z:
                     break
@@ -226,7 +226,7 @@ def remove_character_from_list():
             return
         elif len(data.characters.keys()) - list(data.characters.values()).count(" ") <= 2:
             t.printr("\033[31mThere should be at least 2 characters in the list.\033[0m")
-        elif data.characters[choice] == "Me":
+        elif data.characters[choice][:2] == "Me":
             t.printr("\033[31mCannot remove the character of player.\033[0m")
         else:
             data.removed_characters[choice] = data.characters[choice]
