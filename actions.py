@@ -32,12 +32,15 @@ def vote(option):
     vote_choice = t.input("Select an action by number: ").strip()
     if vote_choice == '1':
         for num, char in data.characters.items():
-            if char != " " and char[:2] != "Me":
-                target, record, action_choice = get_target(num, action_choice)
-                if action_choice == data.Z:
-                    break
-                elif record == True:
-                    record_action(action_choice, num, target, option)
+            if char != " " and char[:2] != "Me" and char not in data.words_to_color:
+                target = 0
+                while target != data.INVALID:
+                    target, record, action_choice = get_target(num, action_choice)
+                    if action_choice == data.Z:
+                        return data.DEFAULT, False
+                    elif record == True:
+                        record_action(action_choice, num, target, option)
+                        break
     elif vote_choice == '2':
         common = True
     elif vote_choice.lower() == 'z':
@@ -72,16 +75,6 @@ def record_action(action_choice, actor, target, option):
     data.matrix[actor - 1][target - 1].append(action)
     target_name = data.characters[target]
     t.printr(f"\033[92mRecorded:\033[0m {data.characters[actor]} {option} {target_name}")
-
-def get_user_choice():
-    while True:
-        # display_characters()
-        user_input = t.input("Enter the number for your choice (or 'z' to go back): ")
-        if user_input.lower() == 'z':
-            return data.Z
-        choice = validate_choice(user_input)
-        if choice is not data.INVALID:
-            return choice
 
 def display_characters():
     for number, character in data.characters.items():
@@ -143,10 +136,17 @@ def select_action():
             t.print("\033[31mInvalid input. Try again.\033[0m")
 
 def select_character(role_type, option = None):
-    if option:
-        print(f"{option}")
-    t.print(f"Select the {role_type} character:")
-    return get_user_choice()
+    while True:
+        if option:
+            t.print(f"{option}")
+        t.print(f"Select the {role_type} character.")
+        # display_characters()
+        user_input = t.input("Enter the number for your choice (or 'z' to go back): ")
+        if user_input.lower() == 'z':
+            return data.Z
+        choice = validate_choice(user_input)
+        if choice is not data.INVALID:
+            return choice
 
 def assign_roles():
     while True:
