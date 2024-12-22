@@ -1,7 +1,7 @@
 import actions
 import additional_functions
 
-DEFAULT, Z, INVALID, VOTE =-1, -1, -1, 1
+DEFAULT, Z, INVALID, VOTE =-1, -1, -2, 1
 
 characters, numbered_characters, removed_characters, action_names, action_names_abbr, role_symbols, role_names = {}, {}, {}, {}, {}, {}, {}
 matrix, words_to_color, notes, history = [], [], [], []
