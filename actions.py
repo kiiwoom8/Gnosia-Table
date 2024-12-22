@@ -32,12 +32,12 @@ def vote(option):
     vote_choice = t.input("Select an action by number: ").strip()
     if vote_choice == '1':
         for num, char in data.characters.items():
-            if char != " ":
+            if char not in [" ", "Me"]:
                 target, record, action_choice = get_target(num, action_choice)
                 if action_choice == data.Z:
                     break
-            if record == True:
-                record_action(action_choice, num, target, option)
+                elif record == True:
+                    record_action(action_choice, num, target, option)
     elif vote_choice == '2':
         common = True
     elif vote_choice.lower() == 'z':
@@ -144,7 +144,7 @@ def select_action():
 
 def select_character(role_type, option = None):
     if option:
-        t.print(f"{option}")
+        print(f"{option}")
     t.print(f"Select the {role_type} character:")
     return get_user_choice()
 
@@ -161,7 +161,7 @@ def assign_roles():
         if role_choice is data.INVALID:
             continue
         
-        char_index = select_character("assign/remove", "\033[92mAssign/remove a role: \033[0m")
+        char_index = select_character("assign/remove", f"\033[92mAssign\033[0m/\033[91mremove\033[0m a role ({data.role_symbols[role_choice]}): ")
         if char_index is data.Z:
             continue  
 
@@ -226,6 +226,8 @@ def remove_character_from_list():
             return
         elif len(data.characters.keys()) - list(data.characters.values()).count(" ") <= 2:
             t.printr("\033[31mThere should be at least 2 characters in the list.\033[0m")
+        elif data.characters[choice] == "Me":
+            t.printr("\033[31mCannot remove the character of player.\033[0m")
         else:
             data.removed_characters[choice] = data.characters[choice]
             data.characters[choice] = " "
