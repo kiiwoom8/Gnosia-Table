@@ -3,7 +3,7 @@ import additional_functions
 
 DEFAULT, Z, INVALID, VOTE =-1, -1, -1, 1
 
-characters, removed_characters, action_names, action_names_abbr, role_symbols, role_names = {}, {}, {}, {}, {}, {}
+characters, numbered_characters, removed_characters, action_names, action_names_abbr, role_symbols, role_names = {}, {}, {}, {}, {}, {}, {}
 matrix, words_to_color, notes, history = [], [], [], []
 table = ""
 
@@ -23,6 +23,19 @@ def get_character_list():
         1: "Me", 2: "Setsu", 3: "Gina", 4: "SQ", 5: "Raqio", 6: "Stella", 7: "Shigemichi", 8: "Chipie", 9: "Comet", 10: "Jonas",
         11: "Kukurushka", 12: "Otome", 13: "Sha-Ming", 14: "Remnan", 15: "Yuriko"
     }
+
+def set_numbered_character_list():
+    global characters, numbered_characters
+    numbered_characters = {}
+    for num, char in characters.items():
+        if char == " ":
+            numbered_characters[num] = char
+        else:
+            if num < 10:
+                numbered_characters[num] = f" {num}. {char}"
+            else:
+                numbered_characters[num] = f"{num}. {char}"
+    return numbered_characters
 
 def get_action_list():
     action_names = {1: "\033[91mVote\033[0m", 2: "\033[91mDoubt\033[0m", 3: "\033[91mAgree\033[0m", 4: "\033[94mCover\033[0m", 5: "\033[94mDefend\033[0m", 
@@ -69,7 +82,7 @@ def print_stats(option, t):
 def get_selections():
     return {
     1: {"title": "Record an action", 
-        "function": lambda: actions.record_action()}, 
+        "function": lambda: actions.act()}, 
     2: {"title": "Delete the most recent action", 
         "function": lambda: actions.delete_recent_action()}, 
     3: {"title": "Assign/Remove roles", 

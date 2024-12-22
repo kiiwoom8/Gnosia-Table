@@ -5,6 +5,7 @@ import data
 def print_table():
     clear()
     print_recent_history()
+    data.set_numbered_character_list()
     col_widths = calculate_column_widths()
     build_header(col_widths)
     build_row_line(col_widths)
@@ -15,8 +16,8 @@ def clear():
     os.system("cls")
 
 def print_recent_history():
-    if len(data.history) > 5:
-        history = data.history[-5:]
+    if len(data.history) > 3:
+        history = data.history[-3:]
     else:
         history = data.history
     for line in history:
@@ -31,10 +32,10 @@ def calculate_column_widths():
     ]
 
 def generate_characters(col_widths):
-    rc_index = [i for i, name in enumerate(data.characters.values()) if name == " "]
+    rc_index = [i for i, name in enumerate(data.numbered_characters.values()) if name == " "]
 
     for i, row in enumerate(data.matrix):
-        char_names = [data.characters[key] for key in sorted(data.characters)]
+        char_names = [data.numbered_characters[key] for key in sorted(data.numbered_characters)]
         char_names[i] = " " if char_names[i] != " " else char_names[i]
 
         if i in rc_index:
@@ -53,7 +54,7 @@ def generate_characters(col_widths):
         data.table += f"{apply_color(row_line)}\n\n"
 
 def build_header(col_widths):
-    header_width = max(len(name) for name in data.characters.values()) + 2
+    header_width = max(len(name) for name in data.numbered_characters.values()) + 2
     header = "".ljust(header_width) + "".join(
         char.ljust(col_widths[i]) for i, char in enumerate(data.characters.values())
     )
@@ -63,10 +64,10 @@ def build_header(col_widths):
 def build_row_line(col_widths):
     for width in col_widths:
         data.table += f"{"─" * width}"
-    data.table += f"{"─" * 12}\n"
+    data.table += f"{"─" * 15}\n"
 
 def format_row(i, row_data, col_widths):
-    char_names = [data.characters[key] for key in sorted(data.characters)]
+    char_names = [data.numbered_characters[key] for key in sorted(data.numbered_characters)]
     header_width = max(len(name) for name in char_names) + 2
     return char_names[i].ljust(header_width) + "".join(
         row_data[j].ljust(col_widths[j]) for j in range(len(row_data))

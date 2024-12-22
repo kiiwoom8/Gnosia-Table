@@ -3,49 +3,79 @@ import table_rendering
 import handle_text
 
 t = handle_text.HandleText()
-
-def record_action():
-    action_choice = data.DEFAULT
-    first = True
-    while True:
-        if action_choice == data.VOTE:
-            first = False
-        else:
-            action_choice = select_action()
-            if action_choice == data.Z:
-                return
-            elif action_choice not in data.action_names:
-                continue
-
-        option = data.action_names[action_choice]
-        actor = select_character("acting", option)
-
-        if actor is data.Z:
-            if not first:
-                return
-            else:
-                action_choice = data.DEFAULT
-                continue
         
-        actor_name = data.characters[actor]
-        target = select_character("target", f"Acting character: {actor_name}")
-
-        if target is data.Z:
-            action_choice = data.DEFAULT
+def act():
+    action_choice = data.DEFAULT
+    while True:
+        common = True
+        action_choice = select_action()
+        if action_choice == data.Z:
+            return
+        elif action_choice not in data.action_names:
             continue
+        option = data.action_names[action_choice]
 
-        if actor == target:
-            t.print("\033[31mCannot act on self. Please try again.\033[0m")
-            continue
+        if action_choice == data.VOTE:
+            action_choice, common = vote(option)
+        if common == True:
+            actor, record, action_choice = get_actor(option, action_choice)
+            target, record, action_choice = get_target(actor, action_choice, record)
+            if record == True:
+                record_action(action_choice, actor, target, option)
 
-        action = data.action_names_abbr[action_choice]
-        data.matrix[actor - 1][target - 1].append(action)
-        target_name = data.characters[target]
-        t.printr(f"\033[92mRecorded:\033[0m {actor_name} {option} {target_name}")
+def vote(option):
+    action_choice = data.VOTE
+    common = False
+    t.print("1. \033[91mStart the vote!\033[0m")
+    t.print("2. Vote")
+    t.print("z. Go back")
+    vote_choice = t.input("Select an action by number: ").strip()
+    if vote_choice == '1':
+        for num, char in data.characters.items():
+            if char != " ":
+                target, record, action_choice = get_target(num, action_choice)
+                if action_choice == data.Z:
+                    break
+            if record == True:
+                record_action(action_choice, num, target, option)
+    elif vote_choice == '2':
+        common = True
+    elif vote_choice.lower() == 'z':
+        action_choice = data.DEFAULT
+    return action_choice, common
+
+def get_actor(option, action_choice):
+    actor = select_character("acting", option)
+    if actor is data.Z:
+        action_choice = data.DEFAULT
+        record = False
+    else:
+        record = True
+    return actor, record, action_choice
+
+def get_target(actor, action_choice, record = True):
+    if record == False:
+        return data.INVALID, record, data.INVALID
+    target = select_character("target", f"Acting character: \033[91m{data.characters[actor]}\033[0m")
+    if target is data.Z:
+        action_choice = data.DEFAULT
+        record = False
+    elif actor == target:
+        t.print("\033[31mCannot act on self. Please try again.\033[0m")
+        record = False
+    else: 
+        record = True
+    return target, record, action_choice
+    
+def record_action(action_choice, actor, target, option):
+    action = data.action_names_abbr[action_choice]
+    data.matrix[actor - 1][target - 1].append(action)
+    target_name = data.characters[target]
+    t.printr(f"\033[92mRecorded:\033[0m {data.characters[actor]} {option} {target_name}")
 
 def get_user_choice():
     while True:
-        display_characters()
+        # display_characters()
         user_input = t.input("Enter the number for your choice (or 'z' to go back): ")
         if user_input.lower() == 'z':
             return data.Z
@@ -194,6 +224,8 @@ def remove_character_from_list():
         choice = select_character("target", option)
         if choice == data.Z:
             return
+        elif len(data.characters.keys()) - list(data.characters.values()).count(" ") <= 2:
+            t.printr("\033[31mThere should be at least 2 characters in the list.\033[0m")
         else:
             data.removed_characters[choice] = data.characters[choice]
             data.characters[choice] = " "
