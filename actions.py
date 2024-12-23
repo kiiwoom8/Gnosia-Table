@@ -7,31 +7,24 @@ t = handle_text.HandleText()
 def act():
     while True:
         action_choice = select_action()
-        if action_choice == data.Z:
+        if action_choice == data.Z or action_choice not in data.action_list:
             return
-        if action_choice not in data.action_list:
-            continue
         action_name = data.action_list[action_choice]["Name"]
-        if action_choice == data.VOTE:
-            handle_vote(action_name)
-        else:
-            record_action(action_choice, action_name)
+        (handle_vote if action_choice == data.VOTE else record_action)(action_choice, action_name)
 
 def record_action(action_choice: int, action_name: str, actor_target: list = None):
     actor_target = actor_target or []
-    
     if actor_target:
-        actor, target = actor_target[0], actor_target[1]
+        actor, target = actor_target
     else:
         actor, valid = get_actor(action_name)
         if not valid or actor in [data.Z, data.PASS]:
             return
-
         target, valid = get_target(actor)
         if not valid or target in [data.Z, data.PASS]:
             return
-    
-    action = data.action_list[action_choice]["Abbr"]
+        
+    action = data.action_list.get(action_choice, {}).get("Abbr")
     if not action:
         t.print("\033[91mError: Invalid action choice.\033[0m")
         return
@@ -40,8 +33,7 @@ def record_action(action_choice: int, action_name: str, actor_target: list = Non
     target_name = data.characters.get(target, "Unknown Target")
     t.printr(f"\033[92mRecorded:\033[0m {data.characters[actor]} {action_name} {target_name}")
 
-def handle_vote(action_name: str):
-    action_choice = data.VOTE
+def handle_vote(action_choice, action_name: str):
     t.print("1. \033[91mStart the vote!\033[0m")
     t.print("2. Vote")
     t.print("z. Go back")
@@ -53,7 +45,7 @@ def handle_vote(action_name: str):
             if char != " " and not char.startswith("Me") and char not in data.words_to_color:
                 target, record = get_target(num)
                 if target == data.Z:
-                    return False  # Exit if 'Z' is selected
+                    return False
                 elif target == data.PASS:
                     continue
                 if record:
@@ -85,17 +77,16 @@ def display_characters():
         if character != " ":
             t.print(f"{number}. {character}")
 
-def validate_choice(user_input):
+def validate_choice(user_input, choice_type='character'):
     try:
         choice = int(user_input)
-        if choice in data.characters.keys():
-            if " " not in data.characters[choice]:
+        if choice_type == 'character':
+            if choice in data.characters.keys() and " " not in data.characters[choice]:
                 return choice
-            elif " " in data.characters[choice]:
-                t.print("\033[31mRemoved character cannot be selected.\033[0m")
-        else:
-            t.print(f"\033[31mPlease enter a number between 1 and {max(data.characters.keys())}: \033[0m ")
-    except ValueError:
+        elif choice_type == 'role' and choice in data.roles.keys():
+            return choice
+        t.print("\033[31mInvalid choice. Try again.\033[0m")
+    except (ValueError, KeyError):
         pass
     return data.INVALID
 
@@ -118,8 +109,8 @@ def delete_recent_action():
             removed_action = actions.pop()
             key = next((action_num for action_num, action in data.action_list.items() if action["Abbr"] == removed_action), None)
             if key:
-                removed_action = data.action_list.get(key)
-            t.printr(f"\033[91mDeleted:\033[0m {actor_name} {removed_action["Name"]} {target_name}")
+                removed_action = data.action_list[key]
+            t.printr(f"\033[91mDeleted:\033[0m {actor_name} {removed_action['Name']} {target_name}")
 
 def select_action():
     while True:
@@ -159,7 +150,7 @@ def assign_roles():
         if role_choice.lower() == 'z':
             return
 
-        role_choice = validate_role_choice(role_choice)
+        role_choice = validate_choice(role_choice, 'role')
         if role_choice is data.INVALID:
             continue
         
@@ -173,17 +164,6 @@ def display_roles():
     for role_num, role in data.roles.items():
         t.print(f"{role_num}. {role["Name"]} ({role["Symbol"]})")
     t.print("z. Go back")
-
-def validate_role_choice(role_choice):
-    try:
-        role_choice = int(role_choice)
-        if role_choice not in list(data.roles.keys()):
-            t.print("\033[31mInvalid role choice. Try again.\033[0m")
-            return data.INVALID
-    except ValueError:
-        t.print("\033[31mInvalid input. Try again.\033[0m")
-        return data.INVALID
-    return role_choice
 
 def toggle_role(char_index, role_choice):
     role_name = data.roles[role_choice]["Name"]

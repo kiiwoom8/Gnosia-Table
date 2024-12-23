@@ -2,7 +2,7 @@ import actions
 import additional_functions
 
 DEFAULT, Z, INVALID, PASS, VOTE =-1, -1, -2, -3, 1,
-RED, BLUE, RESET = "\033[91m", "\033[94m", "\033[0m"
+RED, BLUSH, LBLUE, BLUE, RESET = "\033[31m", "\033[91m", "\033[94m", "\033[34m", "\033[0m"
 
 numbered_characters, removed_characters, current_roles = {}, {}, {}
 matrix, words_to_color, notes, history = [], [], [], []
@@ -33,9 +33,9 @@ action_list = {
     for i, (name, abbr, color) in enumerate([
         ("Vote", "Vo", RED),
         ("Doubt", "Dou", RED),
-        ("Agree", "Ag", RED),
+        ("Agree", "Ag", BLUSH),
         ("Cover", "Cov", BLUE),
-        ("Defend", "Def", BLUE),
+        ("Defend", "Def", LBLUE),
         ("Exaggerate Agree", "ExA", RED),
         ("Exaggerate Defend", "ExD", BLUE),
         ("Argue", "Arg", RED),
