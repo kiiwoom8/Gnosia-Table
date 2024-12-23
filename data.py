@@ -9,10 +9,10 @@ matrix, words_to_color, notes, history = [], [], [], []
 table = ""
 
 characters = {
-        1: "Me", 2: "Setsu", 3: "Gina", 4: "SQ", 5: "Raqio", 6: "Stella", 
-        7: "Shigemichi", 8: "Chipie", 9: "Comet", 10: "Jonas", 11: "Kukurushka", 
-        12: "Otome", 13: "Sha-Ming", 14: "Remnan", 15: "Yuriko"
-    }
+    1: "Me", 2: "Setsu", 3: "Gina", 4: "SQ", 5: "Raqio", 6: "Stella", 
+    7: "Shigemichi", 8: "Chipie", 9: "Comet", 10: "Jonas", 11: "Kukurushka", 
+    12: "Otome", 13: "Sha-Ming", 14: "Remnan", 15: "Yuriko"
+}
 
 roles = {i + 1: {"Name": name, "Symbol": symbol} for i, (name, symbol) in enumerate([
         ("Gnosia", "🅰️"),
@@ -44,25 +44,23 @@ action_list = {
     ])
 }
 
-character_stats = {
-    char_id: { "Name": name, "Charisma": charisma, "Intuition": intuition,
-        "Logic": logic, "Charm": charm, "Performance": performance, "Stealth": stealth}
-    for char_id, name, charisma, intuition, logic, charm, performance, stealth in [
-    (2, "Setsu", "10-35", "8-28.5", "12-38.5", "11-36.5", "9.5-31", "3.5-17.5"),
-    (3, "Gina", "3.5-17.5", "4-45.5", "10-31.5", "7.5-24", "2-13", "9-31.5"),
-    (4, "SQ", "5.5-22", "11-21.5", "2.5-12", "15.5-46", "14.5-47.5", "3-38.5"),
-    (5, "Raqio", "3-16.5", "0.5-0.5", "20.5-49.5", "2-7.5", "11-35.5", "4.5-20.5"),
-    (6, "Stella", "7.5-27", "5-18", "13-42", "1.5-27.5", "5-30.5", "7.5-29"),
-    (7, "Shigemichi", "17-45.5", "3.5-14.5", "2-9.5", "0.5-17.5", "0.5-6", "16-45"),
-    (8, "Chipie", "10-25", "17-39", "7.5-18.5", "13.5-31", "10.5-26.5", "15-33.5"),
-    (9, "Comet", "5.5-17", "25.5-49.5", "0.5-0.5", "11-32.5", "4.5-16.5", "7.5-22"),
-    (10, "Jonas", "16.5-38.5", "9.5-25", "12-34", "7-21.5", "19.5-43.5", "15.5-37"),
-    (11, "Kukurushka", "4.5-14", "16-35.5", "0.5-3.5", "22.5-49.5", "20.5-45", "17.5-40.5"),
-    (12, "Otome", "7.5-16", "16.5-32", "24-46.5", "20.5-42", "11-23", "13.5-26.5"),
-    (13, "Sha-Ming", "14.5-29", "5.5-6.5", "6.5-6.5", "16.5-34.5", "20.5-40.5", "25-49.5"),
-    (14, "Remnan", "2-2", "21-41", "15-28", "10-29", "13-33", "22.5-43.5"),
-    (15, "Yuriko", "25.5-49.5", "20.5-42", "22-44", "17.5-37.5", "25-49.5", "12-25"),
-    ]}
+character_stats = {name: dict(zip(
+    ["Charisma", "Intuition", "Logic", "Charm", "Performance", "Stealth"], stats)) for name, stats in [
+    ("Setsu", ["10-35", "8-28.5", "12-38.5", "11-36.5", "9.5-31", "3.5-17.5"]),
+    ("Gina", ["3.5-17.5", "4-45.5", "10-31.5", "7.5-24", "2-13", "9-31.5"]),
+    ("SQ", ["5.5-22", "11-21.5", "2.5-12", "15.5-46", "14.5-47.5", "3-38.5"]),
+    ("Raqio", ["3-16.5", "0.5-0.5", "20.5-49.5", "2-7.5", "11-35.5", "4.5-20.5"]),
+    ("Stella", ["7.5-27", "5-18", "13-42", "1.5-27.5", "5-30.5", "7.5-29"]),
+    ("Shigemichi", ["17-45.5", "3.5-14.5", "2-9.5", "0.5-17.5", "0.5-6", "16-45"]),
+    ("Chipie", ["10-25", "17-39", "7.5-18.5", "13.5-31", "10.5-26.5", "15-33.5"]),
+    ("Comet", ["5.5-17", "25.5-49.5", "0.5-0.5", "11-32.5", "4.5-16.5", "7.5-22"]),
+    ("Jonas", ["16.5-38.5", "9.5-25", "12-34", "7-21.5", "19.5-43.5", "15.5-37"]),
+    ("Kukurushka", ["4.5-14", "16-35.5", "0.5-3.5", "22.5-49.5", "20.5-45", "17.5-40.5"]),
+    ("Otome", ["7.5-16", "16.5-32", "24-46.5", "20.5-42", "11-23", "13.5-26.5"]),
+    ("Sha-Ming", ["14.5-29", "5.5-6.5", "6.5-6.5", "16.5-34.5", "20.5-40.5", "25-49.5"]),
+    ("Remnan", ["2-2", "21-41", "15-28", "10-29", "13-33", "22.5-43.5"]),
+    ("Yuriko", ["25.5-49.5", "20.5-42", "22-44", "17.5-37.5", "25-49.5", "12-25"])
+]}
 
 options = {
     1: {"title": "Record an action", 
@@ -115,9 +113,13 @@ def get_words_to_color():
     return {action["Abbr"]: action["Color"] for action in action_list.values()}
 
 def print_stats(option, t):
-    if option != "" and int(option) in list(character_stats.keys()):
-        stats = character_stats.get(int(option), None)
-        for key, value in stats.items():
-            t.print(f"{key}: {value}")
-    else:
+    try: 
+        character_name = characters[int(option)]
+        if character_name in character_stats:
+            stats = character_stats[character_name]
+            t.print(f"Name: {character_name}")
+            for key, value in stats.items():
+                t.print(f"{key}: {value}")
+    except (ValueError, KeyError):
         t.print("\033[31mInvalid choice. Please select a valid character.\033[0m")
+        
