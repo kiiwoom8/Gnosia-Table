@@ -2,11 +2,52 @@ import actions
 import additional_functions
 
 DEFAULT, Z, INVALID, PASS, VOTE =-1, -1, -2, -3, 1,
+RED, BLUE, RESET = "\033[91m", "\033[94m", "\033[0m"
 
-characters, numbered_characters, removed_characters, action_names, action_names_abbr, role_symbols, role_names = {}, {}, {}, {}, {}, {}, {}
+numbered_characters, removed_characters, current_roles = {}, {}, {}
 matrix, words_to_color, notes, history = [], [], [], []
 table = ""
-character_data = [
+
+characters = {
+        1: "Me", 2: "Setsu", 3: "Gina", 4: "SQ", 5: "Raqio", 6: "Stella", 
+        7: "Shigemichi", 8: "Chipie", 9: "Comet", 10: "Jonas", 11: "Kukurushka", 
+        12: "Otome", 13: "Sha-Ming", 14: "Remnan", 15: "Yuriko"
+    }
+
+roles = {i + 1: {"Name": name, "Symbol": symbol} for i, (name, symbol) in enumerate([
+        ("Gnosia", "🅰️"),
+        ("AC Follower", "🕷️"),
+        ("Engineer", "🛠️"),
+        ("Doctor", "⚕️"),
+        ("Bug", "☠️"),
+        ("Guardian Angel", "🕊️"),
+        ("Crew", "✳️"),
+        ("Enemy", "⚠️"),
+        ("Killed", "🔪"),
+        ("Cold Sleep", "🧊"),
+        ("Suspicious", "👁️"),
+    ])}
+
+action_list = {
+    i + 1: {"Name": f"{color}{name}{RESET}", "Abbr": abbr, "Color": color}
+    for i, (name, abbr, color) in enumerate([
+        ("Vote", "Vo", RED),
+        ("Doubt", "Dou", RED),
+        ("Agree", "Ag", RED),
+        ("Cover", "Cov", BLUE),
+        ("Defend", "Def", BLUE),
+        ("Exaggerate Agree", "ExA", RED),
+        ("Exaggerate Defend", "ExD", BLUE),
+        ("Argue", "Arg", RED),
+        ("Seek Agreement", "SeA", RED),
+        ("Seek Agreement", "SeD", BLUE),
+    ])
+}
+
+character_stats = {
+    char_id: { "Name": name, "Charisma": charisma, "Intuition": intuition,
+        "Logic": logic, "Charm": charm, "Performance": performance, "Stealth": stealth}
+    for char_id, name, charisma, intuition, logic, charm, performance, stealth in [
     (2, "Setsu", "10-35", "8-28.5", "12-38.5", "11-36.5", "9.5-31", "3.5-17.5"),
     (3, "Gina", "3.5-17.5", "4-45.5", "10-31.5", "7.5-24", "2-13", "9-31.5"),
     (4, "SQ", "5.5-22", "11-21.5", "2.5-12", "15.5-46", "14.5-47.5", "3-38.5"),
@@ -21,82 +62,9 @@ character_data = [
     (13, "Sha-Ming", "14.5-29", "5.5-6.5", "6.5-6.5", "16.5-34.5", "20.5-40.5", "25-49.5"),
     (14, "Remnan", "2-2", "21-41", "15-28", "10-29", "13-33", "22.5-43.5"),
     (15, "Yuriko", "25.5-49.5", "20.5-42", "22-44", "17.5-37.5", "25-49.5", "12-25"),
-]
-character_stats = {
-    char_id: {
-        "Name": name,
-        "Charisma": charisma,
-        "Intuition": intuition,
-        "Logic": logic,
-        "Charm": charm,
-        "Performance": performance,
-        "Stealth": stealth,
-    }
-    for char_id, name, charisma, intuition, logic, charm, performance, stealth in character_data
-}
+    ]}
 
-
-
-def reset():
-    global characters, removed_characters, matrix, action_names, action_names_abbr, role_symbols, role_names, words_to_color, notes, history
-    characters = get_character_list()
-    words_to_color = get_words_to_color()
-    matrix = [[[] for _ in characters] for _ in characters]
-    notes, history = [], []
-    removed_characters = {}
-    if not role_names or not role_symbols or not action_names or not action_names_abbr:
-        role_symbols, role_names = get_roles_list()
-        action_names, action_names_abbr = get_action_list()
-
-def get_character_list():
-    return {
-        1: "Me", 2: "Setsu", 3: "Gina", 4: "SQ", 5: "Raqio", 6: "Stella", 7: "Shigemichi", 8: "Chipie", 9: "Comet", 10: "Jonas",
-        11: "Kukurushka", 12: "Otome", 13: "Sha-Ming", 14: "Remnan", 15: "Yuriko"
-    }
-
-def set_numbered_character_list():
-    global characters, numbered_characters
-    numbered_characters = {}
-    for num, char in characters.items():
-        if char == " ":
-            numbered_characters[num] = char
-        else:
-            if num < 10:
-                numbered_characters[num] = f" {num}. {char}"
-            else:
-                numbered_characters[num] = f"{num}. {char}"
-    return numbered_characters
-
-def get_action_list():
-    action_names = {1: "\033[91mVote\033[0m", 2: "\033[91mDoubt\033[0m", 3: "\033[91mAgree\033[0m", 4: "\033[94mCover\033[0m", 5: "\033[94mDefend\033[0m", 
-                    6: "\033[91mExaggerate Agree\033[0m", 7: "\033[94mExaggerate Defend\033[0m", 8: "\033[91mArgue\033[0m", 
-                    9: "\033[91mSeek Agreement\033[0m", 0: "\033[94mSeek Agreement\033[0m"}
-    action_names_abbr = {1: "Vo", 2: "Dou", 3: "Ag", 4: "Cov", 5: "Def", 6: "ExA", 7: "ExD", 8: "Arg", 9: "SeA", 0: "SeD"}
-    return action_names, action_names_abbr
-
-def get_roles_list():
-    role_symbols = {1: "🅰️", 2: "🕷️", 3: "🛠️", 4: "⚕️", 5: "☠️", 6: "🕊️", 7: "✳️", 8: "⚠️", 9: "🔪", 10: "🧊", 11: "👁️"}
-    role_names = {1: "Gnosia", 2: "AC Follower", 3: "Engineer", 4: "Doctor", 5: "Bug", 6: "Guardian Angel", 7: "Crew", 8: "Enemy", 9: "Kiiled", 10: "Cold Sleep", 11: "Suspicous"}
-    return role_symbols, role_names
-
-def get_words_to_color():
-    return {
-        "Vo": "\033[31m", "Dou": "\033[31m", "Ag": "\033[91m",
-        "Cov": "\033[34m", "Def": "\033[94m", "ExA": "\033[31m", 
-        "ExD": "\033[34m", "Arg": "\033[31m", "SeA": "\033[31m", 
-        "SeD": "\033[34m",
-    }
-
-def print_stats(option, t):
-    if option != "" and int(option) in list(character_stats.keys()):
-        stats = character_stats.get(int(option), None)
-        for key, value in stats.items():
-            t.print(f"{key}: {value}")
-    else:
-        t.print("\033[31mInvalid choice. Please select a valid character.\033[0m")
-
-def get_selections():
-    return {
+options = {
     1: {"title": "Record an action", 
         "function": lambda: actions.act()}, 
     2: {"title": "Delete the most recent action", 
@@ -118,3 +86,38 @@ def get_selections():
     0: {"title": "Exit", 
         "function": lambda: actions.exit_program()}
     }
+
+def reset():
+    global matrix, current_roles, roles, words_to_color, notes, history, removed_characters
+    matrix = [[[] for _ in characters] for _ in characters]
+    words_to_color = get_words_to_color()
+    current_roles = get_empty_roles_list()
+    notes, history = [], []
+    removed_characters = {}
+
+def set_numbered_character_list():
+    global characters, numbered_characters
+    numbered_characters = {}
+    for num, char in characters.items():
+        if char == " ":
+            numbered_characters[num] = char
+        else:
+            if num < 10:
+                numbered_characters[num] = f" {num}. {char}"
+            else:
+                numbered_characters[num] = f"{num}. {char}"
+    return numbered_characters
+
+def get_empty_roles_list():
+    return {role["Name"]: [] for role in roles.values()}
+
+def get_words_to_color():
+    return {action["Abbr"]: action["Color"] for action in action_list.values()}
+
+def print_stats(option, t):
+    if option != "" and int(option) in list(character_stats.keys()):
+        stats = character_stats.get(int(option), None)
+        for key, value in stats.items():
+            t.print(f"{key}: {value}")
+    else:
+        t.print("\033[31mInvalid choice. Please select a valid character.\033[0m")

@@ -6,7 +6,7 @@ t = handle_text.HandleText()
 
 def print_options():
     t.print ("Choose an option:")
-    for key, value in data.get_selections().items():
+    for key, value in data.options.items():
         t.print(f"{key}. {value["title"]}")
 
 def get_option():
@@ -17,8 +17,8 @@ def get_option():
     return option
 
 def execute_function(option):
-    if option in data.get_selections().keys():
-        data.get_selections()[option]["function"]()
+    if option in data.options.keys():
+        data.options[option]["function"]()
 
 def main():
     data.reset()
