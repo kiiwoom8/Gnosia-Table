@@ -16,13 +16,8 @@ def clear():
     os.system("cls")
 
 def print_recent_history():
-    if len(data.history) > 3:
-        history = data.history[-3:]
-    else:
-        history = data.history
-    for line in history:
-        print(line)
-    print()
+    history = data.history[-3:] if len(data.history) > 3 else data.history
+    print("\n".join(history) + "\n")
     
 def calculate_column_widths():
     char_names = [data.characters[key] for key in sorted(data.characters)]
@@ -33,23 +28,14 @@ def calculate_column_widths():
 
 def generate_characters(col_widths):
     rc_index = [i for i, name in enumerate(data.numbered_characters.values()) if name == " "]
-
     for i, row in enumerate(data.matrix):
-        char_names = [data.numbered_characters[key] for key in sorted(data.numbered_characters)]
-        char_names[i] = " " if char_names[i] != " " else char_names[i]
-
-        if i in rc_index:
-            row_data = [" " for _ in row]
-        else:
-            row_data = [
-                " " if char_names[i] == char_names[j] or j in rc_index else ";".join(actions) if actions else "-"
-                for j, actions in enumerate(row)
-            ]
-
-        for j in range(len(row_data)):
-            if char_names[j] != " ":
-                char_names[j] = " "
-
+        char_names = [" " if name == " " 
+                      else name for name in data.numbered_characters.values()]
+        row_data = [
+            " " if i in rc_index or j in rc_index or char_names[i] == char_names[j] 
+            else ";".join(actions) if actions else "-"
+            for j, actions in enumerate(row)
+        ]
         row_line = format_row(i, row_data, col_widths)
         data.table += f"{apply_color(row_line)}\n\n"
 
@@ -62,9 +48,9 @@ def build_header(col_widths):
     data.table += f"{apply_color(header)}\n"
 
 def build_row_line(col_widths):
-    for width in col_widths:
-        data.table += f"{"─" * width}"
-    data.table += f"{"─" * 15}\n"
+    separator = "".join("─" * width for width in col_widths)
+    header_width = max(len(name) for name in data.numbered_characters.values()) + 2
+    data.table += f"{'─' * header_width}{separator}\n"
 
 def format_row(i, row_data, col_widths):
     char_names = [data.numbered_characters[key] for key in sorted(data.numbered_characters)]

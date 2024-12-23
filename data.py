@@ -1,11 +1,41 @@
 import actions
 import additional_functions
 
-DEFAULT, Z, INVALID, VOTE =-1, -1, -2, 1
+DEFAULT, Z, INVALID, PASS, VOTE =-1, -1, -2, -3, 1,
 
 characters, numbered_characters, removed_characters, action_names, action_names_abbr, role_symbols, role_names = {}, {}, {}, {}, {}, {}, {}
 matrix, words_to_color, notes, history = [], [], [], []
 table = ""
+character_data = [
+    (2, "Setsu", "10-35", "8-28.5", "12-38.5", "11-36.5", "9.5-31", "3.5-17.5"),
+    (3, "Gina", "3.5-17.5", "4-45.5", "10-31.5", "7.5-24", "2-13", "9-31.5"),
+    (4, "SQ", "5.5-22", "11-21.5", "2.5-12", "15.5-46", "14.5-47.5", "3-38.5"),
+    (5, "Raqio", "3-16.5", "0.5-0.5", "20.5-49.5", "2-7.5", "11-35.5", "4.5-20.5"),
+    (6, "Stella", "7.5-27", "5-18", "13-42", "1.5-27.5", "5-30.5", "7.5-29"),
+    (7, "Shigemichi", "17-45.5", "3.5-14.5", "2-9.5", "0.5-17.5", "0.5-6", "16-45"),
+    (8, "Chipie", "10-25", "17-39", "7.5-18.5", "13.5-31", "10.5-26.5", "15-33.5"),
+    (9, "Comet", "5.5-17", "25.5-49.5", "0.5-0.5", "11-32.5", "4.5-16.5", "7.5-22"),
+    (10, "Jonas", "16.5-38.5", "9.5-25", "12-34", "7-21.5", "19.5-43.5", "15.5-37"),
+    (11, "Kukurushka", "4.5-14", "16-35.5", "0.5-3.5", "22.5-49.5", "20.5-45", "17.5-40.5"),
+    (12, "Otome", "7.5-16", "16.5-32", "24-46.5", "20.5-42", "11-23", "13.5-26.5"),
+    (13, "Sha-Ming", "14.5-29", "5.5-6.5", "6.5-6.5", "16.5-34.5", "20.5-40.5", "25-49.5"),
+    (14, "Remnan", "2-2", "21-41", "15-28", "10-29", "13-33", "22.5-43.5"),
+    (15, "Yuriko", "25.5-49.5", "20.5-42", "22-44", "17.5-37.5", "25-49.5", "12-25"),
+]
+character_stats = {
+    char_id: {
+        "Name": name,
+        "Charisma": charisma,
+        "Intuition": intuition,
+        "Logic": logic,
+        "Charm": charm,
+        "Performance": performance,
+        "Stealth": stealth,
+    }
+    for char_id, name, charisma, intuition, logic, charm, performance, stealth in character_data
+}
+
+
 
 def reset():
     global characters, removed_characters, matrix, action_names, action_names_abbr, role_symbols, role_names, words_to_color, notes, history
@@ -58,26 +88,12 @@ def get_words_to_color():
     }
 
 def print_stats(option, t):
-    if option == '1':
-        t.print("\033[32mIntuition\033[0m")
-        t.print ("Strongest:")
-        t.print ("Min: \033[33mComet (25.5)\033[0m, \033[97mRemnan (21)\033[0m, \033[90mYuriko (20.5)\033[0m, \033[92mChipie (17)\033[0m, \033[95mOtome (16.5)\033[0m, \033[31mKukurushka (16)\033[0m")
-        t.print ("Max: \033[33mComet (49.5)\033[0m, \033[94mGina (45.5)\033[0m, \033[90mYuriko (42)\033[0m, \033[97mRemnan (41)\033[0m, \033[92mChipie (39)\033[0m, \033[31mKukurushka (35.5)\033[0m, \033[95mOtome (32)\033[0m, Setsu (28.5)")
-        t.print ("Weakest:")
-        t.print ("Min: \033[96mRaqio (0.5)\033[0m, Shigemichi (3.5), \033[94mGina\033[0m (4), \033[32mStella (5)\033[0m, \033[35mSha-Ming (5.5)\033[0m, Setsu (8), Jonas (9.5), SQ (11)")
-        t.print ("Max: \033[96mRaqio (0.5)\033[0m, \033[35mSha-Ming (6.5)\033[0m, Shigemichi (14.5), \033[32mStella (18)\033[0m")
-    elif option == '2':
-        t.print("\033[35mPerformance\033[0m")
-        t.print ("Strongest:")
-        t.print ("Min: \033[90mYuriko (25)\033[0m, \033[35mSha-Ming (20.5)\033[0m, \033[31mKukurushka (20.5)\033[0m, \033[36mJonas (19.5)\033[0m, \033[91mSQ (14.5)\033[0m")
-        t.print ("Max: \033[90mYuriko (49.5)\033[0m, \033[91mSQ (47.5)\033[0m, \033[31mKukurushka (45)\033[0m, \033[36mJonas (43.5)\033[0m, \033[35mSha-Ming (40.5)\033[0m")
-        t.print ("Weakest:")
-        t.print ("Min: Shigemichi (0.5), \033[94mGina (2)\033[0m, \033[33mComet (4.5)\033[0m, \033[32mStella (5)\033[0m")
-        t.print ("Max: Shigemichi (6), \033[94mGina (13)\033[0m, \033[33mComet (16.5)\033[0m, \033[95mOtome (23)\033[0m, \033[92mChipie (26.5)\033[0m")
+    if option != "" and int(option) in list(character_stats.keys()):
+        stats = character_stats.get(int(option), None)
+        for key, value in stats.items():
+            t.print(f"{key}: {value}")
     else:
-        t.print("\033[91mInvalid input\033[0m")   
-
-    t.print()
+        t.print("\033[31mInvalid choice. Please select a valid character.\033[0m")
 
 def get_selections():
     return {
@@ -92,7 +108,7 @@ def get_selections():
     5: {"title": "Show character stats", 
         "function": lambda: additional_functions.show_stats()}, 
     6: {"title": "See the full history", 
-        "function": lambda: additional_functions.see_full_hostory()}, 
+        "function": lambda: additional_functions.see_full_history()}, 
     7: {"title": "Remove character from the list", 
         "function": lambda: actions.remove_character_from_list()}, 
     8: {"title": "Restore removed characters", 

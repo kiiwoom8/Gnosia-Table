@@ -5,76 +5,85 @@ import handle_text
 t = handle_text.HandleText()
         
 def act():
-    action_choice = data.DEFAULT
     while True:
         action_choice = select_action()
         if action_choice == data.Z:
             return
-        elif action_choice not in data.action_names:
+        if action_choice not in data.action_names:
             continue
         action_name = data.action_names[action_choice]
-
         if action_choice == data.VOTE:
             handle_vote(action_name)
         else:
             record_action(action_choice, action_name)
 
-def record_action(action_choice, action_name, actor_target = []):
+def record_action(action_choice: int, action_name: str, actor_target: list = None):
+    actor_target = actor_target or []
+    
     if actor_target:
-        actor = actor_target[0]
-        target = actor_target[1]
-        valid = True
+        actor, target = actor_target[0], actor_target[1]
     else:
+        # Get actor and validate
         actor, valid = get_actor(action_name)
-        target, valid = get_target(actor, valid)
-    if valid == True:
-        action = data.action_names_abbr[action_choice]
-        data.matrix[actor - 1][target - 1].append(action)
-        target_name = data.characters[target]
-        t.printr(f"\033[92mRecorded:\033[0m {data.characters[actor]} {action_name} {target_name}")
+        if not valid or actor in [data.Z, data.PASS]:
+            return
 
-def handle_vote(action_name):
+        # Get target and validate
+        target, valid = get_target(actor)
+        if not valid or target in [data.Z, data.PASS]:
+            return
+    
+    # Check if action is valid
+    action = data.action_names_abbr.get(action_choice)
+    if not action:
+        t.print("\033[91mError: Invalid action choice.\033[0m")
+        return
+
+    # Record action in the matrix
+    data.matrix[actor - 1][target - 1].append(action)
+    target_name = data.characters.get(target, "Unknown Target")
+    t.printr(f"\033[92mRecorded:\033[0m {data.characters[actor]} {action_name} {target_name}")
+
+def handle_vote(action_name: str):
     action_choice = data.VOTE
     t.print("1. \033[91mStart the vote!\033[0m")
     t.print("2. Vote")
     t.print("z. Go back")
-    vote_menu_choice = t.input("Select an action by number: ").strip()
+    
+    vote_menu_choice = t.input("Select an action by number: ").strip().lower()
+
     if vote_menu_choice == '1':
         for num, char in data.characters.items():
-            if char != " " and char[:2] != "Me" and char not in data.words_to_color:
-                target = 0
-                while True:
-                    target, record = get_target(num)
-                    if target == data.Z:
-                        return False
-                    elif record == True:
-                        record_action(action_choice, action_name, [num, target])
-                        break
+            if char != " " and not char.startswith("Me") and char not in data.words_to_color:
+                target, record = get_target(num)
+                if target == data.Z:
+                    return False  # Exit if 'Z' is selected
+                elif target == data.PASS:
+                    continue
+                if record:
+                    record_action(action_choice, action_name, [num, target])
     elif vote_menu_choice == '2':
         record_action(action_choice, action_name)
-    elif vote_menu_choice.lower() == 'z':
-        pass
 
 def get_actor(action_name):
     actor = select_character("acting", action_name)
-    if actor is data.Z:
-        valid = False
-    else:
-        valid = True
-    return actor, valid
+    if actor in [data.Z, data.PASS]:
+        return actor, False
+    return actor, True
 
-def get_target(actor, valid = True):
-    if valid == False:
-        return data.INVALID, valid
-    target = select_character("target", f"Acting character: \033[91m{data.characters[actor]}\033[0m")
-    if target is data.Z:
-        valid = False
-    elif actor == target:
-        t.print("\033[31mCannot act on self. Please try again.\033[0m")
-        valid = False
-    else: 
-        valid = True
-    return target, valid
+def get_target(actor, valid=True):
+    if not valid:
+        return data.INVALID, False
+
+    # Loop to select target
+    while True:
+        target = select_character("target", f"Acting character: \033[91m{data.characters[actor]}\033[0m")
+        if target in [data.Z, data.PASS]:
+            return target, False
+        elif actor == target:
+            t.print("\033[31mCannot act on self. Please try again.\033[0m")
+        else:
+            return target, True
     
 def display_characters():
     for number, character in data.characters.items():
@@ -131,18 +140,19 @@ def select_action():
         try:
             return int(action_choice)
         except ValueError:
-            t.printr(f"\033[31mInvalid input ({action_choice})\033[0m")
+            pass
 
-def select_character(role_type, action_name = None):
+def select_character(role_type, action_name=None):
     while True:
         if action_name:
-            t.print(f"{action_name}")
-        t.print(f"Select the {role_type} character.")
-        user_input = t.input("Enter the number for your choice (or 'z' to go back): ")
-        if user_input.lower() == 'z':
+            t.print(action_name)
+        t.print(f"Select the {role_type} character:")
+        user_input = t.input("Enter the number for your choice (OR 'p' to pass OR 'z' to go back): ").strip().lower()
+        if user_input == 'z':
             return data.Z
-        choice = validate_choice(user_input)
-        if choice is not data.INVALID:
+        elif user_input == 'p':
+            return data.PASS
+        if (choice := validate_choice(user_input)) != data.INVALID:
             return choice
 
 def assign_roles():

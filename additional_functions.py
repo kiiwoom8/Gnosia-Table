@@ -63,25 +63,15 @@ def draw_note_line():
     tt.print()
 
 def show_stats():
+    option = "0"
     while True:
-        t.print("1. \033[32mIntuition\033[0m")
-        t.print("2. \033[35mPerformance\033[0m")
-        t.print("z. Go back")
-        # t.print("3. Logic")
-        option = t.input("Enter your choice: ").strip()
-
+        option = t.input("Enter your choice (or 'z' to go back): ").strip() or option
         if option.lower() == 'z':
             return
-        
         data.print_stats(option, t)
 
-def see_full_hostory():
-    text = ""
+def see_full_history():
     history = data.history
-    if history:
-        for line in history:
-            text += f"{line}\n"
-    else:
-        text = "\033[91m(There's no history recoreded.)\033[0m\n"
+    text = "\n".join(history) if history else "\033[91m(There's no history recorded.)\033[0m"
     print(text)
-    input("Enter any key for exit: ").strip().lower()
+    input("Press any key to exit: ").strip().lower()
