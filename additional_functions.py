@@ -65,10 +65,27 @@ def draw_note_line():
 def show_stats():
     option = "0"
     while True:
-        option = t.input("Enter your choice (or 'z' to go back): ").strip() or option
-        if option.lower() == 'z':
+        t.check_error()
+        option = t.input("Enter your choice (or 'z' to go back): ")
+        if option == 'z':
             return
-        data.print_stats(option, t)
+        elif not option:
+            pass
+        else: 
+            print_stats(option)
+
+def print_stats(option):
+    if option == "1":
+        t.error_text = "\033[31mYou cannot check the stats of the player.\033[0m"
+    try: 
+        character_name = data.characters[int(option)]
+        if character_name in data.character_stats:
+            stats = data.character_stats[character_name]
+            t.print(f"Name: {character_name}")
+            for key, value in stats.items():
+                t.print(f"{key}: {value}")
+    except (ValueError, KeyError):
+        t.error_text = "\033[31mInvalid choice. Please select a valid character.\033[0m"
 
 def see_full_history():
     history = data.history

@@ -111,15 +111,3 @@ def get_empty_roles_list():
 
 def get_words_to_color():
     return {action["Abbr"]: action["Color"] for action in action_list.values()}
-
-def print_stats(option, t):
-    try: 
-        character_name = characters[int(option)]
-        if character_name in character_stats:
-            stats = character_stats[character_name]
-            t.print(f"Name: {character_name}")
-            for key, value in stats.items():
-                t.print(f"{key}: {value}")
-    except (ValueError, KeyError):
-        t.print("\033[31mInvalid choice. Please select a valid character.\033[0m")
-        
