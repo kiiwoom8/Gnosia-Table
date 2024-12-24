@@ -225,7 +225,3 @@ def restore_removed_characters():
         data.characters[number] = character
         t.printr(f"\033[94mRestored\033[0m {character} to the list.")
     data.removed_characters = {}
-
-def exit_program():
-    print("Exiting...")
-    exit(0)
