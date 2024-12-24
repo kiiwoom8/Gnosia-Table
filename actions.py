@@ -1,8 +1,6 @@
 import data
 import table_rendering
-import handle_text
-
-t = handle_text.HandleText()
+import handle_text as t
         
 def act():
     while True:
@@ -28,20 +26,20 @@ def record_action(action_choice: int, action_name: str, actor_target: list = [])
         
     action = data.action_list.get(action_choice, {}).get("Abbr")
     if not action:
-        t.print("\033[91mError: Invalid action choice.\033[0m")
+        t.t_print("\033[91mError: Invalid action choice.\033[0m")
         return
 
     data.matrix[actor - 1][target - 1].append(action)
     target_name = data.characters.get(target, "Unknown Target")
-    t.printr(f"\033[92mRecorded:\033[0m {data.characters[actor]} {action_name} {target_name}")
+    t.r_print(f"\033[92mRecorded:\033[0m {data.characters[actor]} {action_name} {target_name}")
 
 def handle_vote(action_choice, action_name):
     while True:
-        t.print("1. \033[91mStart the vote!\033[0m")
-        t.print("2. Vote")
-        t.print("z. Go back")
+        t.t_print("1. \033[91mStart the vote!\033[0m")
+        t.t_print("2. Vote")
+        t.t_print("z. Go back")
         
-        vote_menu_choice = t.input("Select an action by number: ")
+        vote_menu_choice = t.t_input("Select an action by number: ")
         if vote_menu_choice == '1':
             for char_index, char_name in data.characters.items():
                 if char_name != " " and not char_name.startswith("Me") and char_name not in data.words_to_color:
@@ -63,14 +61,14 @@ def get_target(actor):
     while True:
         target = select_character("target", f"Acting character: \033[91m{data.characters[actor]}\033[0m")
         if actor == target:
-            t.print("\033[31mCannot act on self. Please try again.\033[0m")
+            t.t_print("\033[31mCannot act on self. Please try again.\033[0m")
         else:
             return target
     
 def display_characters():
     for number, character in data.characters.items():
         if character != " ":
-            t.print(f"{number}. {character}")
+            t.t_print(f"{number}. {character}")
 
 def validate_choice(user_input:str, choice_type='character'):
     if user_input.isdigit():
@@ -107,17 +105,17 @@ def delete_recent_action():
             key = next((action_num for action_num, action in data.action_list.items() if action["Abbr"] == removed_action), None)
             if key:
                 removed_action = data.action_list[key]
-            t.printr(f"\033[91mDeleted:\033[0m {actor_name} {removed_action['Name']} {target_name}")
+            t.r_print(f"\033[91mDeleted:\033[0m {actor_name} {removed_action['Name']} {target_name}")
 
 def select_action():
     while True:
         t.check_error()
-        t.print("Select the action performed:")
+        t.t_print("Select the action performed:")
         for action_num, action in data.action_list.items():
-            t.print(f"{action_num}. {action['Name']}")
-        t.print("z. Go back")
+            t.t_print(f"{action_num}. {action['Name']}")
+        t.t_print("z. Go back")
 
-        action_choice = t.input("Select an action by number: ")
+        action_choice = t.t_input("Select an action by number: ")
 
         if (action_choice.isdigit() and int(action_choice) in data.action_list) or action_choice == 'z':
             return action_choice
@@ -130,9 +128,9 @@ def select_character(role_type, action_name=None):
     while True:
         t.check_error()
         if action_name:
-            t.print(action_name)
-        t.print(f"Select the {role_type} character:")
-        user_input = t.input("Enter the number for your choice (OR 'p' to pass OR 'z' to go back): ")
+            t.t_print(action_name)
+        t.t_print(f"Select the {role_type} character:")
+        user_input = t.t_input("Enter the number for your choice (OR 'p' to pass OR 'z' to go back): ")
         if user_input in ['z', 'p']:
             return user_input
         elif (validate_choice(user_input)):
@@ -145,9 +143,9 @@ def select_character(role_type, action_name=None):
 def assign_roles():
     while True:
         t.check_error()
-        t.print("\033[92mAssign\033[0m/\033[91mremove\033[0m Roles: ")
+        t.t_print("\033[92mAssign\033[0m/\033[91mremove\033[0m Roles: ")
         display_roles()
-        role_choice = t.input("Select a role by number: ")
+        role_choice = t.t_input("Select a role by number: ")
         if role_choice == 'z':
             return
         elif not role_choice:
@@ -168,8 +166,8 @@ def assign_roles():
 
 def display_roles():
     for role_num, role in data.roles.items():
-        t.print(f"{role_num}. {role["Name"]} ({role["Symbol"]})")
-    t.print("z. Go back")
+        t.t_print(f"{role_num}. {role["Name"]} ({role["Symbol"]})")
+    t.t_print("z. Go back")
 
 def toggle_role(char_index, role_choice):
     role_name = data.roles[role_choice]["Name"]
@@ -179,11 +177,11 @@ def toggle_role(char_index, role_choice):
         return
     if char_index in data.current_roles[role_name]:
         data.current_roles[role_name].remove(char_index)
-        t.printr(f"\033[91mRemoved\033[0m {role_name} ({role_symbol}) from {data.characters[char_index]}.")
+        t.r_print(f"\033[91mRemoved\033[0m {role_name} ({role_symbol}) from {data.characters[char_index]}.")
     else:
         data.current_roles[role_name].append(char_index)
         char_index = int(char_index)
-        t.printr(f"\033[94mAssigned\033[0m {role_name} ({role_symbol}) to {data.characters[char_index]}.")
+        t.r_print(f"\033[94mAssigned\033[0m {role_name} ({role_symbol}) to {data.characters[char_index]}.")
 
 def toggle_color(char_index, role_choice):
     if role_choice == 9:
@@ -196,11 +194,11 @@ def toggle_color(char_index, role_choice):
     if data.characters[char_index] in data.words_to_color and data.words_to_color[data.characters[char_index]] == color_code:
         removed_color = data.words_to_color.pop(data.characters[char_index])
         if color_code == removed_color:
-            t.printr(f"{data.characters[char_index]} is released from the state of being excepted.")
+            t.r_print(f"{data.characters[char_index]} is released from the state of being excepted.")
             return
 
     data.words_to_color[data.characters[char_index]] = color_code
-    t.printr(f"{data.characters[char_index]} is {state}.")
+    t.r_print(f"{data.characters[char_index]} is {state}.")
 
 def remove_character_from_list():
     while True:
@@ -218,10 +216,13 @@ def remove_character_from_list():
         else:
             data.removed_characters[choice] = data.characters[choice]
             data.characters[choice] = " "
-            t.printr(f"\033[31mRemoved\033[0m {data.removed_characters[choice]} from the list.")
+            t.r_print(f"\033[31mRemoved\033[0m {data.removed_characters[choice]} from the list.")
 
 def restore_removed_characters():
+    if not data.removed_characters:
+        t.error_text = "\033[31mNo characters to restore.\033[0m"
+        return
     for number, character in data.removed_characters.items():
         data.characters[number] = character
-        t.printr(f"\033[94mRestored\033[0m {character} to the list.")
+    t.r_print(f"\033[94mRestored all the characters to the list.\033[0m")
     data.removed_characters = {}

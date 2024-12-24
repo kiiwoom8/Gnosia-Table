@@ -1,17 +1,15 @@
 import data
-import handle_text
+import handle_text as t
 import table_rendering
 
-t = handle_text.HandleText()
-
 def print_options():
-    t.print ("Choose an option:")
+    t.t_print ("Choose an option:")
     for key, value in data.options.items():
-        t.print(f"{key}. {value["title"]}")
+        t.t_print(f"{key}. {value["title"]}")
 
 def get_option():
     try:
-        option = int(t.input("Enter your choice: ").strip())
+        option = int(t.t_input("Enter your choice: ").strip())
     except ValueError:
         option = -1
     return option
@@ -24,6 +22,7 @@ def main():
     data.reset()
     while True:
         table_rendering.print_table()
+        t.check_error()
         print_options()
         option = get_option()
         execute_function(option)
