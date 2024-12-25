@@ -54,7 +54,6 @@ def draw_note_line():
     t.t_print(f"{text}")
 
 def show_stats():
-    data.character_stats = color_code_stats(data.character_stats)
     option = "0"
     while True:
         t.check_error()

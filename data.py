@@ -13,7 +13,7 @@ characters_list = {
     12: "Otome", 13: "Sha-Ming", 14: "Remnan", 15: "Yuriko"
 }
 
-character_stats = {name: dict(zip(
+character_stats = additional_functions.color_code_stats({name: dict(zip(
     ["Charisma", "Intuition", "Logic", "Charm", "Performance", "Stealth"], stats)) for name, stats in [
     ("Setsu", ["10-35", "8-28.5", "12-38.5", "11-36.5", "9.5-31", "3.5-17.5"]),
     ("Gina", ["3.5-17.5", "4-45.5", "10-31.5", "7.5-24", "2-13", "9-31.5"]),
@@ -29,7 +29,7 @@ character_stats = {name: dict(zip(
     ("Sha-Ming", ["14.5-29", "5.5-6.5", "6.5-6.5", "16.5-34.5", "20.5-40.5", "25-49.5"]),
     ("Remnan", ["2-2", "21-41", "15-28", "10-29", "13-33", "22.5-43.5"]),
     ("Yuriko", ["25.5-49.5", "20.5-42", "22-44", "17.5-37.5", "25-49.5", "12-25"])
-]}
+]})
 
 roles = {i + 1: {"Name": name, "Symbol": symbol} for i, (name, symbol) in enumerate([
         ("Gnosia", "🅰️"),
