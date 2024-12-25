@@ -46,7 +46,7 @@ roles = {i + 1: {"Name": name, "Symbol": symbol} for i, (name, symbol) in enumer
     ])}
 
 action_list = {
-    i + 1: {"Name": f"{color}{name}{RESET}", "Abbr": abbr, "Color": color}
+    0 if i == 9 else i + 1: {"Name": f"{color}{name}{RESET}", "Abbr": abbr, "Color": color}
     for i, (name, abbr, color) in enumerate([
         ("Vote", "Vo", RED),
         ("Doubt", "Dou", RED),
@@ -92,10 +92,9 @@ def reset():
     current_roles = {role["Name"]: [] for role in roles.values()}
     notes, history, removed_characters= [], [], {}
 
-def set_numbered_character_list():
-    global characters, numbered_characters
-    numbered_characters = {
-        num: char if char == " " else f"{' ' if num < 10 else ''}{num}. {char}"
-        for num, char in characters.items()
+def set_numbered_list(list):
+    numbered_list = {
+        num: element if element == " " else f"{' ' if num < 10 else ''}{num}. {element}"
+        for num, element in list.items()
     }
-    return numbered_characters
+    return numbered_list

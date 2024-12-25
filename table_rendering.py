@@ -5,7 +5,7 @@ import data
 def print_table():
     clear()
     print_recent_history()
-    data.set_numbered_character_list()
+    data.numbered_characters = data.set_numbered_list(data.characters)
     col_widths = calculate_column_widths()
     build_header(col_widths)
     build_row_line(col_widths)

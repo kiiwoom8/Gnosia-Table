@@ -151,12 +151,11 @@ def select_action():
 
         action_choice = t.t_input("Select an action by number: ")
 
-        if (action_choice.isdigit() and int(action_choice) in data.action_list) or action_choice == 'z':
-            return action_choice
-        elif not action_choice:
-            pass
-        else:
-            t.error_text = "\033[31mInvalid choice. Try again.\033[0m"
+        if action_choice:
+            if (action_choice.isdigit() and int(action_choice) in data.action_list) or action_choice == 'z':
+                return action_choice
+            else:
+                t.error_text = "\033[31mInvalid choice. Try again.\033[0m"
 
 def select_character(role_type, action_name=None):
     while True:
@@ -169,12 +168,11 @@ def select_character(role_type, action_name=None):
         else:
             t.t_print(f"Select the {role_type} character:")
         user_input = t.t_input("Enter the number for your choice (OR 'p' to pass OR 'z' to go back): ")
-        if user_input in ['z', 'p'] or validate_choice(user_input):
-            return user_input
-        elif not user_input:
-            pass
-        else:
-            t.error_text = "\033[31mInvalid choice. Try again.\033[0m"
+        if user_input:
+            if user_input in ['z', 'p'] or validate_choice(user_input):
+                return user_input
+            else:
+                t.error_text = "\033[31mInvalid choice. Try again.\033[0m"
 
 def assign_roles():
     while True:
@@ -193,16 +191,16 @@ def assign_roles():
         else:
             role_choice = int(role_choice)
         char_index = select_character("assigned/removed", f"\033[92mAssign\033[0m/\033[91mremove\033[0m a role ({data.roles[role_choice]["Symbol"]}): ")
-        if char_index in ['z', False]:
-            return
-        else:
-            char_index = int(char_index)
-            
-        toggle_role(char_index, role_choice)
+        if char_index not in ['z', 'p']:
+            if not char_index:
+                t.error_text = "\033[31mInvalid choice. Try again.\033[0m"
+            else:
+                toggle_role(int(char_index), role_choice)
 
 def display_roles():
     for role_num, role in data.roles.items():
-        t.t_print(f"{role_num}. {role["Name"]} ({role["Symbol"]})")
+        formatted_num = f" {role_num}" if role_num < 10 else str(role_num)
+        t.t_print(f"{formatted_num}. {role["Name"]} ({role["Symbol"]})")
     t.t_print("z. Go back")
 
 def toggle_role(char_index, role_choice):
