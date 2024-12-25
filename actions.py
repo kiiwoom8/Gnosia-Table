@@ -50,6 +50,7 @@ def handle_vote(action_choice, action_name):
                         continue
                     else:
                         record_action(action_choice, action_name, [char_index, int(target)])
+            return
         elif vote_menu_choice == '2':
             record_action(action_choice, action_name)
         elif not vote_menu_choice:
@@ -60,7 +61,7 @@ def handle_vote(action_choice, action_name):
 def get_target(actor):
     while True:
         target = select_character("target", f"Acting character: \033[91m{data.characters[actor]}\033[0m")
-        if actor == target:
+        if actor == int(target):
             t.t_print("\033[31mCannot act on self. Please try again.\033[0m")
         else:
             return target
