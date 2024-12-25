@@ -69,7 +69,7 @@ options = {
         "function": lambda: actions.delete_recent_action()}, 
     3: {"title": "Assign/Remove roles", 
         "function": lambda: actions.assign_roles()},
-    4: {"title": "Notepad", 
+    4: {"title": "\033[33mNotepad\033[0m", 
         "function": lambda: additional_functions.take_note()}, 
     5: {"title": "Show character stats", 
         "function": lambda: additional_functions.show_stats()}, 
@@ -81,7 +81,7 @@ options = {
         "function": lambda: actions.restore_removed_characters()}, 
     9: {"title": "Initialize table", 
         "function": lambda: reset()}, 
-    0: {"title": "Exit", 
+    0: {"title": "\033[90mExit\033[0m", 
         "function": lambda: exit(0)}
     }
 

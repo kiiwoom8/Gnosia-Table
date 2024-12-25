@@ -42,8 +42,7 @@ def calculate_column_widths():
 def generate_characters(col_widths):
     rc_index = [i for i, name in enumerate(data.characters.values()) if name == " "]
     for i, row in enumerate(data.matrix):
-        char_names = [" " if name == " " 
-                      else name for name in data.characters.values()]
+        char_names = [" " if name == " " else name for name in data.characters.values()]
         row_data = [
             " " if i in rc_index or j in rc_index or char_names[i] == char_names[j] 
             else ";".join(actions) if actions else "-"
@@ -51,6 +50,8 @@ def generate_characters(col_widths):
         ]
         row_line = format_row(i, row_data, col_widths)
         data.table += f"{apply_color(row_line)}\n\n"
+        # data.table = data.table.replace("-", "\033[90m-\033[0m")
+        data.table = re.sub(r"[-─]", lambda match: f"\033[90m{match.group()}\033[0m", data.table)
 
 def build_header(col_widths):
     characters = get_characters_with_symbols(data.characters)
