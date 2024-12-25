@@ -54,6 +54,7 @@ def draw_note_line():
     t.t_print(f"{text}")
 
 def show_stats():
+    data.character_stats = color_code_stats(data.character_stats)
     option = "0"
     while True:
         t.check_error()
@@ -64,6 +65,24 @@ def show_stats():
             pass
         else: 
             print_stats(option)
+            
+def color_code_stats(character_stats):
+    def color_code(value):
+        if value >= 40: return f"\033[31m{value}\033[0m"
+        if value >= 30: return f"\033[32m{value}\033[0m"
+        if value >= 20: return f"\033[33m{value}\033[0m"
+        return str(value)
+
+    def color_code_range(range_str):
+        lower, upper = map(float, range_str.split("-"))
+        return f"{color_code(lower)} \033[90m-\033[0m {color_code(upper)}"
+
+    for stats_dict in character_stats.values():
+        for stat_name, stat_value in stats_dict.items():
+            stats_dict[stat_name] = color_code_range(stat_value)
+
+    return character_stats
+
 
 def print_stats(option):
     if option == "1":
