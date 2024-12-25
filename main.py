@@ -10,8 +10,9 @@ def print_options():
 def get_option():
     option = t.t_input("Enter your choice: ")
     if option.isdigit():
+        option = int(option)
         if option in data.options.keys():
-            return int(option)
+            return option
         t.error_text = "\033[31mInvalid choice. Please select a valid option.\033[0m"
     return -1
 
