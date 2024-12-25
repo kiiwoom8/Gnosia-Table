@@ -38,14 +38,28 @@ def handle_vote(action_choice, action_name):
         vote_menu_choice = t.t_input("Select an action by number: ")
         match vote_menu_choice:
             case '1':
-                for char_index, char_name in data.characters.items():
-                    if char_name != " " and not char_name.startswith("Me") and char_name not in data.words_to_color:
-                        target = get_target(char_index)
-                        if target == 'z':
-                            return False
-                        elif target != 'p':
-                            record_action(action_choice, action_name, char_index, int(target))
-                return
+                votes, most_voted = {}, []
+                while True:
+                    for char_index, char_name in data.characters.items():
+                        if char_name != " " and not char_name.startswith("Me") and char_name not in data.words_to_color:
+                            target = get_target(char_index, most_voted)
+                            if target == 'z':
+                                return False
+                            elif target != 'p':
+                                target = int(target)
+                                votes[target] = votes.get(target, 0) + 1
+                                record_action(action_choice, action_name, char_index, target)
+                    max_votes = max(votes.values())
+                    most_voted = [char for char, votes in votes.items() if votes == max_votes]
+                    if len(most_voted) == 1:
+                        t.r_print(f"{data.characters[most_voted[0]]} is {data.BLUE}cold sleeped!{data.RESET}")
+                        data.words_to_color[data.characters[most_voted[0]]] = data.BLUE
+                    else:
+                        t.r_print("\033[91mIt's a tie! Vote again.\033[0m")
+                        continue
+                    table_rendering.print_table()
+                    return
+                
             case '2':
                 record_action(action_choice, action_name)
             case 'z':
@@ -55,13 +69,15 @@ def handle_vote(action_choice, action_name):
             case _:
                 t.error_text = "\033[31mInvalid choice. Try again.\033[0m"
 
-def get_target(actor):
+def get_target(actor, targets:list = []):
     while True:
-        target = select_character("target", f"Acting character: \033[91m{data.characters[actor]}\033[0m")
+        target = select_character("target", f"Acting character: {data.BLUSH}{data.characters[actor]}{data.RESET}", targets)
         if target in ['z', 'p']:
             return target
-        elif actor == int(target):
+        if actor == int(target):
             t.t_print("\033[31mCannot act on self. Please try again.\033[0m")
+        elif targets and target not in targets:
+            t.t_print("\033[31mInvalid choice. Please try again.\033[0m")
         else:
             return target
     
@@ -124,12 +140,16 @@ def select_action():
         else:
             t.error_text = "\033[31mInvalid choice. Try again.\033[0m"
 
-def select_character(role_type, action_name=None):
+def select_character(role_type, action_name=None, targets:list = []):
     while True:
         t.check_error()
         if action_name:
             t.t_print(action_name)
-        t.t_print(f"Select the {role_type} character:")
+        if targets:
+            most_voted_names = [data.characters[char_index] for char_index in targets]
+            t.t_print(f"Select the {role_type} character from the following: {most_voted_names}")            
+        else:
+            t.t_print(f"Select the {role_type} character:")
         user_input = t.t_input("Enter the number for your choice (OR 'p' to pass OR 'z' to go back): ")
         if user_input in ['z', 'p'] or validate_choice(user_input):
             return user_input

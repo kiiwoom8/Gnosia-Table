@@ -3,11 +3,11 @@ import additional_functions
 
 RED, BLUSH, LBLUE, BLUE, RESET = "\033[31m", "\033[91m", "\033[94m", "\033[34m", "\033[0m"
 
-numbered_characters, removed_characters, current_roles = {}, {}, {}
+characters, numbered_characters, removed_characters, current_roles = {}, {}, {}, {}
 matrix, words_to_color, notes, history = [], [], [], []
 table = ""
 
-characters = {
+characters_list = {
     1: "Me", 2: "Setsu", 3: "Gina", 4: "SQ", 5: "Raqio", 6: "Stella", 
     7: "Shigemichi", 8: "Chipie", 9: "Comet", 10: "Jonas", 11: "Kukurushka", 
     12: "Otome", 13: "Sha-Ming", 14: "Remnan", 15: "Yuriko"
@@ -85,12 +85,12 @@ options = {
     }
 
 def reset():
-    global matrix, current_roles, roles, words_to_color, notes, history, removed_characters
+    global characters, matrix, current_roles, roles, words_to_color, notes, history, removed_characters
+    characters = characters_list.copy()
     matrix = [[[] for _ in characters] for _ in characters]
-    words_to_color = get_words_to_color()
-    current_roles = get_empty_roles_list()
-    notes, history = [], []
-    removed_characters = {}
+    words_to_color = {action["Abbr"]: action["Color"] for action in action_list.values()}
+    current_roles = {role["Name"]: [] for role in roles.values()}
+    notes, history, removed_characters= [], [], {}
 
 def set_numbered_character_list():
     global characters, numbered_characters
@@ -99,9 +99,3 @@ def set_numbered_character_list():
         for num, char in characters.items()
     }
     return numbered_characters
-
-def get_empty_roles_list():
-    return {role["Name"]: [] for role in roles.values()}
-
-def get_words_to_color():
-    return {action["Abbr"]: action["Color"] for action in action_list.values()}
