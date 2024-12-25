@@ -9,59 +9,58 @@ def act():
             return
         action_choice = int(action_choice)
         action_name = data.action_list[action_choice]["Name"]
-        (handle_vote if action_choice == data.VOTE else record_action)(action_choice, action_name)
+        (handle_vote if action_choice == 1 else record_action)(action_choice, action_name)
 
-def record_action(action_choice: int, action_name: str, actor_target: list = []):
-    if actor_target:
-        actor, target = actor_target
-    else:
+def record_action(action_choice: int, action_name: str, actor = None, target = None):
+    if not actor:
         actor = select_character("acting", action_name)
         if  actor in ['z', 'p']:
             return
         actor = int(actor)
+    if not target:
         target = get_target(actor)
         if target in ['z', 'p']:
             return
         target = int(target)
         
     action = data.action_list.get(action_choice, {}).get("Abbr")
-    if not action:
-        t.t_print("\033[91mError: Invalid action choice.\033[0m")
-        return
-
     data.matrix[actor - 1][target - 1].append(action)
-    target_name = data.characters.get(target, "Unknown Target")
+    target_name = data.characters.get(target, "\033[31mUnknown\033[0m")
     t.r_print(f"\033[92mRecorded:\033[0m {data.characters[actor]} {action_name} {target_name}")
 
 def handle_vote(action_choice, action_name):
     while True:
+        t.check_error()
         t.t_print("1. \033[91mStart the vote!\033[0m")
-        t.t_print("2. Vote")
+        t.t_print("2. \033[31mVote\033[0m") 
         t.t_print("z. Go back")
         
         vote_menu_choice = t.t_input("Select an action by number: ")
-        if vote_menu_choice == '1':
-            for char_index, char_name in data.characters.items():
-                if char_name != " " and not char_name.startswith("Me") and char_name not in data.words_to_color:
-                    target = get_target(char_index)
-                    if target == 'z':
-                        return False
-                    elif target == 'p':
-                        continue
-                    else:
-                        record_action(action_choice, action_name, [char_index, int(target)])
-            return
-        elif vote_menu_choice == '2':
-            record_action(action_choice, action_name)
-        elif not vote_menu_choice:
-            pass
-        elif vote_menu_choice == 'z':
-            return
+        match vote_menu_choice:
+            case '1':
+                for char_index, char_name in data.characters.items():
+                    if char_name != " " and not char_name.startswith("Me") and char_name not in data.words_to_color:
+                        target = get_target(char_index)
+                        if target == 'z':
+                            return False
+                        elif target != 'p':
+                            record_action(action_choice, action_name, char_index, int(target))
+                return
+            case '2':
+                record_action(action_choice, action_name)
+            case 'z':
+                return
+            case '':
+                pass
+            case _:
+                t.error_text = "\033[31mInvalid choice. Try again.\033[0m"
 
 def get_target(actor):
     while True:
         target = select_character("target", f"Acting character: \033[91m{data.characters[actor]}\033[0m")
-        if actor == int(target):
+        if target in ['z', 'p']:
+            return target
+        elif actor == int(target):
             t.t_print("\033[31mCannot act on self. Please try again.\033[0m")
         else:
             return target
@@ -132,9 +131,7 @@ def select_character(role_type, action_name=None):
             t.t_print(action_name)
         t.t_print(f"Select the {role_type} character:")
         user_input = t.t_input("Enter the number for your choice (OR 'p' to pass OR 'z' to go back): ")
-        if user_input in ['z', 'p']:
-            return user_input
-        elif (validate_choice(user_input)):
+        if user_input in ['z', 'p'] or validate_choice(user_input):
             return user_input
         elif not user_input:
             pass

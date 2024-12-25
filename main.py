@@ -8,11 +8,12 @@ def print_options():
         t.t_print(f"{key}. {value["title"]}")
 
 def get_option():
-    try:
-        option = int(t.t_input("Enter your choice: ").strip())
-    except ValueError:
-        option = -1
-    return option
+    option = t.t_input("Enter your choice: ")
+    if option.isdigit():
+        if option in data.options.keys():
+            return int(option)
+        t.error_text = "\033[31mInvalid choice. Please select a valid option.\033[0m"
+    return -1
 
 def execute_function(option):
     if option in data.options.keys():

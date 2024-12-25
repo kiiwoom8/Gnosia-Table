@@ -1,7 +1,6 @@
 import actions
 import additional_functions
 
-DEFAULT, Z, INVALID, PASS, VOTE =-1, -1, -2, -3, 1,
 RED, BLUSH, LBLUE, BLUE, RESET = "\033[31m", "\033[91m", "\033[94m", "\033[34m", "\033[0m"
 
 numbered_characters, removed_characters, current_roles = {}, {}, {}
@@ -95,15 +94,10 @@ def reset():
 
 def set_numbered_character_list():
     global characters, numbered_characters
-    numbered_characters = {}
-    for num, char in characters.items():
-        if char == " ":
-            numbered_characters[num] = char
-        else:
-            if num < 10:
-                numbered_characters[num] = f" {num}. {char}"
-            else:
-                numbered_characters[num] = f"{num}. {char}"
+    numbered_characters = {
+        num: char if char == " " else f"{' ' if num < 10 else ''}{num}. {char}"
+        for num, char in characters.items()
+    }
     return numbered_characters
 
 def get_empty_roles_list():
