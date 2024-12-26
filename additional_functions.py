@@ -56,14 +56,13 @@ def draw_note_line():
 def show_stats():
     option = "0"
     while True:
+        if option:
+            print_stats(option)
         t.check_error()
         option = t.t_input("Enter your choice (or 'z' to go back): ")
-        if option == 'z':
-            return
-        elif not option:
-            pass
-        else: 
-            print_stats(option)
+        if option:
+            if option == 'z':
+                return
             
 def color_code_stats(character_stats):
     def color_code(value):

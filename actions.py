@@ -133,7 +133,6 @@ def delete_recent_action():
 
         target_name = data.characters[target]
         actions = data.matrix[actor - 1][target - 1]
-
         if actions:
             removed_action = actions.pop()
             key = next((action_num for action_num, action in data.action_list.items() if action["Abbr"] == removed_action), None)
@@ -150,7 +149,6 @@ def select_action():
         t.t_print("z. Go back")
 
         action_choice = t.t_input("Select an action by number: ")
-
         if action_choice:
             if (action_choice.isdigit() and int(action_choice) in data.action_list) or action_choice == 'z':
                 return action_choice
