@@ -28,28 +28,31 @@ def record_action(action_choice: int, action_name: str, actor = None, target = N
     target_name = data.characters.get(target, "\033[31mUnknown\033[0m")
     t.r_print(f"\033[92mRecorded:\033[0m {data.characters[actor]} {action_name} {target_name}")
 
-def release_ties():
+def end_votes():
     if data.ties:
         for char_index in data.ties:
             char_name = data.characters[char_index]
             if char_name in data.words_to_color and data.words_to_color[char_name] == data.YELLOW:
                 del data.words_to_color[char_name]
-        data.ties = []
+        data.ties, data.ties_history = [], []
         data.voting_characters = {}
 
 def handle_vote(action_choice, action_name):
     while True:
+        table_rendering.print_table()
         t.check_error()
         t.t_print("1. \033[91mStart the vote!\033[0m")
         t.t_print("2. \033[31mVote\033[0m") 
         t.t_print("3. \033[31mFreeze All\033[0m") 
         t.t_print("4. \033[34mFreeze Nobody\033[0m") 
+        t.t_print("5. Revert ongoing votes")
         t.t_print("z. Go back")
         
         vote_menu_choice = t.t_input("Select an action by number: ")
         match vote_menu_choice:
             case '1':
                 while True:
+                    data.vote_history = {}
                     data.voting_characters = data.voting_characters if data.voting_characters else list(data.characters.keys())
                     voting_characters = data.voting_characters.copy()
                     for char_index in voting_characters:
@@ -62,15 +65,18 @@ def handle_vote(action_choice, action_name):
                                 target = int(target)
                                 data.votes[target] = data.votes.get(target, 0) + 1
                                 record_action(action_choice, action_name, char_index, target)
+                                data.vote_history[char_index] = target
                         data.voting_characters.remove(char_index)
                     max_votes = max(data.votes.values(), default=0)
                     most_voted = sorted([char for char, votes in data.votes.items() if votes == max_votes])
                     data.votes = {}
                     if len(most_voted) == 1:
-                        release_ties()
                         toggle_role(most_voted[0], 10)
+                        end_votes()
                     else:
-                        set_ties(most_voted)
+                        data.ties = most_voted
+                        set_ties(data.ties)
+                        data.ties_history.append(most_voted)
                     table_rendering.print_table()
                     return
             case '2':
@@ -79,15 +85,17 @@ def handle_vote(action_choice, action_name):
                 if data.ties:
                     for char in data.ties:
                         toggle_role(char, 10)
-                    release_ties()
+                    end_votes()
                 else:
                     t.error_text = "\033[31mNo votes to freeze.\033[0m"
             case '4':
                 if data.ties:
-                    release_ties()
+                    end_votes()
                     t.r_print("\033[34mNobody is frozen.\033[0m")
                 else:
                     t.error_text = "\033[31mNo votes to release.\033[0m"
+            case '5':
+                revert_ongoing_votes()
             case 'z':
                 return
             case '':
@@ -96,13 +104,35 @@ def handle_vote(action_choice, action_name):
                 t.error_text = "\033[31mInvalid choice. Try again.\033[0m"
 
 def set_ties(most_voted):
-    data.ties = most_voted
-    t.r_print("\033[91mIt's a tie! Vote again.\033[0m")
-    data.voting_characters = list(data.characters.keys())
+    if most_voted:
+        t.r_print("\033[91mIt's a tie! Vote again.\033[0m")
+        data.voting_characters = list(data.characters.keys())
+        for char in reversed(data.ties):
+            char_name = data.characters[char]
+            if char_name in data.words_to_color and data.words_to_color[char_name] == data.YELLOW:
+                del data.words_to_color[char_name]
+    else:
+        t.error_text = "\033[31mNo votes to tie.\033[0m"
+            
     for char in reversed(data.ties):
+        char_name = data.characters[char]
+        if char_name in data.words_to_color and data.words_to_color[char_name] == data.YELLOW:
+            del data.words_to_color[char_name]
         data.voting_characters.remove(char)
         data.voting_characters.insert(1, char)
         data.words_to_color[data.characters[char]] = data.YELLOW
+
+def revert_ongoing_votes():
+    if data.vote_history:
+        for actor, target in data.vote_history.items():
+            delete_recent_action(actor, target)
+            data.votes, data.voting_characters, data.vote_history = {}, {}, {}
+        if data.ties:
+            data.ties_history.pop()
+            data.ties = data.ties_history[-1] if data.ties_history else []
+            set_ties(data.ties)
+    else:
+        t.error_text = "\033[31mNo votes to revert.\033[0m"
 
 def get_target(actor):
     while True:
@@ -132,21 +162,25 @@ def validate_choice(user_input:str, choice_type='character'):
     else:
         return False
 
-def delete_recent_action():
+def delete_recent_action(actor = None, target = None, escape = False):
     while True:
         table_rendering.print_table()
-        actor = select_character("actor")
-        if actor in ['z', 'p']:
-            return
-        else:
-            actor = int(actor)
+        if not actor:
+            actor = select_character("actor")
+            if actor in ['z', 'p']:
+                return
+            else:
+                actor = int(actor)
 
         actor_name = data.characters[actor]
-        target = select_character("target", f"Acting character: \033[91m{data.characters[actor]}\033[0m")
-        if target == 'z':
-            return
+        if not target:
+            target = select_character("target", f"Acting character: \033[91m{data.characters[actor]}\033[0m")
+            if target == 'z':
+                return
+            else:
+                target = int(target)
         else:
-            target = int(target)
+            escape = True
 
         target_name = data.characters[target]
         actions = data.matrix[actor - 1][target - 1]
@@ -156,6 +190,8 @@ def delete_recent_action():
             if key:
                 removed_action = data.action_list[key]
             t.r_print(f"\033[91mDeleted:\033[0m {actor_name} {removed_action['Name']} {target_name}")
+        if escape:
+            return
 
 def select_action():
     while True:
