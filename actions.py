@@ -51,7 +51,6 @@ def handle_vote(action_choice, action_name):
             case '1':
                 while True:
                     data.voting_characters = data.voting_characters if data.voting_characters else list(data.characters.keys())
-                    print(data.voting_characters)
                     voting_characters = data.voting_characters.copy()
                     for char_index in voting_characters:
                         char_name = data.characters[char_index]
@@ -95,6 +94,7 @@ def handle_vote(action_choice, action_name):
                 pass
             case _:
                 t.error_text = "\033[31mInvalid choice. Try again.\033[0m"
+
 def set_ties(most_voted):
     data.ties = most_voted
     t.r_print("\033[91mIt's a tie! Vote again.\033[0m")
