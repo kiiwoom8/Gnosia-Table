@@ -96,6 +96,8 @@ def start_vote(action_choice, action_name):
     if not data.voting_characters:
         data.voting_characters = list(data.characters.keys())
     for char_index in data.voting_characters.copy():
+        # TODO:
+        print(data.voting_characters)
         char_name = data.characters[char_index]
         if char_name != " "  and data.words_to_color.get(char_name) not in [data.RED, data.BLUE]:
             target = get_target(char_index)
@@ -116,10 +118,12 @@ def set_ties():
         if char_name in data.words_to_color and data.words_to_color[char_name] == data.YELLOW:
             del data.words_to_color[char_name]
 
+    data.voting_characters = list(data.characters.keys())
     for char in reversed(data.ties):
-        data.voting_characters = list(data.characters.keys())
         data.voting_characters.remove(char)
+        t.r_print(f"Before: {data.voting_characters}")
         data.voting_characters.insert(1, char)
+        t.r_print(f"After: {data.voting_characters}")
         data.words_to_color[data.characters[char]] = data.YELLOW
 
 def revert_ongoing_votes():
@@ -136,7 +140,8 @@ def revert_ongoing_votes():
                 if data.words_to_color[char] == data.BLUE:
                     del data.words_to_color[char]
                     break
-        end_votes()
+        if not data.ties:
+            end_votes()
     else:
         t.error_text = "\033[31mNo votes to revert.\033[0m"
 
