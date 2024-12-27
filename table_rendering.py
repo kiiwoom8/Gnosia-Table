@@ -78,7 +78,6 @@ def format_row(i, row_data, col_widths):
     )
 
 def apply_color(text):
-    reset_color = "\033[0m"
     for word, color in data.words_to_color.items():
-        text = re.sub(rf'(?<!\w)({re.escape(word)})(?!\w)', rf'{color}\1{reset_color}', text)
+        text = re.sub(rf'(?<!\w)({re.escape(word)})(?!\w)', rf'{color}\1{data.RESET}', text)
     return text

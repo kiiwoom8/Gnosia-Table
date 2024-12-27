@@ -10,7 +10,7 @@ table = ""
 characters_list = {
     1: "Me", 2: "Setsu", 3: "Gina", 4: "SQ", 5: "Raqio", 6: "Stella", 
     7: "Shigemichi", 8: "Chipie", 9: "Comet", 10: "Jonas", 11: "Kukurushka", 
-    12: "Otome", 13: "Sha-Ming", 14: "Remnan", 15: "Yuriko"
+    12: "Otome", 13: "ShaMing", 14: "Remnan", 15: "Yuriko"
 }
 
 character_stats = additional_functions.color_code_stats({name: dict(zip(
@@ -26,7 +26,7 @@ character_stats = additional_functions.color_code_stats({name: dict(zip(
     ("Jonas", ["16.5-38.5", "9.5-25", "12-34", "7-21.5", "19.5-43.5", "15.5-37"]),
     ("Kukurushka", ["4.5-14", "16-35.5", "0.5-3.5", "22.5-49.5", "20.5-45", "17.5-40.5"]),
     ("Otome", ["7.5-16", "16.5-32", "24-46.5", "20.5-42", "11-23", "13.5-26.5"]),
-    ("Sha-Ming", ["14.5-29", "5.5-6.5", "6.5-6.5", "16.5-34.5", "20.5-40.5", "25-49.5"]),
+    ("ShaMing", ["14.5-29", "5.5-6.5", "6.5-6.5", "16.5-34.5", "20.5-40.5", "25-49.5"]),
     ("Remnan", ["2-2", "21-41", "15-28", "10-29", "13-33", "22.5-43.5"]),
     ("Yuriko", ["25.5-49.5", "20.5-42", "22-44", "17.5-37.5", "25-49.5", "12-25"])
 ]})
