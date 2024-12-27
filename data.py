@@ -3,10 +3,6 @@ import additional_functions
 
 RED, BLUSH, GREEN, LBLUE, BLUE, YELLOW, RESET = "\033[31m", "\033[91m", "\033[92m","\033[94m", "\033[34m", "\033[33m", "\033[0m"
 
-characters, numbered_characters, removed_characters, votes, vote_history, voting_characters, current_roles = {}, {}, {}, {}, {}, {}, {}
-matrix, words_to_color, ties, ties_history, notes, history = [], [], [], [], [], []
-table = ""
-
 characters_list = {
     1: "Me", 2: "Setsu", 3: "Gina", 4: "SQ", 5: "Raqio", 6: "Stella", 
     7: "Shigemichi", 8: "Chipie", 9: "Comet", 10: "Jonas", 11: "Kukurushka", 
@@ -85,12 +81,16 @@ options = {
     }
 
 def reset():
-    global characters, matrix, current_roles, roles, words_to_color, notes, history, removed_characters
+    global characters, numbered_characters, removed_characters, votes, vote_history, voting_characters, current_roles
+    global matrix, words_to_color, ties, ties_history, notes, history
+    global table
     characters = characters_list.copy()
     matrix = [[[] for _ in characters] for _ in characters]
     words_to_color = {action["Abbr"]: action["Color"] for action in action_list.values()}
     current_roles = {role["Name"]: [] for role in roles.values()}
-    notes, history, removed_characters= [], [], {}
+    numbered_characters, removed_characters, votes, vote_history, voting_characters = {}, {}, {}, {}, {}
+    ties, ties_history, notes, history = [], [], [], []
+    table = ""
 
 def set_numbered_list(list):
     numbered_list = {

@@ -121,9 +121,7 @@ def set_ties():
     data.voting_characters = list(data.characters.keys())
     for char in reversed(data.ties):
         data.voting_characters.remove(char)
-        t.r_print(f"Before: {data.voting_characters}")
         data.voting_characters.insert(1, char)
-        t.r_print(f"After: {data.voting_characters}")
         data.words_to_color[data.characters[char]] = data.YELLOW
 
 def revert_ongoing_votes():
