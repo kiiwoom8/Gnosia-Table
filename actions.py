@@ -216,7 +216,7 @@ def display_roles():
     for role_num, role in data.roles.items():
         formatted_num = f" {role_num}" if role_num < 10 else str(role_num)
         t.t_print(f"{formatted_num}. {role["Name"]} ({role["Symbol"]})")
-    t.t_print("z. Go back")
+    t.t_print(" z. Go back")
 
 def toggle_role(char_index, role_choice):
     role_name = data.roles[role_choice]["Name"]
