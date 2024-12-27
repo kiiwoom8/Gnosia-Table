@@ -3,7 +3,7 @@ import additional_functions
 
 RED, BLUSH, LBLUE, BLUE, YELLOW, RESET = "\033[31m", "\033[91m", "\033[94m", "\033[34m", "\033[33m", "\033[0m"
 
-characters, numbered_characters, removed_characters, current_roles = {}, {}, {}, {}
+characters, numbered_characters, removed_characters, votes, voting_characters, current_roles = {}, {}, {}, {}, {}, {}
 matrix, words_to_color, ties, notes, history = [], [], [], [], []
 table = ""
 
