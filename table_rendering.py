@@ -11,6 +11,8 @@ def print_table():
     build_row_line(col_widths)
     generate_characters(col_widths)
     print(data.table, end="")
+    if data.votes or data.ties:
+        print(f"{data.GREEN}[On Vote]{data.RESET}")
 
 def clear():
     os.system("cls")

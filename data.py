@@ -1,7 +1,7 @@
 import actions
 import additional_functions
 
-RED, BLUSH, LBLUE, BLUE, YELLOW, RESET = "\033[31m", "\033[91m", "\033[94m", "\033[34m", "\033[33m", "\033[0m"
+RED, BLUSH, GREEN, LBLUE, BLUE, YELLOW, RESET = "\033[31m", "\033[91m", "\033[92m","\033[94m", "\033[34m", "\033[33m", "\033[0m"
 
 characters, numbered_characters, removed_characters, votes, vote_history, voting_characters, current_roles = {}, {}, {}, {}, {}, {}, {}
 matrix, words_to_color, ties, ties_history, notes, history = [], [], [], [], [], []
