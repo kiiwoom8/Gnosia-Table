@@ -1,6 +1,9 @@
 import data
 import table_rendering
 
+class Z(Exception):
+    pass
+
 text_lines = 0
 error_text = ""
 

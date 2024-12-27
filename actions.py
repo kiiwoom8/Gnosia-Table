@@ -52,21 +52,10 @@ def handle_vote(action_choice, action_name):
         match vote_menu_choice:
             case '1':
                 while True:
-                    data.vote_history = {}
-                    data.voting_characters = data.voting_characters if data.voting_characters else list(data.characters.keys())
-                    voting_characters = data.voting_characters.copy()
-                    for char_index in voting_characters:
-                        char_name = data.characters[char_index]
-                        if char_name != " "  and data.words_to_color.get(char_name) not in [data.BLUE, data.RED]:
-                            target = get_target(char_index)
-                            if target == 'z':
-                                return False
-                            if target != 'p':
-                                target = int(target)
-                                data.votes[target] = data.votes.get(target, 0) + 1
-                                record_action(action_choice, action_name, char_index, target)
-                                data.vote_history[char_index] = target
-                        data.voting_characters.remove(char_index)
+                    try: 
+                        start_vote(action_choice, action_name)
+                    except t.Z:
+                        break
                     max_votes = max(data.votes.values(), default=0)
                     most_voted = sorted([char for char, votes in data.votes.items() if votes == max_votes])
                     data.votes = {}
@@ -75,7 +64,7 @@ def handle_vote(action_choice, action_name):
                         end_votes()
                     else:
                         data.ties = most_voted
-                        set_ties(data.ties)
+                        set_ties(most_voted)
                         data.ties_history.append(most_voted)
                     table_rendering.print_table()
                     return
@@ -103,21 +92,31 @@ def handle_vote(action_choice, action_name):
             case _:
                 t.error_text = "\033[31mInvalid choice. Try again.\033[0m"
 
-def set_ties(most_voted):
-    if most_voted:
-        t.r_print("\033[91mIt's a tie! Vote again.\033[0m")
-        data.voting_characters = list(data.characters.keys())
-        for char in reversed(data.ties):
-            char_name = data.characters[char]
-            if char_name in data.words_to_color and data.words_to_color[char_name] == data.YELLOW:
-                del data.words_to_color[char_name]
-    else:
-        t.error_text = "\033[31mNo votes to tie.\033[0m"
-            
-    for char in reversed(data.ties):
-        char_name = data.characters[char]
+def start_vote(action_choice, action_name):
+    data.vote_history = {}
+    data.voting_characters = data.voting_characters if data.voting_characters else list(data.characters.keys())
+    voting_characters = data.voting_characters.copy()
+    for char_index in voting_characters:
+        char_name = data.characters[char_index]
+        if char_name != " "  and data.words_to_color.get(char_name) not in [data.BLUE, data.RED]:
+            target = get_target(char_index)
+            if target == 'z':
+                raise t.Z
+            if target != 'p':
+                target = int(target)
+                data.votes[target] = data.votes.get(target, 0) + 1
+                record_action(action_choice, action_name, char_index, target)
+                data.vote_history[char_index] = target
+        data.voting_characters.remove(char_index)
+
+def set_ties(most_voted = None):
+    t.r_print("\033[91mIt's a tie! Vote again.\033[0m")
+    for char_name in data.characters.values():
         if char_name in data.words_to_color and data.words_to_color[char_name] == data.YELLOW:
             del data.words_to_color[char_name]
+
+    for char in reversed(data.ties):
+        data.voting_characters = list(data.characters.keys())
         data.voting_characters.remove(char)
         data.voting_characters.insert(1, char)
         data.words_to_color[data.characters[char]] = data.YELLOW
@@ -127,10 +126,12 @@ def revert_ongoing_votes():
         for actor, target in data.vote_history.items():
             delete_recent_action(actor, target)
             data.votes, data.voting_characters, data.vote_history = {}, {}, {}
-        if data.ties:
+        if len(data.ties_history) > 1:
             data.ties_history.pop()
             data.ties = data.ties_history[-1] if data.ties_history else []
-            set_ties(data.ties)
+            set_ties()
+        else:
+            end_votes()
     else:
         t.error_text = "\033[31mNo votes to revert.\033[0m"
 
