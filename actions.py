@@ -28,12 +28,13 @@ def record_action(action_choice: int, action_name: str, actor = None, target = N
     target_name = data.characters.get(target, "\033[31mUnknown\033[0m")
     t.r_print(f"\033[92mRecorded:\033[0m {data.characters[actor]} {action_name} {target_name}")
 
-def end_votes():
+def release_ties():
     if data.ties:
         for char_index in data.ties:
             char_name = data.characters[char_index]
             if char_name in data.words_to_color and data.words_to_color[char_name] == data.YELLOW:
                 del data.words_to_color[char_name]
+        data.previous_ties = data.ties
         data.ties, data.ties_history = [], []
         data.voting_characters = {}
 
@@ -61,7 +62,7 @@ def handle_vote(action_choice, action_name):
                     data.votes = {}
                     if len(most_voted) == 1:
                         toggle_role(most_voted[0], 10)
-                        end_votes()
+                        release_ties()
                     else:
                         data.ties = most_voted
                         set_ties()
@@ -74,12 +75,12 @@ def handle_vote(action_choice, action_name):
                 if data.ties:
                     for char in data.ties:
                         toggle_role(char, 10)
-                    end_votes()
+                    release_ties()
                 else:
                     t.error_text = "\033[31mNo votes to freeze.\033[0m"
             case '4':
                 if data.ties:
-                    end_votes()
+                    release_ties()
                     t.r_print("\033[34mNobody is frozen.\033[0m")
                 else:
                     t.error_text = "\033[31mNo votes to release.\033[0m"
@@ -133,18 +134,23 @@ def revert_ongoing_votes():
     if data.vote_history:
         for actor, target in data.vote_history.items():
             delete_recent_action(actor, target)
-            data.votes, data.voting_characters, data.vote_history = {}, {}, {}
-        if len(data.ties_history) > 1:
-            data.ties_history.pop()
-            data.ties = data.ties_history[-1] if data.ties_history else []
-            set_ties()
-        elif not data.ties: # Someone is cold sleeped recently
-            for char in reversed(data.words_to_color.copy()):
-                if data.words_to_color[char] == data.BLUE:
-                    del data.words_to_color[char]
-                    break
+        if not data.votes: # There's no vote on current round, so revert the last vote
+            if len(data.ties_history) > 1:
+                data.ties_history.pop()
+                data.ties = data.ties_history[-1] if data.ties_history else []
+                set_ties()
+            elif len(data.ties_history) == 1:
+                release_ties()
+            elif not data.ties: # Someone is cold sleeped recently
+                for char in reversed(data.words_to_color.copy()):
+                    if data.words_to_color[char] == data.BLUE:
+                        del data.words_to_color[char]
+                        break
+                data.ties = data.previous_ties # Restore the previous ties
+                set_ties()
+        data.votes, data.voting_characters, data.vote_history = {}, {}, {}
         if not data.ties:
-            end_votes()
+            release_ties()
     else:
         t.error_text = "\033[31mNo votes to revert.\033[0m"
 

@@ -82,14 +82,14 @@ options = {
 
 def reset():
     global characters, numbered_characters, removed_characters, votes, vote_history, voting_characters, current_roles
-    global matrix, words_to_color, ties, ties_history, notes, history
+    global matrix, words_to_color, ties, previous_ties, ties_history, notes, history
     global table
     characters = characters_list.copy()
     matrix = [[[] for _ in characters] for _ in characters]
     words_to_color = {action["Abbr"]: action["Color"] for action in action_list.values()}
     current_roles = {role["Name"]: [] for role in roles.values()}
     numbered_characters, removed_characters, votes, vote_history, voting_characters = {}, {}, {}, {}, {}
-    ties, ties_history, notes, history = [], [], [], []
+    ties, previous_ties, ties_history, notes, history = [], [], [], [], []
     table = ""
 
 def set_numbered_list(list):
