@@ -185,36 +185,33 @@ def validate_choice(user_input:str, choice_type='character'):
 def delete_recent_action(actor = None, target = None, escape = False):
     while True:
         table_rendering.print_table()
-        if not actor:
+        if not actor or not target:
             actor = select_character("actor")
             if actor in ['z', 'p']:
                 return
-            else:
-                actor = int(actor)
-
-        actor_name = data.characters[actor]
-        if not target:
+            actor = int(actor)
             target = select_character("target", f"Acting character: \033[91m{data.characters[actor]}\033[0m")
             if target == 'z':
                 return
-            else:
-                target = int(target)
+            target = int(target)
+            remove_action_from_table(actor, target)
+            actor = None
         else:
-            escape = True
-
-        target_name = data.characters[target]
-        actions = data.matrix[actor - 1][target - 1]
-        if actions:
-            removed_action = actions.pop()
-            key = next((action_num for action_num, action in data.action_list.items() if action["Abbr"] == removed_action), None)
-            if key:
-                removed_action = data.action_list[key]
-            t.r_print(f"\033[91mDeleted:\033[0m {actor_name} {removed_action['Name']} {target_name}")
-        else:
-            t.error_text = "\033[31mNo actions to delete.\033[0m"
-        actor, target = None, None
-        if escape:
+            remove_action_from_table(actor, target)
             return
+
+def remove_action_from_table(actor, target):
+    actor_name = data.characters[actor]
+    target_name = data.characters[target]
+    actions = data.matrix[actor - 1][target - 1]
+    if actions:
+        removed_action = actions.pop()
+        key = next((action_num for action_num, action in data.action_list.items() if action["Abbr"] == removed_action), None)
+        if key:
+            removed_action = data.action_list[key]
+        t.r_print(f"\033[91mDeleted:\033[0m {actor_name} {removed_action['Name']} {target_name}")
+    else:
+        t.error_text = "\033[31mNo actions to delete.\033[0m"
 
 def select_action():
     while True:
@@ -223,7 +220,6 @@ def select_action():
         for action_num, action in data.action_list.items():
             t.t_print(f"{action_num}. {action['Name']}")
         t.t_print("z. Go back")
-
         action_choice = t.t_input("Select an action by number: ")
         if action_choice:
             if (action_choice.isdigit() and int(action_choice) in data.action_list) or action_choice == 'z':
@@ -254,22 +250,16 @@ def assign_roles():
         t.t_print("\033[92mAssign\033[0m/\033[91mremove\033[0m Roles: ")
         display_roles()
         role_choice = t.t_input("Select a role by number: ")
-        if role_choice == 'z':
-            return
-        elif not role_choice:
-            continue
-            
-        if validate_choice(role_choice, 'role') == False:
-            t.error_text = "\033[31mInvalid choice. Try again.\033[0m"
-            continue
-        else:
-            role_choice = int(role_choice)
-        char_index = select_character("assigned/removed", f"\033[92mAssign\033[0m/\033[91mremove\033[0m a role ({data.roles[role_choice]["Symbol"]}): ")
-        if char_index not in ['z', 'p']:
-            if not char_index:
-                t.error_text = "\033[31mInvalid choice. Try again.\033[0m"
+        if role_choice:
+            if role_choice == 'z':
+                return
+            if validate_choice(role_choice, 'role'):
+                role_choice = int(role_choice)
+                char_index = select_character("assigned/removed", f"\033[92mAssign\033[0m/\033[91mremove\033[0m a role ({data.roles[role_choice]["Symbol"]}): ")
+                if char_index not in ['z', 'p']:
+                    toggle_role(int(char_index), role_choice)
             else:
-                toggle_role(int(char_index), role_choice)
+                t.error_text = "\033[31mInvalid choice. Try again.\033[0m"
 
 def display_roles():
     for role_num, role in data.roles.items():
