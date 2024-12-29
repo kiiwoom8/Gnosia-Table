@@ -60,8 +60,7 @@ def show_stats():
             print_stats(option)
         t.check_error()
         option = t.t_input("Enter your choice (or 'z' to go back): ")
-        if option:
-            if option == 'z':
+        if option == 'z':
                 return
             
 def color_code_stats(character_stats):
