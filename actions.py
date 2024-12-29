@@ -212,6 +212,7 @@ def delete_recent_action(actor = None, target = None, escape = False):
             t.r_print(f"\033[91mDeleted:\033[0m {actor_name} {removed_action['Name']} {target_name}")
         else:
             t.error_text = "\033[31mNo actions to delete.\033[0m"
+        actor, target = None, None
         if escape:
             return
 
