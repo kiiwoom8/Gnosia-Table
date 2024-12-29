@@ -54,7 +54,7 @@ def draw_note_line():
     t.t_print(f"{text}")
 
 def show_stats():
-    option = "0"
+    option = None
     while True:
         if option:
             print_stats(option)
