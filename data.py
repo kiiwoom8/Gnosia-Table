@@ -1,5 +1,6 @@
 import actions
 import additional_functions
+import backup
 
 RED, BLUSH, GREEN, LBLUE, BLUE, YELLOW, RESET = "\033[31m", "\033[91m", "\033[92m","\033[94m", "\033[34m", "\033[33m", "\033[0m"
 
@@ -42,24 +43,26 @@ roles = {i + 1: {"Name": name, "Symbol": symbol} for i, (name, symbol) in enumer
     ])}
 
 action_list = {
-    0 if i == 9 else i + 1: {"Name": f"{color}{name}{RESET}", "Abbr": abbr, "Color": color}
+    i + 1: {"Name": f"{color}{name}{RESET}", "Abbr": abbr, "Color": color}
     for i, (name, abbr, color) in enumerate([
-        ("Vote", "Vo", RED),
         ("Doubt", "Dou", RED),
-        ("Agree", "Ag", BLUSH),
         ("Cover", "Cov", BLUE),
-        ("Defend", "Def", LBLUE),
+        ("Agree", "Ag", BLUSH),
         ("Exaggerate Agree", "ExA", RED),
-        ("Exaggerate Defend", "ExD", BLUE),
-        ("Argue", "Arg", RED),
         ("Seek Agreement", "SeA", RED),
+        ("Retaliate/Don't be fooled", "Ret", RED),
+        ("Defend", "Def", BLUE),
+        ("Agree", "AgD", LBLUE),
+        ("Exaggerate Defend", "ExD", BLUE),
         ("Seek Agreement", "SeD", BLUE),
+        ("Argue", "Arg", RED),
+        ("Vote", "Vo", RED),
     ])
 }
 
 options = {
     1: {"title": "Record an action", 
-        "function": lambda: actions.act()}, 
+        "function": lambda: actions.handle_discussion()}, 
     2: {"title": "Delete the most recent action", 
         "function": lambda: actions.delete_recent_action()}, 
     3: {"title": "Assign/Remove roles", 
@@ -72,8 +75,8 @@ options = {
         "function": lambda: additional_functions.see_full_history()}, 
     7: {"title": "Remove character from the list", 
         "function": lambda: actions.remove_character_from_list()}, 
-    8: {"title": "Restore removed characters", 
-        "function": lambda: actions.restore_removed_characters()}, 
+    8: {"title": "Redo/Undo", 
+        "function": lambda: backup.choose_option()}, 
     9: {"title": "Initialize table", 
         "function": lambda: reset()}, 
     0: {"title": "\033[90mExit\033[0m", 
@@ -84,13 +87,20 @@ def reset():
     global characters, numbered_characters, removed_characters, votes, vote_history, voting_characters, current_roles
     global matrix, words_to_color, ties, previous_ties, ties_history, notes, history
     global table
+    global first_actor, actor, target
+    global discussion_doubt, discussion_defend
+    global round, ties_round
     characters = characters_list.copy()
     matrix = [[[] for _ in characters] for _ in characters]
     words_to_color = {action["Abbr"]: action["Color"] for action in action_list.values()}
     current_roles = {role["Name"]: [] for role in roles.values()}
     numbered_characters, removed_characters, votes, vote_history, voting_characters = {}, {}, {}, {}, {}
     ties, previous_ties, ties_history, notes, history = [], [], [], [], []
+    first_actor, actor, target = None, None, None
+    discussion_doubt, discussion_defend = False, False
     table = ""
+    round, ties_round = 1, 0
+
 
 def set_numbered_list(list):
     numbered_list = {
