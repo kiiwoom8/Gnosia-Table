@@ -1,60 +1,8 @@
 import data
 import table_rendering
 import handle_text as t
-import vote
+import discussion
 import backup
-        
-def handle_discussion():
-    while True:
-        var, action_range = print_discusstion_menu()        
-        discussion_menu_choice = t.t_input("Select an action by number: ")
-        if discussion_menu_choice:
-            if discussion_menu_choice in ['z', 'p']:
-                return
-            if discussion_menu_choice == '0':
-                init_discussion_settings()
-                increment_round()
-                table_rendering.print_table()
-            elif discussion_menu_choice.isdigit() and int(discussion_menu_choice) + var in action_range:
-                discussion_menu_choice = int(discussion_menu_choice) + var
-                record_action(discussion_menu_choice, data.action_list[discussion_menu_choice]["Name"], data.actor, data.target)
-                table_rendering.print_table()
-            else:
-                t.error_text = "\033[31mInvalid choice. Try again.\033[0m"
-
-
-def print_discusstion_menu():
-    t.check_error()
-    if data.round > 5 and data.ties_round in [0, 3]: # Voting round
-        vote.handle_vote()
-        return 0, []
-    elif data.discussion_doubt:
-        t.t_print(f"Target: {data.BLUE}{data.characters[data.target]}{data.RESET}")
-        var, action_range = 2, range(3, 8)
-    elif data.discussion_defend:
-        t.t_print(f"Target: {data.BLUE}{data.characters[data.target]}{data.RESET}")
-        var, action_range = 7, range(8, 12)
-    else: # Beginning; Doubt or Cover
-        var, action_range = 0, range(1, 3)
-
-    for i in action_range:
-        action = data.action_list[i]
-        t.t_print(f"{i - var}. {action['Color']}{action['Name']}{data.RESET}")
-
-    t.t_print("0. End discussion")
-    if data.vote_history:
-        t.t_print(f"r. {data.RED}Revert the most recent votes{data.RESET}")
-    t.t_print("z. Go back")
-    
-    return var, action_range
-
-
-def init_discussion_settings():
-    backup.backup_state()
-    data.first_actor, data.actor, data.target = None, None, None
-    data.discussion_doubt, data.discussion_defend = False, False
-    data.participation = []
-
 
 def increment_round():
     if data.ties:
@@ -97,26 +45,7 @@ def record_action(action_choice: int, action_name: str, actor = None, target = N
     target_name = data.characters.get(target, "\033[31mUnknown\033[0m")
     t.r_print(f"\033[92mRecorded:\033[0m {data.characters[actor]} {action_name} {target_name}")
     data.participation.append(actor)
-    set_discussion_options(action_choice)
-
-
-def set_discussion_options(action_choice):
-    match action_choice:
-        case 1:
-            data.discussion_doubt = True
-            data.first_actor = data.actor
-        case 2:
-            data.discussion_defend = True
-        case 6:
-            data.discussion_doubt = True
-            data.discussion_defend = False
-        case 7:
-            data.discussion_doubt = False
-            data.discussion_defend = True
-        case 11:
-            data.discussion_doubt = True
-            data.discussion_defend = False
-    data.actor = None
+    discussion.set_discussion_options(action_choice)
 
 
 def get_target(actor):
@@ -130,12 +59,6 @@ def get_target(actor):
             t.t_print("\033[31mInvalid choice. Please try again.\033[0m")
         else:
             return target
-
-
-def display_characters():
-    for number, character in data.characters.items():
-        if character != " ":
-            t.t_print(f"{number}. {character}")
 
 
 def validate_choice(user_input:str, choice_type='character'):
@@ -200,47 +123,6 @@ def select_character(role_type, action_name=None):
                 return user_input
             else:
                 t.error_text = "\033[31mInvalid choice. Try again.\033[0m"
-
-
-def assign_roles():
-    while True:
-        t.check_error()
-        t.t_print("\033[92mAssign\033[0m/\033[91mremove\033[0m Roles: ")
-        display_roles()
-        role_choice = t.t_input("Select a role by number: ")
-        if role_choice:
-            if role_choice == 'z':
-                return
-            if validate_choice(role_choice, 'role'):
-                role_choice = int(role_choice)
-                char_index = select_character("assigned/removed", f"\033[92mAssign\033[0m/\033[91mremove\033[0m a role ({data.roles[role_choice]["Symbol"]}): ")
-                if char_index not in ['z', 'p']:
-                    backup.backup_state()
-                    toggle_role(int(char_index), role_choice)
-            else:
-                t.error_text = "\033[31mInvalid choice. Try again.\033[0m"
-
-
-def display_roles():
-    for role_num, role in data.roles.items():
-        formatted_num = f" {role_num}" if role_num < 10 else str(role_num)
-        t.t_print(f"{formatted_num}. {role["Name"]} ({role["Symbol"]})")
-    t.t_print(" z. Go back")
-
-
-def toggle_role(char_index, role_choice):
-    role_name = data.roles[role_choice]["Name"]
-    role_symbol = data.roles[role_choice]["Symbol"]
-    if role_name in ["Killed", "Cold Sleep"]:
-        toggle_color(char_index, role_choice)
-        return
-    if char_index in data.current_roles[role_name]:
-        data.current_roles[role_name].remove(char_index)
-        t.r_print(f"\033[91mRemoved\033[0m {role_name} ({role_symbol}) from {data.characters[char_index]}.")
-    else:
-        data.current_roles[role_name].append(char_index)
-        char_index = int(char_index)
-        t.r_print(f"\033[94mAssigned\033[0m {role_name} ({role_symbol}) to {data.characters[char_index]}.")
 
 
 def toggle_color(char_index, role_choice):

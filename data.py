@@ -1,8 +1,10 @@
 import actions
+import discussion
+import role
 import additional_functions
 import backup
 
-RED, BLUSH, GREEN, LBLUE, BLUE, YELLOW, RESET = "\033[31m", "\033[91m", "\033[92m","\033[94m", "\033[34m", "\033[33m", "\033[0m"
+RED, BLUSH, GREEN, LBLUE, BLUE, YELLOW, LGREEN, RESET = "\033[31m", "\033[91m", "\033[92m","\033[94m", "\033[34m", "\033[33m", "\033[92m", "\033[0m"
 
 characters_list = {
     1: "Me", 2: "Setsu", 3: "Gina", 4: "SQ", 5: "Raqio", 6: "Stella", 
@@ -62,11 +64,11 @@ action_list = {
 
 options = {
     1: {"title": "Record an action", 
-        "function": lambda: actions.handle_discussion()}, 
+        "function": lambda: discussion.handle_discussion()}, 
     2: {"title": "Delete the most recent action", 
         "function": lambda: actions.delete_recent_action()}, 
     3: {"title": "Assign/Remove roles", 
-        "function": lambda: actions.assign_roles()},
+        "function": lambda: role.assign_roles()},
     4: {"title": "\033[33mNotepad\033[0m", 
         "function": lambda: additional_functions.take_note()}, 
     5: {"title": "Show character stats", 
