@@ -12,7 +12,6 @@ def handle_discussion():
             if discussion_menu_choice in ['z', 'p']:
                 return
             if discussion_menu_choice == '0':
-                backup.backup_state()
                 init_discussion_settings()
                 increment_round()
                 table_rendering.print_table()
@@ -52,6 +51,7 @@ def print_discusstion_menu():
 
 
 def init_discussion_settings():
+    backup.backup_state()
     data.first_actor, data.actor, data.target = None, None, None
     data.discussion_doubt, data.discussion_defend = False, False
 
@@ -278,6 +278,7 @@ def restore_removed_characters():
     if not data.removed_characters:
         t.error_text = "\033[31mNo characters to restore.\033[0m"
         return
+    backup.backup_state()
     for number, character in data.removed_characters.items():
         data.characters[number] = character
     t.r_print(f"\033[94mRestored all the characters to the list.\033[0m")

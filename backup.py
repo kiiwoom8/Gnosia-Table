@@ -17,6 +17,7 @@ def backup_state(stack = True):
         'current_roles': copy.deepcopy(data.current_roles),
         'matrix': copy.deepcopy(data.matrix),
         'words_to_color': copy.deepcopy(data.words_to_color),
+        'history': copy.deepcopy(data.history),
         'ties': copy.deepcopy(data.ties),
         'previous_ties': copy.deepcopy(data.previous_ties),
         'ties_history': copy.deepcopy(data.ties_history),
@@ -37,6 +38,7 @@ def backup_state(stack = True):
         redo_stack.clear()
     return state
 
+
 def restore_state(state):
     data.characters = state['characters']
     data.numbered_characters = state['numbered_characters']
@@ -47,6 +49,7 @@ def restore_state(state):
     data.current_roles = state['current_roles']
     data.matrix = state['matrix']
     data.words_to_color = state['words_to_color']
+    data.history = state['history']
     data.ties = state['ties']
     data.previous_ties = state['previous_ties']
     data.ties_history = state['ties_history']
@@ -59,6 +62,7 @@ def restore_state(state):
     data.round = state['round']
     data.ties_round = state['ties_round']
 
+
 def undo():
     if undo_stack:
         state = undo_stack.pop()
@@ -69,6 +73,7 @@ def undo():
     else:
         t.error_text = "\033[31mNo more actions to undo.\033[0m"
 
+
 def redo():
     if redo_stack:
         state = redo_stack.pop()
@@ -78,6 +83,7 @@ def redo():
         table_rendering.print_table()
     else:
         t.error_text = "\033[31mNo more actions to redo.\033[0m"
+
 
 def choose_option():
     while True:
