@@ -46,6 +46,7 @@ def set_numbered_list(list:dict):
     }
     return numbered_list
 
+
 def exit_program():
     choice = t.t_input("Are you sure you want to exit? (y/n): ")
     if choice == 'y':
