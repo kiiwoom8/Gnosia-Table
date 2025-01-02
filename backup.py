@@ -9,7 +9,6 @@ redo_stack = []
 def backup_state(stack = True):
     state = {
         'characters': deepcopy(data.characters),
-        'numbered_characters': deepcopy(data.numbered_characters),
         'removed_characters': deepcopy(data.removed_characters),
         'votes': deepcopy(data.votes),
         'voting_characters': deepcopy(data.voting_characters),
@@ -20,7 +19,6 @@ def backup_state(stack = True):
         'history': deepcopy(data.history),
         'ties': deepcopy(data.ties),
         'previous_ties': deepcopy(data.previous_ties),
-        'table': data.table,
         'first_actor': data.first_actor,
         'actor': data.actor,
         'target': data.target,
@@ -39,7 +37,6 @@ def backup_state(stack = True):
 
 def restore_state(state):
     data.characters = state['characters']
-    data.numbered_characters = state['numbered_characters']
     data.removed_characters = state['removed_characters']
     data.votes = state['votes']
     data.voting_characters = state['voting_characters']
@@ -50,7 +47,6 @@ def restore_state(state):
     data.history = state['history']
     data.ties = state['ties']
     data.previous_ties = state['previous_ties']
-    data.table = state['table']
     data.first_actor = state['first_actor']
     data.actor = state['actor']
     data.target = state['target']
