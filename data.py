@@ -83,7 +83,7 @@ options = {
     9: {"title": "Initialize table", 
         "function": lambda: functions.reset()}, 
     0: {"title": "\033[90mExit\033[0m", 
-        "function": lambda: exit(0)}
+        "function": lambda: functions.exit_program()}
     }
 
 def reset():

@@ -1,6 +1,7 @@
 import data
 import backup
 import handle_text as t
+import table_rendering
 
 def reset():
     if data.characters:
@@ -44,3 +45,9 @@ def set_numbered_list(list:dict):
         for num, element in list.items()
     }
     return numbered_list
+
+def exit_program():
+    choice = t.t_input("Are you sure you want to exit? (y/n): ")
+    if choice == 'y':
+        table_rendering.clear()
+        exit(0)
