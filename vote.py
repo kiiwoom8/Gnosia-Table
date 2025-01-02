@@ -15,7 +15,6 @@ def handle_vote():
             case '1':
                 vote()
             case '2':
-                backup.backup_state()
                 actions.record_action(12, "Vote")
             case '3':
                 freeze_all()
@@ -58,7 +57,6 @@ def vote():
     
 
 def vote_characters():
-    backup.backup_state()
     if not data.voting_characters:
         data.voting_characters = list(data.characters.keys())
     for char_index in data.voting_characters.copy():

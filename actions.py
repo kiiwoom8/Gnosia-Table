@@ -17,7 +17,6 @@ def handle_discussion():
                 table_rendering.print_table()
             elif discussion_menu_choice.isdigit() and int(discussion_menu_choice) + var in action_range:
                 discussion_menu_choice = int(discussion_menu_choice) + var
-                backup.backup_state()
                 record_action(discussion_menu_choice, data.action_list[discussion_menu_choice]["Name"], data.actor, data.target)
                 table_rendering.print_table()
             else:
@@ -26,27 +25,27 @@ def handle_discussion():
 
 def print_discusstion_menu():
     t.check_error()
-    var = 0
     if data.round > 5 and data.ties_round in [0, 3]: # Voting round
         vote.handle_vote()
         return 0, []
     elif data.discussion_doubt:
-        var = 2
-        action_range = range(3, 8)
+        t.t_print(f"Target: {data.BLUE}{data.characters[data.target]}{data.RESET}")
+        var, action_range = 2, range(3, 8)
     elif data.discussion_defend:
         t.t_print(f"Target: {data.BLUE}{data.characters[data.target]}{data.RESET}")
-        var = 7
-        action_range = range(8, 12)
+        var, action_range = 7, range(8, 12)
     else: # Beginning; Doubt or Cover
-        action_range = range(1, 3)
+        var, action_range = 0, range(1, 3)
 
     for i in action_range:
         action = data.action_list[i]
         t.t_print(f"{i - var}. {action['Color']}{action['Name']}{data.RESET}")
+
     t.t_print("0. End discussion")
     if data.vote_history:
         t.t_print(f"r. {data.RED}Revert the most recent votes{data.RESET}")
     t.t_print("z. Go back")
+    
     return var, action_range
 
 
@@ -54,6 +53,7 @@ def init_discussion_settings():
     backup.backup_state()
     data.first_actor, data.actor, data.target = None, None, None
     data.discussion_doubt, data.discussion_defend = False, False
+    data.participation = []
 
 
 def increment_round():
@@ -68,6 +68,7 @@ def record_action(action_choice: int, action_name: str, actor = None, target = N
         actor = data.target
         data.target = data.first_actor
         target = data.target
+
     if not actor:
         if target:
             t.t_print(f"Target: {data.BLUE}{data.characters[target]}{data.RESET}" )
@@ -78,7 +79,11 @@ def record_action(action_choice: int, action_name: str, actor = None, target = N
         if actor == target:
             t.error_text = "\033[31mCannot act on self. Please try again.\033[0m"
             return
+        if actor in data.participation:
+            t.error_text = "\033[31mCannot act twice in a round. Please try again.\033[0m"
+            return
         data.actor = actor
+
     if not target:
         target = get_target(actor)
         if target in ['z', 'p']:
@@ -86,10 +91,12 @@ def record_action(action_choice: int, action_name: str, actor = None, target = N
         target = int(target)
         data.target = target
         
+    backup.backup_state()
     action = data.action_list.get(action_choice, {}).get("Abbr")
     data.matrix[actor - 1][target - 1].append(action)
     target_name = data.characters.get(target, "\033[31mUnknown\033[0m")
     t.r_print(f"\033[92mRecorded:\033[0m {data.characters[actor]} {action_name} {target_name}")
+    data.participation.append(actor)
     set_discussion_options(action_choice)
 
 

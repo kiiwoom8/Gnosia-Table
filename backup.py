@@ -17,6 +17,7 @@ def backup_state(stack = True):
         'current_roles': copy.deepcopy(data.current_roles),
         'matrix': copy.deepcopy(data.matrix),
         'words_to_color': copy.deepcopy(data.words_to_color),
+        'participation': copy.deepcopy(data.participation),
         'history': copy.deepcopy(data.history),
         'ties': copy.deepcopy(data.ties),
         'previous_ties': copy.deepcopy(data.previous_ties),
@@ -49,6 +50,7 @@ def restore_state(state):
     data.current_roles = state['current_roles']
     data.matrix = state['matrix']
     data.words_to_color = state['words_to_color']
+    data.participation = state['participation']
     data.history = state['history']
     data.ties = state['ties']
     data.previous_ties = state['previous_ties']

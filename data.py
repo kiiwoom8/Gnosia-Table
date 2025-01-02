@@ -85,7 +85,7 @@ options = {
 
 def reset():
     global characters, numbered_characters, removed_characters, votes, vote_history, voting_characters, current_roles
-    global matrix, words_to_color, ties, previous_ties, ties_history, notes, history
+    global matrix, words_to_color, participation, ties, previous_ties, ties_history, notes, history
     global table
     global first_actor, actor, target
     global discussion_doubt, discussion_defend
@@ -95,7 +95,7 @@ def reset():
     words_to_color = {action["Abbr"]: action["Color"] for action in action_list.values()}
     current_roles = {role["Name"]: [] for role in roles.values()}
     numbered_characters, removed_characters, votes, vote_history, voting_characters = {}, {}, {}, {}, {}
-    ties, previous_ties, ties_history, notes, history = [], [], [], [], []
+    participation, ties, previous_ties, ties_history, notes, history = [], [], [], [], [], []
     first_actor, actor, target = None, None, None
     discussion_doubt, discussion_defend = False, False
     table = ""
