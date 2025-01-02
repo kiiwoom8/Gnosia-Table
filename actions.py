@@ -6,6 +6,7 @@ import discussion
 import backup
 
 def record_action(action_choice: int, action_name: str, actor = None, target = None):
+    backup.backup_state()
     if action_name == f"{data.RED}Retaliate/Don't be fooled{data.RESET}":
         actor = data.target
         data.target = data.first_actor
@@ -33,7 +34,6 @@ def record_action(action_choice: int, action_name: str, actor = None, target = N
         target = int(target)
         data.target = target
         
-    backup.backup_state()
     action = data.action_list.get(action_choice, {}).get("Abbr")
     data.matrix[actor - 1][target - 1].append(action)
     target_name = data.characters.get(target, "\033[31mUnknown\033[0m")
