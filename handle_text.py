@@ -1,9 +1,5 @@
 import data
 import table_rendering
-import backup
-
-class Z(Exception):
-    pass
 
 text_lines = 0
 error_text = ""

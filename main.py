@@ -1,5 +1,4 @@
 import data
-import functions
 import handle_text as t
 import table_rendering
 

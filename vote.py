@@ -53,13 +53,6 @@ def vote_characters():
     if not data.voting_characters:
         data.voting_characters = list(data.characters.keys())
     for char_index in data.voting_characters.copy():
-        '''
-        # show reamining characters voting
-        voting_character_names = [data.characters[char_index] for char_index in data.voting_characters 
-                                  if data.characters[char_index] != " "]
-        voting_character_names[0] = f"{data.BLUSH}{voting_character_names[0]}{data.RESET}"
-        print(", ".join(voting_character_names))
-        '''
         char_name = data.characters[char_index]
         if char_name != " "  and data.words_to_color.get(char_name) not in [data.RED, data.BLUE]:
             target = actions.get_target(char_index)
