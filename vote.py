@@ -2,6 +2,7 @@ import table_rendering
 import data
 import handle_text as t
 import actions
+import role
 import backup
 
 def handle_vote():
@@ -43,7 +44,7 @@ def vote():
     most_voted = sorted([char for char, votes in data.votes.items() if votes == max_votes])
     data.votes = {}
     if len(most_voted) == 1:
-        actions.toggle_role(most_voted[0], 10)
+        role.toggle_role(most_voted[0], 10)
         release_ties()
         data.round, data.ties_round = 1, 0
     else:
@@ -84,7 +85,7 @@ def freeze_all():
     if data.ties:
         backup.backup_state()
         for char in data.ties:
-            actions.toggle_role(char, 10)
+            role.toggle_role(char, 10)
         release_ties()
     else:
         t.error_text = "\033[31mNo votes to freeze.\033[0m"
