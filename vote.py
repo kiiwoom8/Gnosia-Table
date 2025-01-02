@@ -15,10 +15,8 @@ def handle_vote():
             case '1':
                 vote()
             case '2':
-                actions.record_action(12, "Vote")
-            case '3':
                 freeze_all()
-            case '4':
+            case '3':
                 freeze_nobody()
             case 'z':
                 return
@@ -27,12 +25,12 @@ def handle_vote():
             case _:
                 t.error_text = "\033[31mInvalid choice. Try again.\033[0m"
 
+
 def print_vote_menu():
     t.check_error()
     t.t_print("1. \033[91mStart the vote!\033[0m")
-    t.t_print("2. \033[31mVote\033[0m") 
-    t.t_print("3. \033[31mFreeze All\033[0m") 
-    t.t_print("4. \033[34mFreeze Nobody\033[0m") 
+    t.t_print("2. \033[31mFreeze All\033[0m") 
+    t.t_print("3. \033[34mFreeze Nobody\033[0m") 
     t.t_print("z. Go back")
 
 
