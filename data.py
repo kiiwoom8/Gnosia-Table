@@ -1,3 +1,4 @@
+import functions
 import actions
 import discussion
 import role
@@ -80,7 +81,7 @@ options = {
     8: {"title": "Redo/Undo", 
         "function": lambda: backup.choose_option()}, 
     9: {"title": "Initialize table", 
-        "function": lambda: reset()}, 
+        "function": lambda: functions.reset()}, 
     0: {"title": "\033[90mExit\033[0m", 
         "function": lambda: exit(0)}
     }
@@ -92,6 +93,7 @@ def reset():
     global first_actor, actor, target
     global discussion_doubt, discussion_defend
     global round, ties_round
+    
     characters = characters_list.copy()
     matrix = [[[] for _ in characters] for _ in characters]
     words_to_color = {action["Abbr"]: action["Color"] for action in action_list.values()}
@@ -102,11 +104,3 @@ def reset():
     discussion_doubt, discussion_defend = False, False
     table = ""
     round, ties_round = 1, 0
-
-
-def set_numbered_list(list):
-    numbered_list = {
-        num: element if element == " " else f"{' ' if num < 10 else ''}{num}. {element}"
-        for num, element in list.items()
-    }
-    return numbered_list

@@ -1,4 +1,5 @@
 import data
+import functions
 import handle_text as t
 import table_rendering
 
@@ -24,7 +25,7 @@ def execute_function(option):
 
 
 def main():
-    data.reset()
+    data.reset() # should reset from data.py, not from functions.py
     while True:
         table_rendering.print_table()
         t.check_error()

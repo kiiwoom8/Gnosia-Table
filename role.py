@@ -1,4 +1,5 @@
 import data
+import functions
 import actions
 import handle_text as t
 import backup
@@ -13,7 +14,7 @@ def assign_roles():
         if role_choice:
             if role_choice == 'z':
                 return
-            if actions.validate_choice(role_choice, 'role'):
+            if functions.validate_choice(role_choice, 'role'):
                 role_choice = int(role_choice)
                 char_index = actions.select_character("assigned/removed", 
                                                       f"{data.LGREEN}Assign{data.RESET}/{data.BLUSH}remove{data.RESET} a role ({data.roles[role_choice]["Symbol"]}): ")
@@ -35,7 +36,7 @@ def toggle_role(char_index, role_choice):
     role_name = data.roles[role_choice]["Name"]
     role_symbol = data.roles[role_choice]["Symbol"]
     if role_name in ["Killed", "Cold Sleep"]:
-        actions.toggle_color(char_index, role_choice)
+        functions.toggle_color(char_index, role_choice)
         return
     if char_index in data.current_roles[role_name]:
         data.current_roles[role_name].remove(char_index)

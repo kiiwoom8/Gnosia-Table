@@ -1,11 +1,12 @@
 import re
 import os
 import data
+import functions
 
 def print_table():
     clear()
     print_recent_history()
-    data.numbered_characters = data.set_numbered_list(data.characters)
+    data.numbered_characters = functions.set_numbered_list(data.characters)
     col_widths = calculate_column_widths()
     build_header(col_widths)
     build_row_line(col_widths)
@@ -86,9 +87,9 @@ def format_row(char_index, row_data, col_widths):
     numbered_char_with_symbols = get_char_with_symbols(data.numbered_characters)
     numbered_char_names_with_symbols = [numbered_char_with_symbols[key] for key in sorted(numbered_char_with_symbols)]
     header_width = max(len(name) for name in numbered_char_names_with_symbols) + 2
-    return numbered_char_names_with_symbols[char_index].ljust(header_width) + "".join(
-        row_data[j].ljust(col_widths[j]) for j in range(len(row_data))
-    )
+    row = numbered_char_names_with_symbols[char_index].ljust(header_width) + "".join(
+        row_data[j].ljust(col_widths[j]) for j in range(len(row_data)))
+    return row
 
 
 def apply_color(text):

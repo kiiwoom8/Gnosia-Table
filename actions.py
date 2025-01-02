@@ -1,15 +1,9 @@
 import data
+import functions
 import table_rendering
 import handle_text as t
 import discussion
 import backup
-
-def increment_round():
-    if data.ties:
-        data.ties_round += 1
-    else:
-        data.round += 1    
-
 
 def record_action(action_choice: int, action_name: str, actor = None, target = None):
     if action_name == f"{data.RED}Retaliate/Don't be fooled{data.RESET}":
@@ -61,18 +55,6 @@ def get_target(actor):
             return target
 
 
-def validate_choice(user_input:str, choice_type='character'):
-    if user_input.isdigit():
-        choice = int(user_input)
-        valid_data = data.characters if choice_type == 'character' else data.roles
-        if choice in valid_data and (choice_type != 'character' or " " not in valid_data[choice]) or not user_input:
-            return choice
-        else:
-            return False
-    else:
-        return False
-
-
 def delete_recent_action(actor = None, target = None):
     while True:
         if not actor or not target:
@@ -119,28 +101,10 @@ def select_character(role_type, action_name=None):
             t.t_print(f"Select the {role_type} character:")
         user_input = t.t_input("Enter the number for your choice (OR 'p' to pass OR 'z' to go back): ")
         if user_input:
-            if user_input in ['z', 'p'] or validate_choice(user_input):
+            if user_input in ['z', 'p'] or functions.validate_choice(user_input):
                 return user_input
             else:
                 t.error_text = "\033[31mInvalid choice. Try again.\033[0m"
-
-
-def toggle_color(char_index, role_choice):
-    if role_choice == 9:
-        color_code = "\033[31m"
-        state = "\033[31mkilled\033[0m"
-    elif role_choice == 10:
-        color_code = "\033[34m"
-        state = "\033[34mcold sleeped\033[0m"
-
-    if data.characters[char_index] in data.words_to_color and data.words_to_color[data.characters[char_index]] == color_code:
-        removed_color = data.words_to_color.pop(data.characters[char_index])
-        if color_code == removed_color:
-            t.r_print(f"{data.characters[char_index]} is released from the state of being excepted.")
-            return
-
-    data.words_to_color[data.characters[char_index]] = color_code
-    t.r_print(f"{data.characters[char_index]} is {state}.")
 
 
 def remove_character_from_list():

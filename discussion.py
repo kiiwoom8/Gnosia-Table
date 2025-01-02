@@ -1,4 +1,5 @@
 import data
+import functions
 import actions
 import table_rendering
 import handle_text as t
@@ -14,7 +15,7 @@ def handle_discussion():
                 return
             if discussion_menu_choice == '0':
                 init_discussion_settings()
-                actions.increment_round()
+                functions.increment_round()
                 table_rendering.print_table()
             elif discussion_menu_choice.isdigit() and int(discussion_menu_choice) + var in action_range:
                 discussion_menu_choice = int(discussion_menu_choice) + var
