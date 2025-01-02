@@ -74,7 +74,7 @@ options = {
         "function": lambda: additional_functions.take_note()}, 
     5: {"title": "Show character stats", 
         "function": lambda: additional_functions.show_stats()}, 
-    6: {"title": "See the full history", 
+    6: {"title": "Display the full history", 
         "function": lambda: additional_functions.see_full_history()}, 
     7: {"title": "Remove character from the list", 
         "function": lambda: actions.remove_character_from_list()}, 
@@ -93,7 +93,7 @@ def reset():
     global first_actor, actor, target
     global discussion_doubt, discussion_defend
     global round, ties_round
-    
+
     characters = characters_list.copy()
     matrix = [[[] for _ in characters] for _ in characters]
     words_to_color = {action["Abbr"]: action["Color"] for action in action_list.values()}
