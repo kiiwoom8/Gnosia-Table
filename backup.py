@@ -12,7 +12,6 @@ def backup_state(stack = True):
         'numbered_characters': copy.deepcopy(data.numbered_characters),
         'removed_characters': copy.deepcopy(data.removed_characters),
         'votes': copy.deepcopy(data.votes),
-        'vote_history': copy.deepcopy(data.vote_history),
         'voting_characters': copy.deepcopy(data.voting_characters),
         'current_roles': copy.deepcopy(data.current_roles),
         'matrix': copy.deepcopy(data.matrix),
@@ -45,7 +44,6 @@ def restore_state(state):
     data.numbered_characters = state['numbered_characters']
     data.removed_characters = state['removed_characters']
     data.votes = state['votes']
-    data.vote_history = state['vote_history']
     data.voting_characters = state['voting_characters']
     data.current_roles = state['current_roles']
     data.matrix = state['matrix']

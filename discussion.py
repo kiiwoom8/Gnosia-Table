@@ -44,8 +44,6 @@ def print_discusstion_menu():
         t.t_print(f"{i - type}. {action['Color']}{action['Name']}{data.RESET}")
 
     t.t_print("0. End discussion")
-    if data.vote_history:
-        t.t_print(f"r. {data.RED}Revert the most recent votes{data.RESET}")
     t.t_print("z. Go back")
     
     return type, action_range
