@@ -73,10 +73,10 @@ def vote_characters():
             if target == 'z':
                 raise t.Z
             if target != 'p':
+                target = int(target)
                 actions.record_action(12, "Vote", char_index, target)
                 if not data.votes:
                     data.vote_history = {}
-                target = int(target)
                 data.votes[target] = data.votes.get(target, 0) + 1
                 data.vote_history[char_index] = target
         data.voting_characters.remove(char_index)
