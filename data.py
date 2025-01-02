@@ -88,19 +88,19 @@ options = {
 
 def reset():
     global characters, numbered_characters, removed_characters, votes, voting_characters, current_roles
-    global matrix, words_to_color, participation, ties, previous_ties, ties_history, notes, history
+    global matrix, words_to_color, participation, ties, previous_ties, notes, history
     global table
     global first_actor, actor, target
     global discussion_doubt, discussion_defend
-    global round, ties_round
+    global round
 
     characters = characters_list.copy()
     matrix = [[[] for _ in characters] for _ in characters]
     words_to_color = {action["Abbr"]: action["Color"] for action in action_list.values()}
     current_roles = {role["Name"]: [] for role in roles.values()}
     numbered_characters, removed_characters, votes, voting_characters = {}, {}, {}, {}
-    participation, ties, previous_ties, ties_history, notes, history = [], [], [], [], [], []
+    participation, ties, previous_ties, notes, history = [], [], [], [], []
     first_actor, actor, target = None, None, None
     discussion_doubt, discussion_defend = False, False
     table = ""
-    round, ties_round = 1, 0
+    round= 1

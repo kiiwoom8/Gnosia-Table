@@ -6,18 +6,17 @@ import discussion
 import backup
 
 def record_action(action_choice: int, action_name: str, actor = None, target = None):
-    backup.backup_state()
     if action_name == f"{data.RED}Retaliate/Don't be fooled{data.RESET}":
         actor = data.target
-        data.target = data.first_actor
-        target = data.target
+        target = data.first_actor
 
     if not actor:
         if target:
             t.t_print(f"Target: {data.BLUE}{data.characters[target]}{data.RESET}" )
         actor = select_character("acting", action_name)
-        if  actor in ['z', 'p']:
+        if  actor == 'z':
             return
+        
         actor = int(actor)
         if actor == target:
             t.error_text = "\033[31mCannot act on self. Please try again.\033[0m"
@@ -25,15 +24,16 @@ def record_action(action_choice: int, action_name: str, actor = None, target = N
         if actor in data.participation:
             t.error_text = "\033[31mCannot act twice in a round. Please try again.\033[0m"
             return
-        data.actor = actor
 
     if not target:
         target = get_target(actor)
-        if target in ['z', 'p']:
+        if target == 'z':
             return
         target = int(target)
-        data.target = target
-        
+
+    backup.backup_state()
+    data.actor = actor
+    data.target = target
     action = data.action_list.get(action_choice, {}).get("Abbr")
     data.matrix[actor - 1][target - 1].append(action)
     target_name = data.characters.get(target, "\033[31mUnknown\033[0m")
@@ -46,7 +46,7 @@ def record_action(action_choice: int, action_name: str, actor = None, target = N
 def get_target(actor):
     while True:
         target = select_character("target", f"Acting character: {data.BLUSH}{data.characters[actor]}{data.RESET}")
-        if target in ['z', 'p']:
+        if target == 'z':
             return target
         if actor == int(target):
             t.t_print("\033[31mCannot act on self. Please try again.\033[0m")
@@ -60,7 +60,7 @@ def delete_recent_action(actor = None, target = None):
     while True:
         if not actor or not target:
             actor = select_character("actor")
-            if actor in ['z', 'p']:
+            if actor == 'z':
                 return
             actor = int(actor)
             target = select_character("target", f"Acting character: \033[91m{data.characters[actor]}\033[0m")
@@ -100,9 +100,9 @@ def select_character(role_type, action_name=None):
             t.t_print(f"Select the {role_type} character from the following: {most_voted_names}")            
         else:
             t.t_print(f"Select the {role_type} character:")
-        user_input = t.t_input("Enter the number for your choice (OR 'p' to pass OR 'z' to go back): ")
+        user_input = t.t_input("Enter the number for your choice (or 'z' to go back): ")
         if user_input:
-            if user_input in ['z', 'p'] or functions.validate_choice(user_input):
+            if user_input == 'z' or functions.validate_choice(user_input):
                 return user_input
             else:
                 t.error_text = "\033[31mInvalid choice. Try again.\033[0m"
@@ -126,14 +126,3 @@ def remove_character_from_list():
             data.removed_characters[choice] = data.characters[choice]
             data.characters[choice] = " "
             t.r_print(f"\033[31mRemoved\033[0m {data.removed_characters[choice]} from the list.")
-
-
-def restore_removed_characters():
-    if not data.removed_characters:
-        t.error_text = "\033[31mNo characters to restore.\033[0m"
-        return
-    backup.backup_state()
-    for number, character in data.removed_characters.items():
-        data.characters[number] = character
-    t.r_print(f"\033[94mRestored all the characters to the list.\033[0m")
-    data.removed_characters = {}

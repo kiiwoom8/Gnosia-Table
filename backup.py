@@ -1,26 +1,25 @@
 import data
 import handle_text as t
 import table_rendering
-import copy
+from copy import deepcopy
 
 undo_stack = []
 redo_stack = []
 
 def backup_state(stack = True):
     state = {
-        'characters': copy.deepcopy(data.characters),
-        'numbered_characters': copy.deepcopy(data.numbered_characters),
-        'removed_characters': copy.deepcopy(data.removed_characters),
-        'votes': copy.deepcopy(data.votes),
-        'voting_characters': copy.deepcopy(data.voting_characters),
-        'current_roles': copy.deepcopy(data.current_roles),
-        'matrix': copy.deepcopy(data.matrix),
-        'words_to_color': copy.deepcopy(data.words_to_color),
-        'participation': copy.deepcopy(data.participation),
-        'history': copy.deepcopy(data.history),
-        'ties': copy.deepcopy(data.ties),
-        'previous_ties': copy.deepcopy(data.previous_ties),
-        'ties_history': copy.deepcopy(data.ties_history),
+        'characters': deepcopy(data.characters),
+        'numbered_characters': deepcopy(data.numbered_characters),
+        'removed_characters': deepcopy(data.removed_characters),
+        'votes': deepcopy(data.votes),
+        'voting_characters': deepcopy(data.voting_characters),
+        'current_roles': deepcopy(data.current_roles),
+        'matrix': deepcopy(data.matrix),
+        'words_to_color': deepcopy(data.words_to_color),
+        'participation': deepcopy(data.participation),
+        'history': deepcopy(data.history),
+        'ties': deepcopy(data.ties),
+        'previous_ties': deepcopy(data.previous_ties),
         'table': data.table,
         'first_actor': data.first_actor,
         'actor': data.actor,
@@ -28,7 +27,6 @@ def backup_state(stack = True):
         'discussion_doubt': data.discussion_doubt,
         'discussion_defend': data.discussion_defend,
         'round': data.round,
-        'ties_round': data.ties_round
     }
     if undo_stack and undo_stack[-1] == state:
         return
@@ -52,7 +50,6 @@ def restore_state(state):
     data.history = state['history']
     data.ties = state['ties']
     data.previous_ties = state['previous_ties']
-    data.ties_history = state['ties_history']
     data.table = state['table']
     data.first_actor = state['first_actor']
     data.actor = state['actor']
@@ -60,7 +57,6 @@ def restore_state(state):
     data.discussion_doubt = state['discussion_doubt']
     data.discussion_defend = state['discussion_defend']
     data.round = state['round']
-    data.ties_round = state['ties_round']
 
 
 def undo():

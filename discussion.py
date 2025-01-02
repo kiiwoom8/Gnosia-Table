@@ -8,14 +8,18 @@ import backup
 
 def handle_discussion():
     while True:
+        if vote.onVote():
+            vote.handle_vote()
+            return
+
         type, action_range = print_discusstion_menu()        
         discussion_menu_choice = t.t_input("Select an action by number: ")
         if discussion_menu_choice:
-            if discussion_menu_choice in ['z', 'p']:
+            if discussion_menu_choice == 'z':
                 return
             if discussion_menu_choice == '0':
                 init_discussion_settings()
-                functions.increment_round()
+                data.round += 1
                 table_rendering.print_table()
             elif discussion_menu_choice.isdigit() and int(discussion_menu_choice) + type in action_range:
                 discussion_menu_choice = int(discussion_menu_choice) + type
@@ -27,10 +31,7 @@ def handle_discussion():
 
 def print_discusstion_menu():
     t.check_error()
-    if data.round > 5 and data.ties_round in [0, 3]: # Voting round
-        vote.handle_vote()
-        return 0, []
-    elif data.discussion_doubt:
+    if data.discussion_doubt:
         t.t_print(f"Target: {data.BLUE}{data.characters[data.target]}{data.RESET}")
         type, action_range = 2, range(3, 8)
     elif data.discussion_defend:

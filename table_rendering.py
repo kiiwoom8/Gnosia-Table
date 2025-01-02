@@ -2,6 +2,7 @@ import re
 import os
 import data
 import functions
+import vote
 
 def print_table():
     clear()
@@ -14,10 +15,11 @@ def print_table():
     print(data.table, end="")
     if data.discussion_doubt or data.discussion_defend:
         print(f"{data.GREEN}[On Discussion]{data.RESET}")
-    if data.round > 5:
+        print(f"{data.YELLOW}Round {data.round}{data.RESET}")
+    elif vote.onVote():
         print(f"{data.GREEN}[On Vote]{data.RESET}")
-    if data.round < 6 or data.ties_round not in [0, 3]: 
-        print(f"{data.YELLOW}Round {data.round if not data.ties else data.ties_round}{data.RESET}")
+    else:
+        print(f"{data.YELLOW}Round {data.round}{data.RESET}")
 
 
 def clear():

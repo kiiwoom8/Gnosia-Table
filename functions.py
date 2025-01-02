@@ -8,13 +8,6 @@ def reset():
     data.reset()
 
 
-def increment_round():
-    if data.ties:
-        data.ties_round += 1
-    else:
-        data.round += 1    
-
-
 def validate_choice(user_input:str, choice_type='character'):
     if user_input.isdigit():
         choice = int(user_input)
