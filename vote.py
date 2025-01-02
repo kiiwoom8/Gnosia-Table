@@ -14,8 +14,8 @@ def handle_vote():
         vote()
     else:
         while True:
-            t.check_error()
             table_rendering.print_table()
+            t.check_error()
             t.t_print("1. \033[31mFreeze All\033[0m") 
             t.t_print("2. \033[34mFreeze Nobody\033[0m") 
             t.t_print("z. Go back")
@@ -71,7 +71,7 @@ def vote_characters():
             target = int(target)
             actions.record_action(12, "Vote", char_index, target)
             data.votes[target] = data.votes.get(target, 0) + 1
-            
+
         data.voting_characters.remove(char_index)
 
 
