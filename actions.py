@@ -38,8 +38,9 @@ def record_action(action_choice: int, action_name: str, actor = None, target = N
     data.matrix[actor - 1][target - 1].append(action)
     target_name = data.characters.get(target, "\033[31mUnknown\033[0m")
     t.r_print(f"\033[92mRecorded:\033[0m {data.characters[actor]} {action_name} {target_name}")
-    data.participation.append(actor)
     discussion.set_discussion_options(action_choice)
+    if action_name != "Vote":
+        data.participation.append(actor)
 
 
 def get_target(actor):
