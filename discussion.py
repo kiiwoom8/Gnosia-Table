@@ -8,17 +8,19 @@ import backup
 
 def handle_discussion():
     while True:
-        var, action_range = print_discusstion_menu()        
+        type, action_range = print_discusstion_menu()        
         discussion_menu_choice = t.t_input("Select an action by number: ")
         if discussion_menu_choice:
             if discussion_menu_choice in ['z', 'p']:
+                if type == 0: # initialize unfinished selections
+                    init_discussion_settings()
                 return
             if discussion_menu_choice == '0':
                 init_discussion_settings()
                 functions.increment_round()
                 table_rendering.print_table()
-            elif discussion_menu_choice.isdigit() and int(discussion_menu_choice) + var in action_range:
-                discussion_menu_choice = int(discussion_menu_choice) + var
+            elif discussion_menu_choice.isdigit() and int(discussion_menu_choice) + type in action_range:
+                discussion_menu_choice = int(discussion_menu_choice) + type
                 actions.record_action(discussion_menu_choice, data.action_list[discussion_menu_choice]["Name"], data.actor, data.target)
                 table_rendering.print_table()
             else:
@@ -32,23 +34,23 @@ def print_discusstion_menu():
         return 0, []
     elif data.discussion_doubt:
         t.t_print(f"Target: {data.BLUE}{data.characters[data.target]}{data.RESET}")
-        var, action_range = 2, range(3, 8)
+        type, action_range = 2, range(3, 8)
     elif data.discussion_defend:
         t.t_print(f"Target: {data.BLUE}{data.characters[data.target]}{data.RESET}")
-        var, action_range = 7, range(8, 12)
+        type, action_range = 7, range(8, 12)
     else: # Beginning; Doubt or Cover
-        var, action_range = 0, range(1, 3)
+        type, action_range = 0, range(1, 3)
 
     for i in action_range:
         action = data.action_list[i]
-        t.t_print(f"{i - var}. {action['Color']}{action['Name']}{data.RESET}")
+        t.t_print(f"{i - type}. {action['Color']}{action['Name']}{data.RESET}")
 
     t.t_print("0. End discussion")
     if data.vote_history:
         t.t_print(f"r. {data.RED}Revert the most recent votes{data.RESET}")
     t.t_print("z. Go back")
     
-    return var, action_range
+    return type, action_range
 
 
 def init_discussion_settings():
