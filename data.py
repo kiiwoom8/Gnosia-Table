@@ -78,7 +78,7 @@ options = {
         "function": lambda: additional_functions.see_full_history()}, 
     7: {"title": "Remove character from the list", 
         "function": lambda: actions.remove_character_from_list()}, 
-    8: {"title": "Redo/Undo", 
+    8: {"title": "Undo/Redo", 
         "function": lambda: backup.choose_option()}, 
     9: {"title": "Initialize table", 
         "function": lambda: functions.reset()}, 
