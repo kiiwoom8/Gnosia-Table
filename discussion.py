@@ -12,8 +12,8 @@ def handle_discussion():
         discussion_menu_choice = t.t_input("Select an action by number: ")
         if discussion_menu_choice:
             if discussion_menu_choice in ['z', 'p']:
-                if type == 0: # initialize unfinished selections
-                    init_discussion_settings()
+                if type == 0:
+                    init_unfinished_discussion()
                 return
             if discussion_menu_choice == '0':
                 init_discussion_settings()
@@ -53,6 +53,10 @@ def print_discusstion_menu():
     return type, action_range
 
 
+def init_unfinished_discussion():
+    data.first_actor, data.actor, data.participation = None, None, []
+
+
 def init_discussion_settings():
     backup.backup_state()
     data.first_actor, data.actor, data.target = None, None, None
@@ -76,4 +80,5 @@ def set_discussion_options(action_choice):
         case 11:
             data.discussion_doubt = True
             data.discussion_defend = False
+            
     data.actor = None
