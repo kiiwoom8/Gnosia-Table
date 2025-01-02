@@ -6,9 +6,6 @@ import role
 import backup
 from copy import deepcopy
 
-def onVote():
-    return data.round > 5 or (data.ties and (data.round not in [1,2] or data.previous_ties == data.ties))
-
 def handle_vote():
     if not data.ties or data.previous_ties != data.ties:
         vote()
@@ -116,3 +113,7 @@ def release_ties():
         data.ties = []
         data.round = 1
         data.voting_characters = {}
+
+
+def onVote():
+    return data.round > 5 or (data.ties and (data.round not in [1,2] or data.previous_ties == data.ties))
