@@ -7,6 +7,7 @@ import backup
 
 def record_action(action_name: str, actor = None, target = None):
     action = data.action_list[action_name]
+    action_color = action["Color"]
     if action_name == "Retaliate/Don't be fooled":
         actor = data.target
         target = data.first_attacker
@@ -39,7 +40,7 @@ def record_action(action_name: str, actor = None, target = None):
     action = action["Abbr"]
     data.matrix[actor - 1][target - 1].append(action)
     target_name = data.characters.get(target, "\033[31mUnknown\033[0m")
-    t.r_print(f"\033[92mRecorded:\033[0m {data.characters[actor]} {action_name} {target_name}")
+    t.r_print(f"\033[92mRecorded:\033[0m {data.characters[actor]} {action_color}{action_name}{data.RESET} {target_name}")
     discussion.set_discussion_options(action_name)
     if action_name != "Vote":
         data.participation.append(actor)
