@@ -57,6 +57,10 @@ def generate_characters(col_widths):
     removed_char_indices = [i for i, name in enumerate(data.characters.values()) if name == " "]
     for char_index, row in enumerate(data.matrix):
         char_names = [" " if name == " " else name for name in data.characters.values()]
+
+        if char_index in removed_char_indices:
+            continue
+
         row_data = [
             " " if char_index in removed_char_indices or j in removed_char_indices or char_names[char_index] == char_names[j] 
             else ";".join(actions) if actions else "-"
