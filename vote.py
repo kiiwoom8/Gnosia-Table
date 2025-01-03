@@ -59,7 +59,7 @@ def vote_characters():
             if target == 'z':
                 return
             target = int(target)
-            actions.record_action(12, "Vote", char_index, target)
+            actions.record_action("Vote", char_index, target)
             data.votes[target] = data.votes.get(target, 0) + 1
 
         data.voting_characters.remove(char_index)

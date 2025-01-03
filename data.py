@@ -46,20 +46,23 @@ roles = {i + 1: {"Name": name, "Symbol": symbol} for i, (name, symbol) in enumer
     ])}
 
 action_list = {
-    i + 1: {"Name": f"{color}{name}{RESET}", "Abbr": abbr, "Color": color}
-    for i, (name, abbr, color) in enumerate([
-        ("Doubt", "Dou", RED),
-        ("Cover", "Cov", BLUE),
-        ("Agree", "Ag", BLUSH),
-        ("Exaggerate Agree", "ExA", RED),
-        ("Seek Agreement", "SeA", RED),
-        ("Retaliate/Don't be fooled", "Ret", RED),
-        ("Defend", "Def", BLUE),
-        ("Agree", "AgD", LBLUE),
-        ("Exaggerate Defend", "ExD", BLUE),
-        ("Seek Agreement", "SeD", BLUE),
-        ("Argue", "Arg", RED),
-        ("Vote", "Vo", RED),
+    name: {"Name": f"{color}{name}{RESET}", "Abbr": abbr, "Color": color, "Type": type}
+    for name, (name, abbr, color, type) in enumerate([
+        ("Doubt", "Dou", RED, "Default"),
+        ("Cover", "Cov", BLUE, "Default"),
+        ("Agree Doubt", "Ag", BLUSH, "Doubt"),
+        ("Exaggerate Agree", "ExA", RED, "Doubt"),
+        ("Seek Agreement Doubt", "SeA", RED, "Doubt"),
+        ("Retaliate/Don't be fooled", "Ret", RED, "Doubt"),
+        ("Defend", "Def", BLUE, "Doubt"),
+        ("Block Argument Doubt", "BlA", RED, "Doubt"),
+        ("Help", "Hlp", BLUE, "Doubt"),
+        ("Agree Defend", "AgD", LBLUE, "Defend"),
+        ("Exaggerate Defend", "ExD", BLUE, "Defend"),
+        ("Seek Agreement Defend", "SeD", BLUE, "Defend"),
+        ("Argue", "Arg", RED, "Defend"),
+        ("Block Argument Defend", "BlD", BLUE, "Defend"),
+        ("Vote", "Vo", RED, None),
     ])
 }
 
@@ -90,7 +93,7 @@ def reset():
     global characters, numbered_characters, removed_characters, votes, voting_characters, current_roles
     global matrix, words_to_color, participation, ties, previous_ties, notes, history
     global table
-    global first_actor, actor, target
+    global first_attacker, first_defender, actor, target
     global discussion_doubt, discussion_defend
     global round
 
@@ -100,7 +103,7 @@ def reset():
     current_roles = {role["Name"]: [] for role in roles.values()}
     numbered_characters, removed_characters, votes, voting_characters = {}, {}, {}, {}
     participation, ties, previous_ties, notes, history = [], [], [], [], []
-    first_actor, actor, target = None, None, None
+    first_attacker, first_defender, actor, target = None, None, None, None
     discussion_doubt, discussion_defend = False, False
     table = ""
     round= 1

@@ -19,7 +19,7 @@ def backup_state(stack = True):
         'history': deepcopy(data.history),
         'ties': deepcopy(data.ties),
         'previous_ties': deepcopy(data.previous_ties),
-        'first_actor': data.first_actor,
+        'first_actor': data.first_attacker,
         'actor': data.actor,
         'target': data.target,
         'discussion_doubt': data.discussion_doubt,
@@ -47,7 +47,7 @@ def restore_state(state):
     data.history = state['history']
     data.ties = state['ties']
     data.previous_ties = state['previous_ties']
-    data.first_actor = state['first_actor']
+    data.first_attacker = state['first_actor']
     data.actor = state['actor']
     data.target = state['target']
     data.discussion_doubt = state['discussion_doubt']

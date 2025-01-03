@@ -5,15 +5,16 @@ import handle_text as t
 import discussion
 import backup
 
-def record_action(action_choice: int, action_name: str, actor = None, target = None):
-    if action_name == f"{data.RED}Retaliate/Don't be fooled{data.RESET}":
+def record_action(action_name: str, actor = None, target = None):
+    action = data.action_list[action_name]
+    if action_name == "Retaliate/Don't be fooled":
         actor = data.target
-        target = data.first_actor
+        target = data.first_attacker
 
     if not actor:
         if target:
             t.t_print(f"Target: {data.BLUE}{data.characters[target]}{data.RESET}" )
-        actor = select_character("acting", action_name)
+        actor = select_character("acting", action['Name'])
         if  actor == 'z':
             return
         
@@ -34,11 +35,11 @@ def record_action(action_choice: int, action_name: str, actor = None, target = N
     backup.backup_state()
     data.actor = actor
     data.target = target
-    action = data.action_list.get(action_choice, {}).get("Abbr")
+    action = action["Abbr"]
     data.matrix[actor - 1][target - 1].append(action)
     target_name = data.characters.get(target, "\033[31mUnknown\033[0m")
     t.r_print(f"\033[92mRecorded:\033[0m {data.characters[actor]} {action_name} {target_name}")
-    discussion.set_discussion_options(action_choice)
+    discussion.set_discussion_options(action_name)
     if action_name != "Vote":
         data.participation.append(actor)
 
