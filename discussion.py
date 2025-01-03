@@ -40,17 +40,16 @@ def print_discusstion_menu():
     else: # Doubt or Cover
         type = "Default"
 
-    action_name_list = [action_name for action_name, action in data.action_list.items() if action["Type"] == type]
+    excluded_actions = []
+    if data.first_attacker and data.first_defender:
+        excluded_actions = ["Argue", "Block Argument Defend", "Defend", "Retaliate/Don't be fooled", "Block Argument Doubt"]
+    elif data.first_attacker:
+        excluded_actions = ["Argue", "Block Argument Defend"]
+    elif data.first_defender:
+        excluded_actions = ["Defend", "Retaliate/Don't be fooled", "Block Argument Doubt", "Help"]
 
-    if data.first_attacker or data.first_defender: # Remove options that are not allowed
-        if data.first_attacker and data.first_defender:
-            excluded_actions = ["Argue", "Block Argument Defend", "Defend", "Retaliate/Don't be fooled", "Block Argument Doubt"]
-        elif data.first_attacker:
-            excluded_actions = ["Argue", "Block Argument Defend"]
-        elif data.first_defender:
-            excluded_actions = ["Defend", "Retaliate/Don't be fooled", "Block Argument Doubt", "Help"]
-        
-        action_name_list = [action for action in action_name_list if action not in excluded_actions]
+    action_name_list = [action_name for action_name, action in data.action_list.items() 
+                        if action_name not in excluded_actions and action["Type"] == type]
 
     for i, action_name in enumerate(action_name_list):
         t.t_print(f"{i + 1}. {data.action_list[action_name]['Name']}")
