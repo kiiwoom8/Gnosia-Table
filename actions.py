@@ -33,8 +33,9 @@ def record_action(action_name: str, actor = None, target = None):
         target = int(target)
 
     backup.backup_state()
-    data.actor = actor
-    data.target = target
+    if action_name != "Vote":
+        data.actor = actor
+        data.target = target
     action = action["Abbr"]
     data.matrix[actor - 1][target - 1].append(action)
     target_name = data.characters.get(target, "\033[31mUnknown\033[0m")

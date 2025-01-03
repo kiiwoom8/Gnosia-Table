@@ -49,6 +49,7 @@ def vote():
             set_ties()
             data.round = 1
 
+
 def vote_characters():
     if not data.voting_characters:
         data.voting_characters = list(data.characters.keys())
