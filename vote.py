@@ -7,9 +7,7 @@ import backup
 from copy import deepcopy
 
 def handle_vote():
-    if not data.ties or data.previous_ties != data.ties:
-        vote()
-    else:
+    if data.ties and data.previous_ties == data.ties:
         while True:
             table_rendering.print_table()
             t.check_error()
@@ -30,6 +28,8 @@ def handle_vote():
                     pass
                 case _:
                     t.error_text = "\033[31mInvalid choice. Try again.\033[0m"
+    else:
+        vote()
 
 
 def vote():
