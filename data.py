@@ -5,7 +5,7 @@ import role
 import additional_functions
 import backup
 
-RED, BLUSH, GREEN, LBLUE, BLUE, YELLOW, LGREEN, RESET = "\033[31m", "\033[91m", "\033[92m","\033[94m", "\033[34m", "\033[33m", "\033[92m", "\033[0m"
+RED, BLUSH, GREEN, LBLUE, BLUE, YELLOW, LGREEN, GRAY, RESET = "\033[31m", "\033[91m", "\033[92m","\033[94m", "\033[34m", "\033[33m", "\033[92m", "\033[90m", "\033[0m"
 
 characters_list = {
     1: "Me", 2: "Setsu", 3: "Gina", 4: "SQ", 5: "Raqio", 6: "Stella", 
@@ -69,27 +69,21 @@ action_list = {
 }
 
 options = {
-    1: {"title": "Record an action", 
-        "function": lambda: discussion.handle_discussion()}, 
-    2: {"title": "Delete the most recent action", 
-        "function": lambda: actions.delete_recent_action()}, 
-    3: {"title": "Assign/Remove roles", 
-        "function": lambda: role.assign_roles()},
-    4: {"title": "\033[33mNotepad\033[0m", 
-        "function": lambda: additional_functions.take_note()}, 
-    5: {"title": "Show character stats", 
-        "function": lambda: additional_functions.show_stats()}, 
-    6: {"title": "Display the full history", 
-        "function": lambda: additional_functions.see_full_history()}, 
-    7: {"title": "Remove character from the list", 
-        "function": lambda: actions.remove_character_from_list()}, 
-    8: {"title": "Undo/Redo", 
-        "function": lambda: backup.choose_option()}, 
-    9: {"title": "Initialize table", 
-        "function": lambda: functions.reset()}, 
-    0: {"title": "\033[90mExit\033[0m", 
-        "function": lambda: functions.exit_program()}
-    }
+    k if "Exit" not in title else 0: {"title": title, "function": func}
+    for k, (title, func) in enumerate([
+        ("Record an action", discussion.handle_discussion),
+        ("Delete the most recent action", actions.delete_recent_action),
+        ("Assign/Remove roles", role.assign_roles),
+        ("\033[33mNotepad\033[0m", additional_functions.take_note),
+        ("Show character stats", additional_functions.show_stats),
+        ("Display the full history", additional_functions.see_full_history),
+        ("Remove character from the list", actions.remove_character_from_list),
+        ("Undo/Redo", backup.choose_option),
+        ("Initialize table", functions.reset),
+        (f"{GRAY}Exit{RESET}", functions.exit_program)
+    ], start=1)
+}
+
 
 def reset():
     global characters, removed_characters, votes, voting_characters, current_roles
