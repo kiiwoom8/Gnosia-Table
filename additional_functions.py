@@ -4,53 +4,66 @@ import handle_text as t
 def take_note():
     while True:
         t.check_error()
-        draw_note_line()
-        if data.notes:
-            t.t_print("\033[32mYour Notes:\033[0m")
-            for idx, content in enumerate(data.notes, start=1):
-                t.t_print(f"({idx}) {content}")
-        else:
-            t.t_print("\033[91m(No note)\033[0m")
-        draw_note_line()
-        t.t_print("1. Take a note")
-        t.t_print("2. Delete a note")
-        t.t_print("z. Go back")
-
+        display_notes()
         option = t.t_input("Enter your choice: ").strip().lower()
         if option:
             match option:
                 case '1':
-                    content = t.t_input("Enter the note content or press Enter to return: ").strip()
-                    if content and content != 'z':
-                        data.notes.append(content)
-                        t.t_print(f"{data.GREEN}Note added successfully.{data.RESET}")
+                    create_note()
                 case '2':
                     if data.notes:
-                        while True:
-                            t.check_error()
-                            note_number = t.t_input("Enter the number of the note to delete: ").strip()
-                            if note_number:
-                                if note_number == 'z':
-                                    break
-                                note_number = int(note_number)
-                                if 0 < note_number <= len(data.notes):
-                                    deleted_note = data.notes.pop(note_number - 1)
-                                    t.t_print(f"{data.GREEN}The note '{deleted_note}' has been deleted successfully.{data.RESET}")
-                                    break
-                                else:
-                                    t.error_text = "\033[31mInvalid input. Please enter a number.\033[0m"
+                        delete_note()
                     else:
                         t.error_text = "\033[31mNo notes to delete.\033[0m"
                 case 'z':
                     return
                 case _:
                     t.error_text = "\033[31mInvalid choice. Please select 1, 2, or 'z'.\033[0m"
-        
+
+
+def create_note():
+    content = t.t_input("Enter the note content or press Enter to return: ").strip()
+    if content and content != 'z':
+        data.notes.append(content)
+        t.t_print(f"{data.GREEN}Note added successfully.{data.RESET}")
+
+
+def delete_note():
+    while True:
+        t.check_error()
+        note_number = t.t_input("Enter the number of the note to delete: ").strip()
+        if note_number:
+            if note_number == 'z':
+                break
+            note_number = int(note_number)
+            if 0 < note_number <= len(data.notes):
+                deleted_note = data.notes.pop(note_number - 1)
+                t.t_print(f"{data.GREEN}The note '{deleted_note}' has been deleted successfully.{data.RESET}")
+                break
+            else:
+                t.error_text = "\033[31mInvalid input. Please enter a number.\033[0m"
+
+
+def display_notes():
+    draw_note_line()
+    if data.notes:
+        t.t_print("\033[32mYour Notes:\033[0m")
+        for idx, content in enumerate(data.notes, start=1):
+            t.t_print(f"({idx}) {content}")
+    else:
+        t.t_print("\033[91m(No note)\033[0m")
+    draw_note_line()
+    t.t_print("1. Take a note")
+    t.t_print("2. Delete a note")
+    t.t_print("z. Go back")  
+
+
 def draw_note_line():
     text= ""
     for _ in range(100):
         text +="\033[33m─\033[0m"
     t.t_print(f"{text}")
+
 
 def show_stats():
     option = None
@@ -61,7 +74,8 @@ def show_stats():
         option = t.t_input("Enter your choice (or 'z' to go back): ")
         if option == 'z':
                 return
-            
+
+
 def color_code_stats(character_stats):
     def color_code(value):
         if value >= 40: return f"\033[31m{value}\033[0m"
@@ -92,6 +106,7 @@ def print_stats(option):
                 t.t_print(f"{key}: {value}")
     except (ValueError, KeyError):
         t.error_text = "\033[31mInvalid choice. Please select a valid character.\033[0m"
+
 
 def see_full_history():
     history = data.history
