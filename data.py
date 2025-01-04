@@ -31,7 +31,7 @@ character_stats = additional_functions.color_code_stats({name: dict(zip(
     ("Yuriko", ["25.5-49.5", "20.5-42", "22-44", "17.5-37.5", "25-49.5", "12-25"])
 ]})
 
-roles = {i + 1: {"Name": name, "Symbol": symbol} for i, (name, symbol) in enumerate([
+roles = {name: symbol for (name, symbol) in [
         ("Gnosia", "🅰️"),
         ("AC Follower", "🕷️"),
         ("Engineer", "🛠️"),
@@ -40,16 +40,18 @@ roles = {i + 1: {"Name": name, "Symbol": symbol} for i, (name, symbol) in enumer
         ("Guardian Angel", "🕊️"),
         ("Crew", "✳️"),
         ("Enemy", "⚠️"),
+        ("Suspicious", "👁️"),
         ("Killed", "🔪"),
         ("Cold Sleep", "🧊"),
-        ("Suspicious", "👁️"),
-    ])}
+    ]}
 
 action_list = {
     name: {"Name": f"{color}{name}{RESET}", "Abbr": abbr, "Color": color, "Type": type}
     for name, (name, abbr, color, type) in enumerate([
         ("Doubt", "Dou", RED, "Default"),
         ("Cover", "Cov", BLUE, "Default"),
+        ("Collab", "Col", BLUE, "Default"),
+        ("Refuse", "Ref", BLUSH, None),
         ("Agree Doubt", "Ag", BLUSH, "Doubt"),
         ("Exaggerate Agree", "ExA", RED, "Doubt"),
         ("Seek Agreement Doubt", "SeA", RED, "Doubt"),
@@ -91,19 +93,19 @@ options = {
 
 def reset():
     global characters, removed_characters, votes, voting_characters, current_roles
-    global matrix, words_to_color, participation, ties, previous_ties, notes, history
+    global matrix, words_to_color, participation, collab, ties, previous_ties, notes, history
     global table
-    global first_attacker, first_defender, actor, target
+    global first_attacker, first_defender, target
     global discussion_doubt, discussion_defend
     global round
 
     characters = characters_list.copy()
     matrix = [[[] for _ in characters] for _ in characters]
     words_to_color = {action["Abbr"]: action["Color"] for action in action_list.values()}
-    current_roles = {role["Name"]: [] for role in roles.values()}
+    current_roles = {role: [] for role in roles.keys()}
     removed_characters, votes, voting_characters = {}, {}, {}
-    participation, ties, previous_ties, notes, history = [], [], [], [], []
-    first_attacker, first_defender, actor, target = None, None, None, None
+    participation, collab, ties, previous_ties, notes, history = [], [], [], [], [], []
+    first_attacker, first_defender, target = None, None, None
     discussion_doubt, discussion_defend = False, False
     table = ""
     round= 1

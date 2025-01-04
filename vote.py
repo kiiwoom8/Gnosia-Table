@@ -39,7 +39,7 @@ def vote():
         most_voted = sorted([char for char, votes in data.votes.items() if votes == max_votes])
         data.votes = {}
         if len(most_voted) == 1:
-            role.toggle_role(most_voted[0], 10)
+            role.toggle_role(most_voted[0], "Cold Sleep")
             release_ties()
             data.round = 1
         else:
@@ -70,7 +70,7 @@ def freeze_all():
     if data.ties:
         backup.backup_state()
         for char in data.ties:
-            role.toggle_role(char, 10)
+            role.toggle_role(char, "Cold Sleep")
         release_ties()
     else:
         t.error_text = "\033[31mNo votes to freeze.\033[0m"

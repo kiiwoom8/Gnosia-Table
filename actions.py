@@ -6,44 +6,75 @@ import discussion
 import backup
 
 def record_action(action_name: str, actor = None, target = None):
-    action = data.action_list[action_name]
-    action_color = action["Color"]
     if action_name == "Retaliate/Don't be fooled":
         actor = data.target
         target = data.first_attacker
 
-    if not actor:
-        if target:
-            t.t_print(f"Target: {data.BLUE}{data.characters[target]}{data.RESET}" )
-        actor = select_character("acting", action['Name'])
-        if  actor == 'z':
-            return
-        
-        actor = int(actor)
-        if actor == target:
-            t.error_text = "\033[31mCannot act on self. Please try again.\033[0m"
-            return
-        if actor in data.participation:
-            t.error_text = "\033[31mCannot act twice in a round. Please try again.\033[0m"
-            return
+    if target:
+        t.t_print(f"Target: {data.BLUE}{data.characters[target]}{data.RESET}" )
 
+    # handle actor
+    action = data.action_list[action_name]
+    actor = select_character("acting", action['Name']) 
+    if  actor == 'z':
+        return
+    
+    actor = int(actor)
+    if actor == target:
+        t.error_text = "\033[31mCannot act on self. Please try again.\033[0m"
+        return
+    if actor in data.participation:
+        t.error_text = "\033[31mCannot act twice in a round. Please try again.\033[0m"
+        return
+
+    # handle target
     if not target:
         target = get_target(actor)
         if target == 'z':
             return
         target = int(target)
-
+    
+    if action_name == "Collab" and any({actor, target} & char_set for char_set in data.collab):
+        t.error_text = (f"{data.RED}Collaboration already exists with {data.characters[actor]} "
+                        f"or {data.characters[target]}. Please try again.{data.RESET}")
+        return
+    
     backup.backup_state()
     if action_name != "Vote":
-        data.actor = actor
         data.target = target
-    action = action["Abbr"]
-    data.matrix[actor - 1][target - 1].append(action)
-    target_name = data.characters.get(target, "\033[31mUnknown\033[0m")
-    t.r_print(f"\033[92mRecorded:\033[0m {data.characters[actor]} {action_color}{action_name}{data.RESET} {target_name}")
-    discussion.set_discussion_options(action_name)
-    if action_name != "Vote":
+        
+    record(action, actor, target)
+    if action_name == "Collab":
+        handle_collab(action, actor, target)
+        discussion.end_round() # don't backup
+    elif action_name != "Vote":
+        discussion.set_discussion_options(action_name, actor)
         data.participation.append(actor)
+
+
+def record(action, actor, target):
+    data.matrix[actor - 1][target - 1].append(action["Abbr"])
+    target_name = data.characters.get(target, "\033[31mUnknown\033[0m")
+    record_history(action, actor, target_name)
+
+
+def handle_collab(action, actor, target):
+    while True:
+        t.check_error()
+        choice = t.t_input(f"Accept the collaboration with {data.characters[actor]}? (y/n): ")
+        if choice:
+            match choice:
+                case 'y':
+                    data.collab.append({actor, target})
+                    data.matrix[target - 1][actor - 1].append(action['Abbr'])
+                    record_history(action, target, data.characters[actor])
+                    break
+                case 'n':
+                    data.matrix[target - 1][actor - 1].append("Ref")
+                    record_history(data.action_list["Refuse"], target, data.characters[actor])
+                    break
+                case _:
+                    t.error_text = "\033[31mInvalid choice. Try again.\033[0m"
 
 
 def get_target(actor):
@@ -57,6 +88,10 @@ def get_target(actor):
             t.t_print("\033[31mInvalid choice. Please try again.\033[0m")
         else:
             return target
+
+
+def record_history(action, actor, target_name):
+    t.r_print(f"\033[92mRecorded:\033[0m {data.characters[actor]} {action['Name']} {target_name}")
 
 
 def delete_recent_action(actor = None, target = None):

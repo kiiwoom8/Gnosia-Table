@@ -25,9 +25,9 @@ def print_recent_history():
 def get_char_with_symbols(characters:dict):
     chars_with_symbs = {}
     for char_num, char_name in characters.items():
-        for role in data.roles.values():
-            if char_num in data.current_roles[role["Name"]]:
-                char_name += (role["Symbol"])
+        for role_name in data.roles.keys():
+            if char_num in data.current_roles[role_name]:
+                char_name += (data.roles[role_name])
             chars_with_symbs[char_num] = char_name
     return chars_with_symbs
 

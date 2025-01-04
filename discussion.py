@@ -18,16 +18,19 @@ def handle_discussion():
             if discussion_menu_choice == 'z':
                 return
             if discussion_menu_choice == '0':
-                init_discussion_settings()
-                data.round += 1
-                table_rendering.print_table()
+                backup.backup_state()
+                end_round()
             elif discussion_menu_choice.isdigit() and 0 < int(discussion_menu_choice) < len(action_name_list) + 1:
                 discussion_menu_choice = int(discussion_menu_choice) - 1
-                actions.record_action(action_name_list[discussion_menu_choice], data.actor, data.target)
+                actions.record_action(action_name_list[discussion_menu_choice], None, data.target)
                 table_rendering.print_table()
             else:
                 t.error_text = "\033[31mInvalid choice. Try again.\033[0m"
 
+def end_round():
+    init_discussion_settings()
+    data.round += 1
+    table_rendering.print_table()
 
 def print_discusstion_menu():
     t.check_error()
@@ -37,7 +40,7 @@ def print_discusstion_menu():
     elif data.discussion_defend:
         t.t_print(f"Target: {data.BLUE}{data.characters[data.target]}{data.RESET}")
         type = "Defend"
-    else: # Doubt or Cover
+    else: # Doubt, Cover, Collab
         type = "Default"
 
     excluded_actions = []
@@ -51,8 +54,8 @@ def print_discusstion_menu():
     action_name_list = [action_name for action_name, action in data.action_list.items() 
                         if action_name not in excluded_actions and action["Type"] == type]
 
-    for i, action_name in enumerate(action_name_list):
-        t.t_print(f"{i + 1}. {data.action_list[action_name]['Name']}")
+    for i, action_name in enumerate(action_name_list, start=1):
+        t.t_print(f"{i}. {data.action_list[action_name]['Name']}")
 
     t.t_print("0. End discussion")
     t.t_print("z. Go back")
@@ -61,31 +64,28 @@ def print_discusstion_menu():
 
 
 def init_discussion_settings():
-    backup.backup_state()
-    data.first_attacker, data.first_defender, data.actor, data.target = None, None, None, None
+    data.first_attacker, data.first_defender, data.target = None, None, None
     data.discussion_doubt, data.discussion_defend = False, False
     data.participation = []
 
 
-def set_discussion_options(action_name):
+def set_discussion_options(action_name, actor):
     match action_name:
         case "Doubt":
             data.discussion_doubt = True
-            data.first_attacker = data.actor
+            data.first_attacker = actor
         case "Cover":
             data.discussion_defend = True
-            data.first_defender = data.actor
+            data.first_defender = actor
         case "Retaliate/Don't be fooled":
             data.discussion_doubt = True
             data.discussion_defend = False
-            data.first_attacker, data.first_defender = data.actor, data.actor
+            data.first_attacker, data.first_defender = actor, actor
         case "Block Argument Doubt" | "Block Argument Defend":
-            data.first_attacker, data.first_defender = data.actor, data.actor
+            data.first_attacker, data.first_defender = actor, actor
         case "Defend" | "Help":
             data.discussion_doubt = False
             data.discussion_defend = True
         case "Argue":
             data.discussion_doubt = True
             data.discussion_defend = False
-
-    data.actor = None
