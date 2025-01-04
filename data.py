@@ -5,7 +5,7 @@ import role
 import additional_functions
 import backup
 
-RED, BLUSH, GREEN, LBLUE, BLUE, YELLOW, LGREEN, GRAY, RESET = "\033[31m", "\033[91m", "\033[92m","\033[94m", "\033[34m", "\033[33m", "\033[92m", "\033[90m", "\033[0m"
+RED, BLUSH, GREEN, LBLUE, BLUE, YELLOW, LYELLOW, LGREEN, GRAY, RESET = "\033[31m", "\033[91m", "\033[92m","\033[94m", "\033[34m", "\033[33m", "\033[93m", "\033[92m", "\033[90m", "\033[0m"
 
 characters_list = {
     1: "Me", 2: "Setsu", 3: "Gina", 4: "SQ", 5: "Raqio", 6: "Stella", 
@@ -74,7 +74,7 @@ options = {
         ("Record an action", discussion.handle_discussion),
         ("Delete the most recent action", actions.delete_recent_action),
         ("Assign/Remove roles", role.assign_roles),
-        ("\033[33mNotepad\033[0m", additional_functions.take_note),
+        (f"{LYELLOW}Notepad{RESET}", additional_functions.take_note),
         ("Show character stats", additional_functions.show_stats),
         ("Display the full history", additional_functions.see_full_history),
         ("Remove character from the list", actions.remove_character_from_list),
