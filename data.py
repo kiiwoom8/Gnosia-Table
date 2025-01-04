@@ -84,7 +84,6 @@ options = {
     ], start=1)
 }
 
-
 def reset():
     global characters, removed_characters, votes, voting_characters, current_roles
     global matrix, words_to_color, participation, collab, ties, previous_ties, notes, history
