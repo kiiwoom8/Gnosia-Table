@@ -4,6 +4,7 @@ import discussion
 import role
 import additional_functions
 import backup
+import file
 
 RED, BLUSH, GREEN, LBLUE, BLUE, YELLOW, LYELLOW, LGREEN, GRAY, RESET = "\033[31m", "\033[91m", "\033[92m","\033[94m", "\033[34m", "\033[33m", "\033[93m", "\033[92m", "\033[90m", "\033[0m"
 
@@ -55,7 +56,7 @@ action_list = {
         ("Agree Doubt", "Ag", BLUSH, "Doubt"),
         ("Exaggerate Agree", "ExA", RED, "Doubt"),
         ("Seek Agreement Doubt", "SeA", RED, "Doubt"),
-        ("Retaliate/Don't be fooled", "Ret", RED, "Doubt"),
+        ("Retaliate", "Ret", RED, "Doubt"),
         ("Defend", "Def", BLUE, "Doubt"),
         ("Block Argument Doubt", "BlA", RED, "Doubt"),
         ("Help", "Hlp", BLUE, "Doubt"),
@@ -74,11 +75,12 @@ options = {
         ("Record an action", discussion.handle_discussion),
         ("Delete last actions", actions.delete_last_action),
         ("Assign/Remove roles", role.assign_roles),
-        (f"{LYELLOW}Notepad{RESET}", additional_functions.take_note),
+        # (f"{LYELLOW}Notepad{RESET}", additional_functions.take_note),
         ("Show character stats", additional_functions.show_stats),
         ("Display the full history", additional_functions.see_full_history),
         ("Remove character from the list", actions.remove_character_from_list),
         ("Undo/Redo", backup.choose_option),
+        ("Import/export table", file.choose_option),
         ("Initialize table", functions.reset),
         (f"{GRAY}Exit{RESET}", functions.exit_program)
     ], start=1)
