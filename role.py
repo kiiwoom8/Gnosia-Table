@@ -14,9 +14,8 @@ def assign_roles():
         if role_choice:
             if role_choice == 'z':
                 return
-            role_choice = int(role_choice)
-            if 0 < role_choice < len(data.roles) + 1:
-                role_name = list(data.roles.keys())[role_choice - 1]
+            if role_choice.isdigit() and 0 < int(role_choice) < len(data.roles) + 1:
+                role_name = list(data.roles.keys())[int(role_choice) - 1]
                 char_index = actions.select_character("assigned/removed", 
                                                       f"{data.LGREEN}Assign{data.RESET}/{data.BLUSH}remove{data.RESET} a role ({data.roles[role_name]}): ")
                 if char_index not in ['z', 'p']:
