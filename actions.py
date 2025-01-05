@@ -15,17 +15,18 @@ def record_action(action_name: str, actor = None, target = None):
 
     # handle actor
     action = data.action_list[action_name]
-    actor = select_character("acting", action['Name']) 
-    if  actor == 'z':
-        return
-    
-    actor = int(actor)
-    if actor == target:
-        t.error_text = "\033[31mCannot act on self. Please try again.\033[0m"
-        return
-    if actor in data.participation:
-        t.error_text = "\033[31mCannot act twice in a round. Please try again.\033[0m"
-        return
+    if not actor:
+        actor = select_character("acting", action['Name']) 
+        if  actor == 'z':
+            return
+        
+        actor = int(actor)
+        if actor == target:
+            t.error_text = "\033[31mCannot act on self. Please try again.\033[0m"
+            return
+        if actor in data.participation:
+            t.error_text = "\033[31mCannot act twice in a round. Please try again.\033[0m"
+            return
 
     # handle target
     if not target:
