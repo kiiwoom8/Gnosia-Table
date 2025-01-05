@@ -5,7 +5,7 @@ def take_note():
     while True:
         t.check_error()
         display_notes()
-        option = t.t_input("Enter your choice: ").strip().lower()
+        option = t.t_input("Enter your choice: ")
         if option:
             match option:
                 case '1':
@@ -22,8 +22,8 @@ def take_note():
 
 
 def create_note():
-    content = t.t_input("Enter the note content or press Enter to return: ").strip()
-    if content and content != 'z':
+    content = t.tn_input("Enter the note content or press Enter to return: ")
+    if content and content not in ['z', 'Z']:
         data.notes.append(content)
         t.t_print(f"{data.GREEN}Note added successfully.{data.RESET}")
 

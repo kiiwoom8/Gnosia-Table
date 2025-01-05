@@ -23,6 +23,14 @@ def t_input(text:str):
     return result
 
 
+def tn_input(text:str): # without lowering
+    result = input(text)
+    global text_lines
+    text_lines += 1
+    delete_text()
+    return result
+
+
 def delete_text():
     global text_lines
     for _ in range(text_lines):
