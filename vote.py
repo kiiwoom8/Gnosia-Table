@@ -53,6 +53,7 @@ def vote():
 def vote_characters():
     if not data.voting_characters:
         data.voting_characters = list(data.characters.keys())
+
     for char_index in data.voting_characters.copy():
         char_name = data.characters[char_index]
         if char_name != " "  and data.words_to_color.get(char_name) not in [data.RED, data.BLUE]:
@@ -92,10 +93,11 @@ def set_ties():
             del data.words_to_color[char_name]
 
     data.voting_characters = list(data.characters.keys())
-    for char in reversed(data.ties):
-        data.voting_characters.remove(char)
-        data.voting_characters.insert(1, char)
-        data.words_to_color[data.characters[char]] = data.YELLOW
+    for char_num in reversed(data.ties):
+        if char_num != 1: # take priority on player character
+            data.voting_characters.remove(char_num)
+            data.voting_characters.insert(1, char_num)
+        data.words_to_color[data.characters[char_num]] = data.YELLOW
 
 
 def release_ties():
