@@ -72,7 +72,7 @@ options = {
     k if "Exit" not in title else 0: {"title": title, "function": func}
     for k, (title, func) in enumerate([
         ("Record an action", discussion.handle_discussion),
-        ("Delete the most recent action", actions.delete_recent_action),
+        ("Delete last actions", actions.delete_last_action),
         ("Assign/Remove roles", role.assign_roles),
         (f"{LYELLOW}Notepad{RESET}", additional_functions.take_note),
         ("Show character stats", additional_functions.show_stats),

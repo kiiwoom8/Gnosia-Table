@@ -95,7 +95,7 @@ def record_history(action, actor, target_name):
     t.r_print(f"\033[92mRecorded:\033[0m {data.characters[actor]} {action['Name']} {target_name}")
 
 
-def delete_recent_action(actor = None, target = None):
+def delete_last_action(actor = None, target = None):
     while True:
         if not actor or not target:
             actor = select_character("actor")
