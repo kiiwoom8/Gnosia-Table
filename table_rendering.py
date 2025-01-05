@@ -7,7 +7,7 @@ import vote
 def print_table():
     clear()
     print_recent_history()
-    numbered_characters = functions.set_numbered_list(data.characters)
+    numbered_characters = functions.set_num_char_list(data.characters)
     col_widths = calculate_column_widths()
     build_header(numbered_characters, col_widths)
     build_row_line(numbered_characters, col_widths)

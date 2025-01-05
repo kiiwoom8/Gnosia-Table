@@ -28,7 +28,7 @@ def assign_roles():
 
 def display_roles():
     for i, (role_name, role_symbol) in enumerate(data.roles.items(), start=1):
-        t.t_print(f"{i}. {role_name} ({role_symbol})")
+        t.t_print(f"{" " if i < 10 else ""}{i}. {role_name} ({role_symbol})")
     t.t_print(" z. Go back")
 
 
