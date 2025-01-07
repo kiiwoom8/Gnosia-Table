@@ -19,14 +19,17 @@ def r_print(text = ""):
 def t_input(text:str):
     t_print(text)
     result = msvcrt.getch()
-    result = result.decode('utf-8').strip().lower()  # Decode to string and process
-    match result:
-        case 'a': result = '10'
-        case 'b': result = '11'
-        case 'c': result = '12'
-        case 'd': result = '13'
-        case 'e': result = '14'
-        case 'f': result = '15'
+    try:
+        result = result.decode('utf-8').strip().lower()  # Decode to string and process
+        match result:
+            case 'a': result = '10'
+            case 'b': result = '11'
+            case 'c': result = '12'
+            case 'd': result = '13'
+            case 'e': result = '14'
+            case 'f': result = '15'
+    except UnicodeDecodeError:
+        result = '-1'
 
     global text_lines
     delete_text()
