@@ -1,5 +1,6 @@
 import data
 import table_rendering
+import msvcrt
 
 text_lines = 0
 error_text = ""
@@ -16,10 +17,20 @@ def r_print(text = ""):
     
 
 def t_input(text:str):
-    result = input(text).strip().lower()
+    t_print(text)
+    result = msvcrt.getch()
+    result = result.decode('utf-8').strip().lower()  # Decode to string and process
+    match result:
+        case 'a': result = '10'
+        case 'b': result = '11'
+        case 'c': result = '12'
+        case 'd': result = '13'
+        case 'e': result = '14'
+        case 'f': result = '15'
+
     global text_lines
-    text_lines += 1
     delete_text()
+
     return result
 
 
