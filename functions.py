@@ -46,7 +46,7 @@ def exclude_char_from_collab(char_index):
     
 def set_num_char_list(list:dict):
     numbered_list = {
-        num: element if element == " " else f"{' ' if num < 10 else ''}{num}. {element}"
+        num: element if element == " " else f"{data.convert_digits(num)}. {element}"
         for num, element in list.items()
     }
     return numbered_list

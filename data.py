@@ -104,3 +104,10 @@ def reset():
     discussion_doubt, discussion_defend = False, False
     table = ""
     round= 1
+
+def convert_digits(i):
+    if i > 9:
+        i = chr(87 + i)
+    else:
+        i = str(i)
+    return i
