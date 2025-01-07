@@ -29,7 +29,7 @@ def display_roles():
     for i, (role_name, role_symbol) in enumerate(data.roles.items(), start=1):
         i = data.convert_digits(i)
         t.t_print(f"{i}. {role_name} ({role_symbol})")
-    t.t_print(" z. Go back")
+    t.t_print("z. Go back")
 
 
 def toggle_role(char_index, role_name):
