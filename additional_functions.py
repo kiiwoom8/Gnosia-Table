@@ -112,4 +112,4 @@ def see_full_history():
     history = data.history
     text = "\n".join(history) if history else "\033[91m(There's no history recorded.)\033[0m"
     print(text)
-    input("Press any key to exit: ").strip().lower()
+    t.t_input("Press any key to exit: ").strip().lower()

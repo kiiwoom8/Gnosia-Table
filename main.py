@@ -10,7 +10,7 @@ def print_options():
 
 def get_option():
     option = t.t_input("Enter your choice: ")
-    if option.isdigit():
+    if option.isdigit() and -1 < int(option) < len(data.options):
         option = int(option)
         if option in data.options.keys():
             return option
