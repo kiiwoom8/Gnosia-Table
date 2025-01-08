@@ -79,7 +79,6 @@ options = {
         ("Show character stats", additional_functions.show_stats),
         ("Display the full history", additional_functions.see_full_history),
         ("Remove character from the list", actions.remove_character_from_list),
-        ("Undo/Redo", backup.choose_option),
         ("Import/export table", file.choose_option),
         ("Initialize table", functions.reset),
         (f"{GRAY}Exit{RESET}", functions.exit_program)

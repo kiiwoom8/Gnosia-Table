@@ -77,23 +77,3 @@ def redo():
         table_rendering.print_table()
     else:
         t.error_text = "\033[31mNo more actions to redo.\033[0m"
-
-
-def choose_option():
-    while True:
-        t.check_error()
-        t.t_print("Choose an option:")
-        t.t_print("1. Undo")
-        t.t_print("2. Redo")
-        t.t_print("z. Go back")
-        option = t.t_input("Enter your choice: ")
-        if option:
-            match option:
-                case '1':
-                    undo()
-                case '2':
-                    redo()
-                case 'z':
-                    return
-                case _:
-                    t.error_text = "\033[31mInvalid choice. Please select a valid option.\033[0m"

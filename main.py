@@ -1,11 +1,13 @@
 import data
 import handle_text as t
 import table_rendering
+import backup
 
 def print_options():
     t.t_print ("Choose an option:")
     for key, value in data.options.items():
         t.t_print(f"{key}. {value["title"]}")
+    t.t_print("q. Undo / w. Redo")
 
 
 def get_option():
@@ -15,12 +17,20 @@ def get_option():
         if option in data.options.keys():
             return option
         t.error_text = "\033[31mInvalid choice. Please select a valid option.\033[0m"
+    elif option in ['q', 'w']:
+        return option
     return -1
 
 
 def execute_function(option):
     if option in data.options.keys():
         data.options[option]["function"]()
+    elif option in ['q', 'w']:
+        match option:
+            case 'q': 
+                backup.undo()
+            case 'w': 
+                backup.redo()
 
 
 def main():
