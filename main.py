@@ -7,11 +7,10 @@ def print_options():
     t.t_print ("Choose an option:")
     for key, value in data.options.items():
         t.t_print(f"{key}. {value["title"]}")
-    t.t_print("q. Undo / w. Redo")
 
 
 def get_option():
-    option = t.t_input("Enter your choice: ")
+    option = t.t_input("Enter your choice ('q' for Undo, 'w' for Redo): ")
     if option.isdigit() and -1 < int(option) < len(data.options):
         option = int(option)
         if option in data.options.keys():
