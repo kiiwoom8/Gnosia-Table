@@ -19,12 +19,13 @@ def validate_choice(user_input:str):
     
 
 def toggle_color(char_index, role_name):
-    if role_name == "Killed":
-        color_code = "\033[31m"
-        state = "\033[31mkilled\033[0m"
-    elif role_name == "Cold Sleep":
-        color_code = "\033[34m"
-        state = "\033[34mcold sleeped\033[0m"
+    match role_name:
+        case "Killed":
+            color_code = "\033[31m"
+            state = "\033[31mkilled\033[0m"
+        case "Cold Sleep":
+            color_code = "\033[34m"
+            state = "\033[34mcold sleeped\033[0m"
 
     if data.characters[char_index] in data.words_to_color and data.words_to_color[data.characters[char_index]] == color_code:
         removed_color = data.words_to_color.pop(data.characters[char_index])
