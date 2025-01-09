@@ -64,8 +64,8 @@ def record(action, actor, target):
     cell = data.matrix[actor - 1][target - 1]
     if cell:
         if cell[-1] == action_abbr:
-            cell[-1] =  f"{action_abbr}x2"
-        elif cell[-1][:len(action_abbr)] == action_abbr and cell[-1][-2] == 'x':
+            cell[-1] =  f"{action_abbr}×2"
+        elif cell[-1][:len(action_abbr)] == action_abbr and cell[-1][-2] == '×':
             cell[-1] = f"{action_abbr}x{str(int(cell[-1][-1]) + 1)}"
         else:
             cell.append(action_abbr)
