@@ -1,21 +1,23 @@
 import data
 import handle_text as t
+import table_rendering
 import backup
 import json
 from json.decoder import JSONDecodeError
 
 def choose_option():
-    t.t_print("s. Export current table")
-    t.t_print("l. Load table from file")
-    t.t_print("z. Go back")
-    choice = t.t_input("Choose option: ")
-    match choice:
-        case 's':
-            export_current_table()
-        case 'l':
-            load_table_from_file()
-        case 'z':
-            return
+    while True:
+        t.t_print("s. Export current table")
+        t.t_print("l. Load table from file")
+        t.t_print("z. Go back")
+        choice = t.t_input("Choose option: ")
+        match choice:
+            case 's':
+                export_current_table()
+            case 'l':
+                load_table_from_file()
+            case 'z':
+                return
         
 
 def export_current_table():
@@ -37,6 +39,7 @@ def load_table_from_file():
 
         backup.restore_state(state)
         data.characters = {int(char_num): char_name for char_num, char_name in data.characters.items()} # json doesn't support int key so convert it
+        table_rendering.print_table()
         t.t_print(f"{data.GREEN}Loaded table successfully!{data.RESET}")
         
     except FileNotFoundError:
