@@ -20,8 +20,8 @@ def print_recent_history():
     history = data.history[-3:] if len(data.history) > 3 else data.history
     if history:
         print("\n".join(history))
-    print(f"({data.YELLOW}ENTER{data.RESET} for refresh) ", end="")
-    print(f"('{data.YELLOW}ctrl{data.RESET}' + '{data.YELLOW}+{data.RESET}' or '{data.YELLOW}-{data.RESET}' for adjusting table size)")
+    print(f"[{data.YELLOW}ENTER{data.RESET} for refresh], ", end="")
+    print(f"['{data.YELLOW}ctrl{data.RESET}' + '{data.YELLOW}+{data.RESET}' or '{data.YELLOW}-{data.RESET}' for adjusting table size]")
 
 def get_char_with_symbols(characters:dict):
     chars_with_symbs = {}
