@@ -64,6 +64,7 @@ action_list = {
         ("Exaggerate Defend", "ExD", BLUE, "Defend"),
         ("Seek Agreement Defend", "SeD", BLUE, "Defend"),
         ("Argue", "Arg", RED, "Defend"),
+        ("Reject", "Rej", RED, "Defend"),
         ("Block Argument Defend", "BlD", BLUE, "Defend"),
         ("Vote", "Vo", RED, None),
     ])

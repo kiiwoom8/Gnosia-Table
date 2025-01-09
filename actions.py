@@ -9,7 +9,9 @@ def record_action(action_name: str, actor = None, target = None):
     if action_name == "Retaliate":
         actor = data.target
         target = data.first_attacker
-
+    if action_name == "Help":
+        actor = target
+        target = None
     if target:
         t.t_print(f"Target: {data.BLUE}{data.characters[target]}{data.RESET}" )
 
@@ -41,15 +43,16 @@ def record_action(action_name: str, actor = None, target = None):
         return
     
     backup.backup_state()
-    if action_name != "Vote":
-        data.target = target
-        
     record(action, actor, target)
+
     if action_name == "Collab":
-        handle_collab(action, actor, target)
+        handle_collab(actor, target)
         discussion.end_round() # don't backup
+    elif action_name == "Help":
+        handle_help(actor, target)
     elif action_name != "Vote":
         discussion.set_discussion_options(action_name, actor)
+        data.target = target
         data.participation.append(actor)
 
 
@@ -69,7 +72,8 @@ def record(action, actor, target):
     record_history(action, actor, target_name)
 
 
-def handle_collab(action, actor, target):
+def handle_collab(actor, target):
+    action = data.action_list['Collab']
     while True:
         t.check_error()
         choice = t.t_input(f"Accept the collaboration with {data.characters[actor]}? (y/n): ")
@@ -86,6 +90,22 @@ def handle_collab(action, actor, target):
                     break
                 case _:
                     t.error_text = "\033[31mInvalid choice. Try again.\033[0m"
+
+
+def handle_help(actor, target):
+    while True:
+        t.check_error()
+        choice = t.t_input(f"Accept the Help with {data.characters[actor]}? (y/n): ")
+        if choice:
+            match choice:
+                case 'y':
+                    record_action("Defend", target, actor)
+                    break
+                case 'n':
+                    record_action("Reject", target, actor)
+                    break
+                case _:
+                    t.error_text = "\033[31mInvalid choice. Try again.\033[0m"    
 
 
 def get_target(actor):

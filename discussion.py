@@ -49,9 +49,9 @@ def print_discusstion_menu():
 
     excluded_actions = []
     if data.first_attacker and data.first_defender:
-        excluded_actions = ["Argue", "Block Argument Defend", "Defend", "Retaliate", "Block Argument Doubt"]
+        excluded_actions = ["Argue", "Reject", "Block Argument Defend", "Defend", "Retaliate", "Block Argument Doubt"]
     elif data.first_attacker:
-        excluded_actions = ["Argue", "Block Argument Defend"]
+        excluded_actions = ["Argue", "Reject", "Block Argument Defend"]
     elif data.first_defender:
         excluded_actions = ["Defend", "Retaliate", "Block Argument Doubt", "Help"]
 
@@ -90,6 +90,6 @@ def set_discussion_options(action_name, actor):
         case "Defend" | "Help":
             data.discussion_doubt = False
             data.discussion_defend = True
-        case "Argue":
+        case "Argue" | "Reject":
             data.discussion_doubt = True
             data.discussion_defend = False
