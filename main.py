@@ -4,11 +4,12 @@ import table_rendering
 import backup
 
 def print_options():
-    t.t_print ("Choose an option:")
+    # t.t_print ("Choose an option:")
     for key, value in data.options.items():
         if 'Exit' in value["title"]:
-            t.t_print(f"{data.YELLOW}q{data.RESET}. Undo")
-            t.t_print(f"{data.YELLOW}w{data.RESET}. Redo")
+            t.t_print(f"{data.GRAY}*{data.RESET}. Refresh [{data.YELLOW}ENTER{data.RESET}]")
+            t.t_print(f"{data.GRAY}*{data.RESET}. Undo/Redo [{data.YELLOW}q{data.RESET}/{data.YELLOW}w{data.RESET}]")
+            t.t_print(f"{data.GRAY}*{data.RESET}. Adjust font size [{data.YELLOW}ctrl{data.RESET} + '{data.YELLOW}+{data.RESET}' or '{data.YELLOW}-{data.RESET}']")
         t.t_print(f"{key}. {value["title"]}")
 
 
