@@ -26,11 +26,15 @@ def handle_discussion():
                 table_rendering.print_table()
             else:
                 t.error_text = "\033[31mInvalid choice. Try again.\033[0m"
+        else:
+            table_rendering.print_table()
+
 
 def end_round():
     init_discussion_settings()
     data.round += 1
     table_rendering.print_table()
+
 
 def print_discusstion_menu():
     t.check_error()

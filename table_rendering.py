@@ -20,7 +20,8 @@ def print_recent_history():
     history = data.history[-3:] if len(data.history) > 3 else data.history
     if history:
         print("\n".join(history))
-    
+    print(f"({data.YELLOW}ENTER{data.RESET} for refresh) ", end="")
+    print(f"('{data.YELLOW}ctrl{data.RESET}' + '{data.YELLOW}+{data.RESET}' or '{data.YELLOW}-{data.RESET}' for adjusting table size)")
 
 def get_char_with_symbols(characters:dict):
     chars_with_symbs = {}
@@ -54,8 +55,9 @@ def generate_table(numbered_characters, col_widths):
             ]
 
             row_line = format_row(numbered_characters, char_index, row_data, col_widths)
-            data.table += f"{apply_color(row_line)}\n\n"
+            data.table += f"{apply_color(row_line)}\n"
             data.table = re.sub(r"[-─]", lambda match: f"\033[90m{match.group()}{data.RESET}", data.table)
+    data.table += "\n"
 
 
 def build_header(num_characters, col_widths):

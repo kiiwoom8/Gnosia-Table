@@ -6,11 +6,14 @@ import backup
 def print_options():
     t.t_print ("Choose an option:")
     for key, value in data.options.items():
+        if 'Exit' in value["title"]:
+            t.t_print(f"{data.YELLOW}q{data.RESET}. Undo")
+            t.t_print(f"{data.YELLOW}w{data.RESET}. Redo")
         t.t_print(f"{key}. {value["title"]}")
 
 
 def get_option():
-    option = t.t_input("Enter your choice ('q' for Undo, 'w' for Redo): ")
+    option = t.t_input(f"Enter your choice: ")
     if option.isdigit() and -1 < int(option) < len(data.options):
         option = int(option)
         if option in data.options.keys():

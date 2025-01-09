@@ -155,6 +155,8 @@ def select_character(role_type, action_name=None):
                 return user_input
             else:
                 t.error_text = "\033[31mInvalid choice. Try again.\033[0m"
+        else:
+            table_rendering.print_table()
 
 
 def remove_character_from_list():

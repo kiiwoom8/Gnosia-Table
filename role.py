@@ -1,5 +1,6 @@
 import data
 import functions
+import table_rendering
 import actions
 import handle_text as t
 import backup
@@ -23,6 +24,8 @@ def assign_roles():
                     toggle_role(int(char_index), role_name)
             else:
                 t.error_text = "\033[31mInvalid choice. Try again.\033[0m"
+        else:
+            table_rendering.print_table()
 
 
 def display_roles():
