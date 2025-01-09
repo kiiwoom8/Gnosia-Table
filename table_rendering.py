@@ -87,10 +87,11 @@ def format_row(numbered_characters, char_index, row_data, col_widths):
 
 def apply_color(text):
     for word, color in data.words_to_color.items():
-        if word[-2] == 'x':
-            text = re.sub(rf'({re.escape(word)})', rf'{color}\1{data.RESET}', text)
-        else:
-            text = re.sub(rf'(?<!\w)({re.escape(word)})(?!\w)', rf'{color}\1{data.RESET}', text)
+        text = re.sub(
+            rf'(?<!\w)({re.escape(word)}(?:x\d+)?)(?!\w)',
+            rf'{color}\1{data.RESET}',
+            text
+        )
     return text
 
 
