@@ -45,15 +45,18 @@ def record_action(action_name: str, actor = None, target = None):
     backup.backup_state()
     record(action, actor, target)
 
-    if action_name == "Collab":
-        handle_collab(actor, target)
-        discussion.end_round() # don't backup
-    elif action_name == "Help":
-        handle_help(actor, target)
-    elif action_name != "Vote":
-        discussion.set_discussion_options(action_name, actor)
-        data.target = target
-        data.participation.append(actor)
+    match action_name:
+        case "Collab":
+            handle_collab(actor, target)
+            discussion.end_round()  # don't backup
+        case "Help":
+            handle_help(actor, target)
+        case "Vote":
+            pass
+        case _:
+            discussion.set_discussion_options(action_name, actor)
+            data.target = target
+            data.participation.append(actor)
 
 
 def record(action, actor, target):
