@@ -18,7 +18,8 @@ def assign_roles():
             if role_choice.isdigit() and 0 < (role_choice := int(role_choice)) < len(data.roles) + 1:
                 role_name = list(data.roles.keys())[role_choice - 1]
                 char_index = actions.select_character("assigned/removed", 
-                                                      f"{data.LGREEN}Assign{data.RESET}/{data.BLUSH}remove{data.RESET} a role ({data.roles[role_name]}): ")
+                                                      f"{data.LGREEN}Assign{data.RESET}/{data.BLUSH}remove{data.RESET} a role ({data.roles[role_name]}): ",
+                                                      is_role_sel=True)
                 if char_index != 'z':
                     backup.backup_state()
                     toggle_role(int(char_index), role_name)

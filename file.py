@@ -32,6 +32,7 @@ def export_current_table():
         backup.undo_stack.pop()
     t.t_print(f"{data.GREEN}Exported current table successfully!{data.RESET}")
 
+
 def load_table_from_file():
     try:
         with open('table.json', 'r') as file:

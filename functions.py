@@ -9,10 +9,10 @@ def reset():
     data.reset()
 
 
-def validate_choice(user_input:str):
+def validate_choice(user_input:str, is_role_sel = False):
     if user_input.isdigit() and (user_input := int(user_input)) in data.characters:
         char_name = data.characters[user_input]
-        if " " not in char_name and char_name not in data.words_to_color or data.words_to_color[char_name] not in [data.RED, data.BLUE] :
+        if  " " not in char_name and (is_role_sel or (char_name not in data.words_to_color or data.words_to_color[char_name] not in [data.RED, data.BLUE])) :
             return user_input
     else:
         return False
@@ -39,7 +39,7 @@ def toggle_color(char_index, role_name):
 
 
 def exclude_char_from_collab(char_index):
-    data.collab = [char_set for char_set in data.collab if char_index not in char_set]
+    data.collab = [char_list for char_list in data.collab if char_index not in char_list]
 
     
 def set_num_char_list(list:dict):

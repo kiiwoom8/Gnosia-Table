@@ -11,7 +11,7 @@ def record_action(action_name: str, actor = None, target = None, backup_status =
     if not (actor and target):
         return
     
-    if action_name == "Collab" and any({actor, target} & char_set for char_set in data.collab):
+    if action_name == "Collab" and any(actor in char_list or target in char_list for char_list in data.collab):
         t.error_text = (f"{data.RED}Collaboration already exists with {data.characters[actor]} "
                         f"or {data.characters[target]}. Please try again.{data.RESET}")
         return
@@ -83,7 +83,7 @@ def handle_collab(actor, target):
         if choice:
             match choice:
                 case 'y':
-                    data.collab.append({actor, target})
+                    data.collab.append([actor, target])
                     data.matrix[target - 1][actor - 1].append(action['Abbr'])
                     record_history(action, target, data.characters[actor])
                     break
@@ -177,19 +177,21 @@ def remove_action_from_table(actor, target):
         t.error_text = "\033[31mNo actions to delete.\033[0m"
 
 
-def select_character(role_type, action_name=None):
+def select_character(role_type, action_name=None, is_role_sel = False):
     while True:
         t.check_error()
         if action_name:
             t.t_print(action_name)
+
         if data.ties:
             most_voted_names = [data.characters[char_index] for char_index in data.ties]
             t.t_print(f"Select the {role_type} character from the following: {most_voted_names}")            
         else:
             t.t_print(f"Select the {role_type} character:")
+
         user_input = t.t_input("Enter the number for your choice (or 'z' to go back): ")
         if user_input:
-            if user_input == 'z' or functions.validate_choice(user_input):
+            if user_input == 'z' or functions.validate_choice(user_input, is_role_sel):
                 return user_input
             else:
                 t.error_text = "\033[31mInvalid choice. Try again.\033[0m"
