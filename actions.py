@@ -7,7 +7,7 @@ import backup
 
 def record_action(action_name: str, actor = None, target = None):
     if action_name == "Retaliate":
-        actor = data.target
+        actor = target
         target = data.first_attacker
     if action_name == "Help":
         actor = target
