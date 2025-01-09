@@ -5,14 +5,14 @@ import json
 from json.decoder import JSONDecodeError
 
 def choose_option():
-    t.t_print("1. Export current table")
-    t.t_print("2. Load table from file")
+    t.t_print("s. Export current table")
+    t.t_print("l. Load table from file")
     t.t_print("z. Go back")
     choice = t.t_input("Choose option: ")
     match choice:
-        case '1':
+        case 's':
             export_current_table()
-        case '2':
+        case 'l':
             load_table_from_file()
         case 'z':
             return
