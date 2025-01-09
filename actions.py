@@ -6,37 +6,11 @@ import discussion
 import backup
 
 def record_action(action_name: str, actor = None, target = None, backup_status = True):
-    if action_name == "Retaliate":
-        actor = target
-        target = data.first_attacker
-    if action_name == "Help":
-        actor = target
-        target = None
-    if target:
-        t.t_print(f"Target: {data.BLUE}{data.characters[target]}{data.RESET}" )
-
-    # handle actor
     action = data.action_list[action_name]
-    if not actor:
-        actor = select_character("acting", action['Name']) 
-        if  actor == 'z':
-            return
-        
-        actor = int(actor)
-        if actor == target:
-            t.error_text = "\033[31mCannot act on self. Please try again.\033[0m"
-            return
-        if actor in data.participation:
-            t.error_text = "\033[31mCannot act twice in a round. Please try again.\033[0m"
-            return
+    actor, target = set_actor_and_target(action, action_name, actor, target)
+    if not (actor and target):
+        return
 
-    # handle target
-    if not target:
-        target = get_target(actor)
-        if target == 'z':
-            return
-        target = int(target)
-    
     if action_name == "Collab" and any({actor, target} & char_set for char_set in data.collab):
         t.error_text = (f"{data.RED}Collaboration already exists with {data.characters[actor]} "
                         f"or {data.characters[target]}. Please try again.{data.RESET}")
@@ -45,21 +19,46 @@ def record_action(action_name: str, actor = None, target = None, backup_status =
     if backup_status:
         backup.backup_state()
     record(action, actor, target)
+    post_action(action_name, actor, target)
 
+
+def set_actor_and_target(action, action_name, actor, target):
     match action_name:
-        case "Collab":
-            handle_collab(actor, target)
-            discussion.end_round()  # don't backup
+        case "Retaliate":
+            actor = target
+            target = data.first_attacker
         case "Help":
-            handle_help(actor, target)
-        case "Vote":
-            pass
-        case _:
-            discussion.set_discussion_options(action_name, actor)
-            data.target = target
-            data.participation.append(actor)
+            actor = target
+            target = None
 
+    if target:
+        t.t_print(f"Target: {data.BLUE}{data.characters[target]}{data.RESET}" )
 
+    # handle actor
+    if not actor:
+        actor = select_character("acting", action['Name']) 
+        if actor == 'z':
+            return None, None
+        
+        actor = int(actor)
+        if actor == target:
+            t.error_text = "\033[31mCannot act on self. Please try again.\033[0m"
+            return None, None
+        if actor in data.participation:
+            t.error_text = "\033[31mCannot act twice in a round. Please try again.\033[0m"
+            return None, None
+
+    # handle target
+    if not target:
+        target = get_target(actor)
+        if target == 'z':
+            return None, None
+            
+        target = int(target)
+        
+    return actor, target
+    
+    
 def record(action, actor, target):
     action_abbr = action["Abbr"]
     cell = data.matrix[actor - 1][target - 1]
@@ -112,15 +111,30 @@ def handle_help(actor, target):
                     t.error_text = "\033[31mInvalid choice. Try again.\033[0m"    
 
 
+def post_action(action_name, actor, target):
+    match action_name:
+        case "Vote":
+            pass
+        case "Collab":
+            handle_collab(actor, target)
+            discussion.end_round()  # don't backup
+        case "Help":
+            handle_help(actor, target)
+        case _:
+            discussion.set_discussion_options(action_name, actor)
+            data.target = target
+            data.participation.append(actor)
+
+
 def get_target(actor):
     while True:
         target = select_character("target", f"Acting character: {data.BLUSH}{data.characters[actor]}{data.RESET}")
         if target == 'z':
             return target
         if actor == int(target):
-            t.t_print("\033[31mCannot act on self. Please try again.\033[0m")
+            t.error_text = "\033[31mCannot act on self. Please try again.\033[0m"
         elif data.ties and int(target) not in data.ties:
-            t.t_print("\033[31mInvalid choice. Please try again.\033[0m")
+            t.error_text = "\033[31mInvalid choice. Please try again.\033[0m"
         else:
             return target
 
@@ -189,8 +203,10 @@ def remove_character_from_list():
         t.check_error()
         option = "\033[91mRemove character\033[0m"
         choice = select_character("target", option)
+
         if choice == 'z':
             return
+            
         choice = int(choice)
         if len(data.characters.keys()) - list(data.characters.values()).count(" ") <= 2:
             t.error_text = "\033[31m[Failed] There should be at least 2 characters in the list.\033[0m"

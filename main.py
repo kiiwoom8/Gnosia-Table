@@ -14,14 +14,10 @@ def print_options():
 
 def get_option():
     option = t.t_input(f"Enter your choice: ")
-    if option.isdigit() and -1 < int(option) < len(data.options):
-        option = int(option)
-        if option in data.options.keys():
-            return option
+    if option and not (option.isdigit() and (option := int(option)) in data.options.keys() or option in ['q', 'w', 'z']):
         t.error_text = "\033[31mInvalid choice. Please select a valid option.\033[0m"
-    elif option in ['q', 'w']:
-        return option
-    return -1
+
+    return option
 
 
 def execute_function(option):
