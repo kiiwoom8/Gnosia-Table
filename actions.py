@@ -5,7 +5,7 @@ import handle_text as t
 import discussion
 import backup
 
-def record_action(action_name: str, actor = None, target = None):
+def record_action(action_name: str, actor = None, target = None, backup_status = True):
     if action_name == "Retaliate":
         actor = target
         target = data.first_attacker
@@ -42,7 +42,8 @@ def record_action(action_name: str, actor = None, target = None):
                         f"or {data.characters[target]}. Please try again.{data.RESET}")
         return
     
-    backup.backup_state()
+    if backup_status:
+        backup.backup_state()
     record(action, actor, target)
 
     match action_name:
@@ -102,12 +103,10 @@ def handle_help(actor, target):
         if choice:
             match choice:
                 case 'y':
-                    record_action("Defend", target, actor)
-                    backup.undo_stack.pop() # cancel backup to combine Help and its reply
+                    record_action("Defend", target, actor, backup_status = False) # don't backup to conbine Help and it's reply
                     break
                 case 'n':
-                    record_action("Reject", target, actor)
-                    backup.undo_stack.pop() # cancel backup to combine Help and its reply
+                    record_action("Reject", target, actor, backup_status = False)
                     break
                 case _:
                     t.error_text = "\033[31mInvalid choice. Try again.\033[0m"    
