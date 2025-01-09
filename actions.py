@@ -10,7 +10,7 @@ def record_action(action_name: str, actor = None, target = None, backup_status =
     actor, target = set_actor_and_target(action, action_name, actor, target)
     if not (actor and target):
         return
-
+    
     if action_name == "Collab" and any({actor, target} & char_set for char_set in data.collab):
         t.error_text = (f"{data.RED}Collaboration already exists with {data.characters[actor]} "
                         f"or {data.characters[target]}. Please try again.{data.RESET}")

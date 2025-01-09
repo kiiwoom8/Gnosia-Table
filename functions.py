@@ -10,13 +10,10 @@ def reset():
 
 
 def validate_choice(user_input:str):
-    if user_input.isdigit():
-        choice = int(user_input)
-        valid_data = data.characters
-        if choice in valid_data and " " not in valid_data[choice] or not user_input:
-            return choice
-        else:
-            return False
+    if user_input.isdigit() and (user_input := int(user_input)) in data.characters:
+        char_name = data.characters[user_input]
+        if " " not in char_name and char_name not in data.words_to_color:
+            return user_input
     else:
         return False
     
