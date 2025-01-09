@@ -54,7 +54,17 @@ def record_action(action_name: str, actor = None, target = None):
 
 
 def record(action, actor, target):
-    data.matrix[actor - 1][target - 1].append(action["Abbr"])
+    action_abbr = action["Abbr"]
+    cell = data.matrix[actor - 1][target - 1]
+    if cell:
+        if cell[-1] == action_abbr:
+            cell[-1] =  f"{action_abbr}x2"
+        elif cell[-1][:len(action_abbr)] == action_abbr and cell[-1][-2] == 'x':
+            cell[-1] = f"{action_abbr}x{str(int(cell[-1][-1]) + 1)}"
+        else:
+            cell.append(action_abbr)
+    else:
+        cell.append(action_abbr)
     target_name = data.characters.get(target, "\033[31mUnknown\033[0m")
     record_history(action, actor, target_name)
 
