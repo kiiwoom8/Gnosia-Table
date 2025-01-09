@@ -100,9 +100,11 @@ def handle_help(actor, target):
             match choice:
                 case 'y':
                     record_action("Defend", target, actor)
+                    backup.undo_stack.pop() # cancel backup to combine Help and its reply
                     break
                 case 'n':
                     record_action("Reject", target, actor)
+                    backup.undo_stack.pop() # cancel backup to combine Help and its reply
                     break
                 case _:
                     t.error_text = "\033[31mInvalid choice. Try again.\033[0m"    
