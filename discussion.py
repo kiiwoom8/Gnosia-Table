@@ -44,7 +44,7 @@ def print_discusstion_menu():
     elif data.discussion_defend:
         t.t_print(f"Target: {data.BLUE}{data.characters[data.target]}{data.RESET}")
         type = "Defend"
-    else: # Doubt, Cover, Collab
+    else: # Doubt, Cover
         type = "Default"
 
     excluded_actions = []

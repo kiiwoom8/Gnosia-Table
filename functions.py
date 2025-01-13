@@ -30,18 +30,12 @@ def toggle_color(char_index, role_name):
     if data.characters[char_index] in data.words_to_color and data.words_to_color[data.characters[char_index]] == color_code:
         removed_color = data.words_to_color.pop(data.characters[char_index])
         if color_code == removed_color:
-            t.r_print((f"{data.characters[char_index]} is released from the state of being excepted. "
-                       f"{data.BLUSH}Previous collaboration is not restored{data.RESET}, so please consider that."))
+            t.r_print((f"{data.characters[char_index]} is released from the state of being excepted."))
     else:
         data.words_to_color[data.characters[char_index]] = color_code
         t.r_print(f"{data.characters[char_index]} is {state}.")
-        exclude_char_from_collab(char_index)
 
 
-def exclude_char_from_collab(char_index):
-    data.collab = [char_list for char_list in data.collab if char_index not in char_list]
-
-    
 def set_num_char_list(list:dict):
     numbered_list = {
         num: element if element == " " else f"{data.convert_digits(num)}. {element}"

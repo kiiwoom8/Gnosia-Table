@@ -11,11 +11,6 @@ def record_action(action_name: str, actor = None, target = None, backup_status =
     if not (actor and target):
         return
     
-    if action_name == "Collab" and any(actor in char_list or target in char_list for char_list in data.collab):
-        t.error_text = (f"{data.RED}Collaboration already exists with {data.characters[actor]} "
-                        f"or {data.characters[target]}. Please try again.{data.RESET}")
-        return
-    
     if backup_status:
         backup.backup_state()
     record(action, actor, target)
@@ -75,26 +70,6 @@ def record(action, actor, target):
     record_history(action, actor, target_name)
 
 
-def handle_collab(actor, target):
-    action = data.action_list['Collab']
-    while True:
-        t.check_error()
-        choice = t.t_input(f"Accept the collaboration with {data.characters[actor]}? (y/n): ")
-        if choice:
-            match choice:
-                case 'y':
-                    data.collab.append([actor, target])
-                    data.matrix[target - 1][actor - 1].append(action['Abbr'])
-                    record_history(action, target, data.characters[actor])
-                    break
-                case 'n':
-                    data.matrix[target - 1][actor - 1].append("Ref")
-                    record_history(data.action_list["Refuse"], target, data.characters[actor])
-                    break
-                case _:
-                    t.error_text = "\033[31mInvalid choice. Try again.\033[0m"
-
-
 def handle_help(actor, target):
     while True:
         t.check_error()
@@ -115,9 +90,6 @@ def post_action(action_name, actor, target):
     match action_name:
         case "Vote":
             pass
-        case "Collab":
-            handle_collab(actor, target)
-            discussion.end_round()  # don't backup
         case "Help":
             handle_help(actor, target)
         case _:
