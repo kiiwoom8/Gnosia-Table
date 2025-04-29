@@ -1,4 +1,5 @@
 import data
+import re
 import functions
 import table_rendering
 import handle_text as t
@@ -58,10 +59,14 @@ def record(action, actor, target):
     action_abbr = action["Abbr"]
     cell = data.matrix[actor - 1][target - 1]
     if cell:
-        if cell[-1] == action_abbr:
-            cell[-1] =  f"{action_abbr}×2"
-        elif cell[-1][:len(action_abbr)] == action_abbr and cell[-1][-2] == '×':
-            cell[-1] = f"{action_abbr}x{str(int(cell[-1][-1]) + 1)}"
+        last = cell[-1]
+        # Match pattern like dou, doux2, doux10 etc.
+        match = re.fullmatch(rf'({re.escape(action_abbr)})x(\d+)', last)
+        if last == action_abbr:
+            cell[-1] = f"{action_abbr}x2"
+        elif match:
+            base, count = match.groups()
+            cell[-1] = f"{base}x{int(count) + 1}"
         else:
             cell.append(action_abbr)
     else:

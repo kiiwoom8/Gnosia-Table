@@ -87,9 +87,13 @@ def format_row(numbered_characters, char_index, row_data, col_widths):
 
 def apply_color(text):
     for word, color in data.words_to_color.items():
+        # Match the word anywhere, even as part of a longer word
+        # But avoid matching x followed by digits
+        if re.fullmatch(r'x\d+', word):  # Skip patterns like x3
+            continue
         text = re.sub(
-            rf'(?<!\w)({re.escape(word)}(?:x\d+)?)(?!\w)',
-            rf'{color}\1{data.RESET}',
+            re.escape(word),
+            rf'{color}\g<0>{data.RESET}',
             text
         )
     return text
