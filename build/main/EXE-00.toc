@@ -92,7 +92,7 @@
  [],
  False,
  False,
- 1745944842,
+ 1745981350,
  [('run.exe',
    'C:\\Users\\kiiwo\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages\\PyInstaller\\bootloader\\Windows-64bit-intel\\run.exe',
    'EXECUTABLE')],

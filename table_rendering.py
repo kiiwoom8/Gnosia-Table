@@ -86,17 +86,16 @@ def format_row(numbered_characters, char_index, row_data, col_widths):
 
 
 def apply_color(text):
-    for word, color in data.words_to_color.items():
-        # Match the word anywhere, even as part of a longer word
-        # But avoid matching x followed by digits
-        if re.fullmatch(r'x\d+', word):  # Skip patterns like x3
-            continue
-        text = re.sub(
-            re.escape(word),
-            rf'{color}\g<0>{data.RESET}',
-            text
-        )
-    return text
+    keys = sorted(data.words_to_color.keys(), key=len, reverse=True)
+    # Match exact key or key followed by x and a digit (e.g., AgD, Def, Defx2)
+    pattern = re.compile(rf'\b({"|".join(map(re.escape, keys))})(?=x[2-4]|\b)')
+
+    def repl(m):
+        abbr = m.group(1)
+        color = data.words_to_color[abbr]
+        return f"{color}{abbr}{data.RESET}"
+
+    return pattern.sub(repl, text)
 
 
 def print_status():
