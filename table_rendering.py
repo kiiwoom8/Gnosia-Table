@@ -87,7 +87,7 @@ def format_row(numbered_characters, char_index, row_data, col_widths):
 
 def apply_color(text):
     keys = sorted(data.words_to_color.keys(), key=len, reverse=True)
-    # Match exact key or key followed by x and a digit (e.g., AgD, Def, Defx2)
+    # Match exact key or key followed by x and a digit (e.g., AD, Def, Defx2)
     pattern = re.compile(rf'\b({"|".join(map(re.escape, keys))})(?=x[2-4]|\b)')
 
     def repl(m):
